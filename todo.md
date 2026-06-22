@@ -852,14 +852,14 @@
 - [ ] Show the commit message in the summary.
 - [ ] Show target remote `https://github.com/areen-at/AI-agents-HW6`.
 - [ ] Show the target branch.
-- [ ] Ask the user for explicit push confirmation.
-- [ ] Do not run `git push` before confirmation.
-- [ ] After confirmation, push the commit to GitHub.
+- [ ] Treat the pre-push summary as informational for ordinary phase pushes.
+- [ ] Push the phase commit automatically after the summary and safety checks.
+- [ ] Verify local and remote branches are synchronized after the push.
 - [ ] Report the pushed commit ID and branch.
 - [ ] Never force-push without separate explicit authorization.
 - [ ] Never include unrelated user changes in a phase commit.
-- [ ] Treat a phase as locally complete if committed but awaiting push approval.
-- [ ] Treat a phase as remotely complete only after a successful approved push.
+- [ ] Treat a phase as locally complete after its verified commit exists.
+- [ ] Treat a phase as remotely complete only after a successful automatic push.
 
 ## GitHub repository setup backlog
 
@@ -872,4 +872,4 @@
 - [ ] Fetch remote history before creating the first shared commit when the remote is non-empty.
 - [ ] Avoid overwriting remote history.
 - [ ] Reconcile existing remote files through an ordinary merge or agreed approach.
-- [ ] Perform the same pre-push summary and confirmation for the initial push.
+- [ ] Perform the same informational pre-push summary and automatic push for repository setup changes.

@@ -703,7 +703,7 @@ Each issue should identify its PRD requirement IDs, tests, configuration changes
 - Target GitHub repository: `https://github.com/areen-at/AI-agents-HW6`
 - The local repository should use this URL as `origin` after the workspace Git metadata is valid.
 - Codex performs routine status, staging, commit, and push operations for each completed phase.
-- Every actual push requires explicit user confirmation after the pre-push summary.
+- Ordinary phase pushes are pre-authorized and run automatically after the pre-push summary and safety checks.
 
 ### Required sequence after every phase
 
@@ -722,9 +722,10 @@ Each issue should identify its PRD requirement IDs, tests, configuration changes
    - checks and tests run;
    - commit message; and
    - target branch and remote.
-10. Ask the user for explicit confirmation to push.
-11. Only after confirmation, run the push to GitHub.
-12. Report the pushed branch and commit identifier.
+10. Present the informational pre-push summary.
+11. Push the phase commit to GitHub without waiting for an additional confirmation.
+12. Verify local and remote branch synchronization.
+13. Report the pushed branch and commit identifier.
 
 ### Git safety rules
 
@@ -737,7 +738,8 @@ Each issue should identify its PRD requirement IDs, tests, configuration changes
 - Do not use broad staging as a substitute for inspection; verify every staged path.
 - Do not include unrelated user changes in a phase commit.
 - Do not amend, rewrite, force-push, or delete history without explicit user authorization.
-- Do not push before the user confirms the displayed summary.
+- Do not pause for approval on an ordinary phase push after the displayed summary.
+- Continue to require explicit authorization for force-pushes, history rewrites, destructive Git operations, or a different remote/branch target.
 
 ### Commit-message convention
 
@@ -757,7 +759,4 @@ Optional commit body:
 
 ### Phase Git gate
 
-A phase is not fully closed until its tests pass, its approved files are committed, and either:
-
-- the user confirms and Codex successfully pushes the commit; or
-- the user explicitly chooses to leave the commit local.
+A phase is not fully closed until its tests pass, its approved files are committed, the ordinary push succeeds, and local and remote branches are verified as synchronized. If a push fails, report the failure and keep the verified local commit intact for a safe retry.
