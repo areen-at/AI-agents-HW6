@@ -4,9 +4,9 @@ This repository will implement a two-agent Cop-and-Thief game in which our Cop a
 
 ## Current status
 
-Phase 5 is complete. The repository now contains the polished Phase 1 foundation, the Phase 2 immutable domain model, Phase 3 authoritative game rules, Phase 4 engine-only series control, and Phase 5 simple heuristic Cop/Thief agents.
+Phase 6 is complete. The repository now contains the polished Phase 1 foundation, Phase 2 immutable domain model, Phase 3 authoritative game rules, Phase 4 engine-only series control, Phase 5 heuristic agents, and Phase 6 role observations plus the natural-language JSON action protocol.
 
-The next authorized implementation phase is Phase 6: partial observations and natural-language protocol.
+The next authorized implementation phase is Phase 7: independent Cop and Thief MCP servers.
 
 ## Required baseline
 
@@ -57,6 +57,7 @@ An opponent mock may be used only in explicit test mode. Real opponent data will
 - [Phase 3 game rules evidence](docs/PHASE_3_GAME_RULES.md)
 - [Phase 4 series/replay/report evidence](docs/PHASE_4_SERIES_REPLAY_REPORT.md)
 - [Phase 5 heuristic agents evidence](docs/PHASE_5_HEURISTIC_AGENTS.md)
+- [Phase 6 observation/protocol evidence](docs/PHASE_6_OBSERVATION_PROTOCOL.md)
 
 ## Phase 1 validation commands
 
@@ -133,6 +134,21 @@ Expected:
 - Thief returns only movement actions and prefers safer escape moves;
 - every heuristic output is validated against engine legal actions; and
 - 60 total unit tests pass.
+
+## Phase 6 observation/protocol validation
+
+Phase 6 makes the heuristic path use the same observation and JSON-response contract planned for
+MCP:
+
+- python main.py --mode internal --config config.json --engine-only --policy heuristic
+
+Expected:
+
+- observations expose only role-allowed visible information;
+- prompts instruct one JSON object with no prose;
+- strict parser rejects malformed, oversized, mismatched, unknown, and illegal actions;
+- one repair is allowed before technical-failure classification; and
+- 73 total unit tests pass.
 
 ## Git workflow
 

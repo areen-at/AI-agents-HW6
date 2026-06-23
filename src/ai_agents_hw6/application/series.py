@@ -13,7 +13,7 @@ from ai_agents_hw6.application.events import (
     state_hash,
     state_to_json,
 )
-from ai_agents_hw6.agents import heuristic_decision_provider
+from ai_agents_hw6.agents import heuristic_protocol_decision_provider
 from ai_agents_hw6.config import AppConfig
 from ai_agents_hw6.domain import (
     AttemptId,
@@ -306,7 +306,7 @@ def write_engine_only_series_with_policy(config: AppConfig, *, policy_name: str)
     if policy_name == "first-legal":
         decision_provider = first_legal_action_provider
     elif policy_name == "heuristic":
-        decision_provider = heuristic_decision_provider(max_barriers=settings.max_barriers)
+        decision_provider = heuristic_protocol_decision_provider(max_barriers=settings.max_barriers)
     else:
         raise ValueError(f"unknown engine-only policy: {policy_name}")
     return run_series(

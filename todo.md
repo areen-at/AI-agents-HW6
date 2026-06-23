@@ -271,41 +271,41 @@
 
 ### Tasks
 
-- [ ] T0164 Implement approved role-specific observation function.
-- [ ] T0165 Include own position and allowed local information.
-- [ ] T0166 Include visible barriers only.
-- [ ] T0167 Include opponent data only when observable.
-- [ ] T0168 Include move number and allowed budgets.
-- [ ] T0169 Exclude hidden coordinates and full state.
-- [ ] T0170 Return immutable observation DTOs.
-- [ ] T0171 Create separate Cop and Thief natural-language templates.
-- [ ] T0172 State each role objective in plain language.
-- [ ] T0173 Describe current observation in text.
-- [ ] T0174 Describe permitted action vocabulary.
-- [ ] T0175 Include bounded relevant history.
-- [ ] T0176 Require exactly one action response.
-- [ ] T0177 Define strict move response schema.
-- [ ] T0178 Define strict Cop barrier response schema.
-- [ ] T0179 Require protocol version and request ID.
-- [ ] T0180 Reject unknown action types and oversized output.
-- [ ] T0181 Parse JSON safely.
-- [ ] T0182 Validate proposed action against current legal actions.
-- [ ] T0183 Allow one bounded correction request.
-- [ ] T0184 Classify unrecoverable malformed response as technical failure.
-- [ ] T0185 Test messages for hidden coordinate leakage.
-- [ ] T0186 Test errors and transport logs for hidden state leakage.
-- [ ] T0187 Keep terminal renderer output out of agent inputs.
-- [ ] T0188 Make heuristic adapter use the same message contract.
-- [ ] T0189 Capture sanitized natural-language decision traces.
-- [ ] T0190 Report phase files, commands, outputs, and tests then stop.
+- [x] T0164 Implement approved role-specific observation function.
+- [x] T0165 Include own position and allowed local information.
+- [x] T0166 Include visible barriers only.
+- [x] T0167 Include opponent data only when observable.
+- [x] T0168 Include move number and allowed budgets.
+- [x] T0169 Exclude hidden coordinates and full state.
+- [x] T0170 Return immutable observation DTOs.
+- [x] T0171 Create separate Cop and Thief natural-language templates.
+- [x] T0172 State each role objective in plain language.
+- [x] T0173 Describe current observation in text.
+- [x] T0174 Describe permitted action vocabulary.
+- [x] T0175 Include bounded relevant history.
+- [x] T0176 Require exactly one action response.
+- [x] T0177 Define strict move response schema.
+- [x] T0178 Define strict Cop barrier response schema.
+- [x] T0179 Require protocol version and request ID.
+- [x] T0180 Reject unknown action types and oversized output.
+- [x] T0181 Parse JSON safely.
+- [x] T0182 Validate proposed action against current legal actions.
+- [x] T0183 Allow one bounded correction request.
+- [x] T0184 Classify unrecoverable malformed response as technical failure.
+- [x] T0185 Test messages for hidden coordinate leakage.
+- [x] T0186 Test errors and transport logs for hidden state leakage.
+- [x] T0187 Keep terminal renderer output out of agent inputs.
+- [x] T0188 Make heuristic adapter use the same message contract.
+- [x] T0189 Capture sanitized natural-language decision traces.
+- [x] T0190 Report phase files, commands, outputs, and tests then stop.
 
 ### Phase gate
 
-- [ ] All tasks required for this phase have evidence.
-- [ ] Automated and manual verification results are recorded.
-- [ ] Changed files and unrelated preserved files are listed.
-- [ ] Run commands and expected output are documented.
-- [ ] Work stops here for review before the next phase.
+- [x] All tasks required for this phase have evidence.
+- [x] Automated and manual verification results are recorded.
+- [x] Changed files and unrelated preserved files are listed.
+- [x] Run commands and expected output are documented.
+- [x] Work stops here for review before the next phase.
 
 ## Phase 7 - Independent Cop and Thief MCP servers
 
