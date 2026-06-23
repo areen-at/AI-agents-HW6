@@ -26,6 +26,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Run a deterministic engine-only six-game series and write the internal report.",
     )
     parser.add_argument(
+        "--local-mcp",
+        action="store_true",
+        help="Run a six-game series through the configured local Cop and Thief decision servers.",
+    )
+    parser.add_argument(
         "--policy",
         choices=("heuristic", "first-legal"),
         default="heuristic",

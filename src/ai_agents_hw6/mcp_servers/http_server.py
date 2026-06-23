@@ -14,17 +14,19 @@ def build_server(*, role: Role, host: str, port: int, token: str | None = None) 
 
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self) -> None:  # noqa: N802
-            if self.path == "/health":
+            path = _normalize_path(self.path)
+            if path == "/health":
                 self._write_json(service.health())
-            elif self.path == "/identity":
+            elif path == "/identity":
                 self._write_json(service.identity())
-            elif self.path == "/capabilities":
+            elif path == "/capabilities":
                 self._write_json(service.capabilities())
             else:
                 self._write_json({"error": "not found"}, status=404)
 
         def do_POST(self) -> None:  # noqa: N802
-            if self.path != "/decide":
+            path = _normalize_path(self.path)
+            if path != "/decide":
                 self._write_json({"error": "not found"}, status=404)
                 return
             try:
@@ -59,6 +61,14 @@ def build_server(*, role: Role, host: str, port: int, token: str | None = None) 
             self.wfile.write(body)
 
     return ThreadingHTTPServer((host, port), Handler)
+
+
+def _normalize_path(path: str) -> str:
+    if path.startswith("/mcp/"):
+        return path[4:]
+    if path == "/mcp":
+        return "/"
+    return path
 
 
 def run_server(*, role: Role, host: str, port: int, token: str | None = None) -> None:

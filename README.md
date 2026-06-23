@@ -4,9 +4,9 @@ This repository will implement a two-agent Cop-and-Thief game in which our Cop a
 
 ## Current status
 
-Phase 7 is complete. The repository now contains the polished Phase 1 foundation, Phase 2 immutable domain model, Phase 3 authoritative game rules, Phase 4 engine-only series control, Phase 5 heuristic agents, Phase 6 observations/protocol, and Phase 7 independent Cop/Thief local decision servers.
+Phase 8 is complete. The repository now contains the polished Phase 1 foundation, Phase 2 immutable domain model, Phase 3 authoritative game rules, Phase 4 engine-only series control, Phase 5 heuristic agents, Phase 6 observations/protocol, Phase 7 independent Cop/Thief local decision servers, and Phase 8 local MCP orchestration.
 
-The next authorized implementation phase is Phase 8: local MCP orchestrator and required run.
+The next authorized implementation phase is Phase 9: terminal visualization and operational logging.
 
 ## Required baseline
 
@@ -59,6 +59,7 @@ An opponent mock may be used only in explicit test mode. Real opponent data will
 - [Phase 5 heuristic agents evidence](docs/PHASE_5_HEURISTIC_AGENTS.md)
 - [Phase 6 observation/protocol evidence](docs/PHASE_6_OBSERVATION_PROTOCOL.md)
 - [Phase 7 MCP server evidence](docs/PHASE_7_MCP_SERVERS.md)
+- [Phase 8 local MCP orchestrator evidence](docs/PHASE_8_LOCAL_MCP_ORCHESTRATOR.md)
 
 ## Phase 1 validation commands
 
@@ -165,6 +166,23 @@ Expected:
 - optional bearer-token authentication is supported;
 - stopping one local server does not stop the other; and
 - 82 total unit tests pass.
+
+## Phase 8 local MCP validation
+
+Phase 8 adds the local server-bound run:
+
+- python main.py --mode internal --config config.json --local-mcp
+
+Expected:
+
+- configured Cop and Thief URLs are preflighted;
+- decisions go through the local server boundary;
+- Thief acts before Cop;
+- responses are validated and applied once;
+- technical failures create replacement attempts;
+- six valid games complete;
+- report JSON is generated locally and ignored by Git; and
+- 90 total unit tests pass.
 
 ## Git workflow
 

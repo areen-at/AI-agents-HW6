@@ -351,42 +351,42 @@
 
 ### Tasks
 
-- [ ] T0218 Create MCP client connection for owned Cop server.
-- [ ] T0219 Create MCP client connection for owned Thief server.
-- [ ] T0220 Read URLs from config and tokens from environment.
-- [ ] T0221 Run health, role, and version preflight.
-- [ ] T0222 Refuse start when either owned server is unavailable.
-- [ ] T0223 Keep authoritative game state local.
-- [ ] T0224 Send Thief observation and natural-language request first.
-- [ ] T0225 Validate and apply Thief response through engine.
-- [ ] T0226 Check terminal state before contacting Cop.
-- [ ] T0227 Send Cop observation and natural-language request.
-- [ ] T0228 Validate and apply Cop response through engine.
-- [ ] T0229 Repeat until terminal.
-- [ ] T0230 Never let orchestrator choose strategic fallback move.
-- [ ] T0231 Generate one idempotency key per decision.
-- [ ] T0232 Reuse idempotency key only for safe retry.
-- [ ] T0233 Apply each response at most once.
-- [ ] T0234 Record and reject duplicate responses.
-- [ ] T0235 Turn exhausted MCP failures into invalid attempts.
-- [ ] T0236 Schedule replacement attempts until six valid games.
-- [ ] T0237 Add python main.py --mode internal --config config.json or equivalent.
-- [ ] T0238 Render terminal board during the run.
-- [ ] T0239 Print each game result and aggregate totals.
-- [ ] T0240 Generate required internal report.
-- [ ] T0241 Test missing Cop and Thief servers.
-- [ ] T0242 Test timeout, malformed response, duplicate response, and version mismatch.
-- [ ] T0243 Complete six valid games exclusively through MCP.
-- [ ] T0244 Replay the completed series offline.
-- [ ] T0245 Report phase files, commands, outputs, and tests then stop.
+- [x] T0218 Create MCP client connection for owned Cop server.
+- [x] T0219 Create MCP client connection for owned Thief server.
+- [x] T0220 Read URLs from config and tokens from environment.
+- [x] T0221 Run health, role, and version preflight.
+- [x] T0222 Refuse start when either owned server is unavailable.
+- [x] T0223 Keep authoritative game state local.
+- [x] T0224 Send Thief observation and natural-language request first.
+- [x] T0225 Validate and apply Thief response through engine.
+- [x] T0226 Check terminal state before contacting Cop.
+- [x] T0227 Send Cop observation and natural-language request.
+- [x] T0228 Validate and apply Cop response through engine.
+- [x] T0229 Repeat until terminal.
+- [x] T0230 Never let orchestrator choose strategic fallback move.
+- [x] T0231 Generate one idempotency key per decision.
+- [x] T0232 Reuse idempotency key only for safe retry.
+- [x] T0233 Apply each response at most once.
+- [x] T0234 Record and reject duplicate responses.
+- [x] T0235 Turn exhausted MCP failures into invalid attempts.
+- [x] T0236 Schedule replacement attempts until six valid games.
+- [x] T0237 Add python main.py --mode internal --config config.json or equivalent.
+- [x] T0238 Render terminal board during the run.
+- [x] T0239 Print each game result and aggregate totals.
+- [x] T0240 Generate required internal report.
+- [x] T0241 Test missing Cop and Thief servers.
+- [x] T0242 Test timeout, malformed response, duplicate response, and version mismatch.
+- [x] T0243 Complete six valid games exclusively through MCP.
+- [x] T0244 Replay the completed series offline.
+- [x] T0245 Report phase files, commands, outputs, and tests then stop.
 
 ### Phase gate
 
-- [ ] All tasks required for this phase have evidence.
-- [ ] Automated and manual verification results are recorded.
-- [ ] Changed files and unrelated preserved files are listed.
-- [ ] Run commands and expected output are documented.
-- [ ] Work stops here for review before the next phase.
+- [x] All tasks required for this phase have evidence.
+- [x] Automated and manual verification results are recorded.
+- [x] Changed files and unrelated preserved files are listed.
+- [x] Run commands and expected output are documented.
+- [x] Work stops here for review before the next phase.
 
 ## Phase 9 - Terminal visualization and operational logging
 

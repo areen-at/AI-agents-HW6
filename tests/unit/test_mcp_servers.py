@@ -155,6 +155,7 @@ class HttpDecisionServerTests(unittest.TestCase):
             cop_base = f"http://127.0.0.1:{cop_server.server_port}"
             thief_base = f"http://127.0.0.1:{thief_server.server_port}"
             self.assertEqual(_get_json(f"{cop_base}/identity")["role"], "cop")
+            self.assertEqual(_get_json(f"{cop_base}/mcp/identity")["role"], "cop")
             self.assertEqual(_get_json(f"{thief_base}/identity")["role"], "thief")
 
             cop_server.shutdown()
