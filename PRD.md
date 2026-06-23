@@ -7,7 +7,7 @@
 | Product | Dual AI Agent Cop-and-Thief Race via MCP Servers |
 | Assignment | Exercise 06 / Lesson L09 |
 | Source specification | `ex06-Dual AI agent race via MCP servers.pdf`, version 1.0, 2026-06-19 |
-| Product document status | Implementation-ready draft, subject to the open decisions in Section 19 |
+| Product document status | Phase 0 baseline approved; deferred deployment choices are tracked in Section 19 |
 | Primary audience | Student development team, reviewers, course assessor, and operators |
 | Default timezone | `Asia/Jerusalem` |
 
@@ -22,8 +22,8 @@ The product is not merely a board-game simulation. Its principal learning object
 3. natural-language decision requests and structured tool responses;
 4. local and remote execution;
 5. secure access to public MCP endpoints;
-6. visual observability and machine-readable logs;
-7. optional adaptive strategy, preferably a simple Q-table;
+6. terminal visual observability and machine-readable logs;
+7. simple heuristic policies first, with optional adaptive strategy later;
 8. automated JSON reporting through Gmail API; and
 9. a scientifically grounded Dec-POMDP description.
 
@@ -36,7 +36,7 @@ The product is not merely a board-game simulation. Its principal learning object
 - Host the Cop and Thief as two independent MCP servers with distinct URLs.
 - Make each action decision through the MCP/agent decision path rather than a hard-coded game policy in the orchestrator.
 - support local development and secure remote deployment.
-- Display the live game and results in a graphical user interface.
+- Display the live game and results in a readable terminal interface.
 - Persist enough structured evidence to replay and audit every valid game.
 - Email the exact required JSON report through Gmail API.
 - Publish an appropriately documented GitHub repository.
@@ -54,15 +54,17 @@ The product is not merely a board-game simulation. Its principal learning object
 - Building a general-purpose tournament platform.
 - Implementing a large-scale or computationally expensive reinforcement-learning stack.
 - Giving either agent direct access to hidden authoritative state.
-- Allowing the GUI, email layer, or remote deployment mechanism to determine game outcomes.
+- Allowing the terminal UI, optional GUI, email layer, or remote deployment mechanism to determine game outcomes.
 - Replacing MCP communication with direct in-process policy calls in the final system.
+- Requiring a graphical desktop UI for baseline compliance.
+- Requiring an external LLM or Q-learning before the heuristic baseline works.
 
 ## 4. Stakeholders and users
 
 | Stakeholder | Need |
 |---|---|
 | Student development team | Clear interfaces, phased implementation, reproducible tests, and low-friction local operation |
-| Course assessor | Evidence that all game, MCP, deployment, GUI, reporting, and documentation requirements are satisfied |
+| Course assessor | Evidence that all game, MCP, deployment, terminal visualization, reporting, and documentation requirements are satisfied |
 | Game operator | A simple way to configure, launch, monitor, stop, resume, and report a six-game series |
 | Opposing group | Stable public MCP URLs, authentication instructions, compatible protocol contracts, and mutually verifiable results |
 | System maintainer | Structured logs, health checks, secret isolation, and deterministic replay artifacts |
@@ -101,14 +103,14 @@ The product is not merely a board-game simulation. Its principal learning object
 1. The operator prepares configuration and secrets.
 2. The operator starts the Cop MCP server and Thief MCP server.
 3. The orchestrator verifies server health, authentication, protocol compatibility, and role identity.
-4. The operator starts a series through CLI or GUI.
+4. The operator starts a series through the CLI; an optional future GUI may call the same application service.
 5. The engine initializes a seeded board, agent positions, and empty barrier set.
 6. For each move round, the orchestrator sends the current permitted observation to the Thief MCP server.
 7. The Thief returns a structured action derived from its decision process.
 8. The engine validates and applies the action, then checks the terminal condition.
 9. If play continues, the orchestrator sends the Cop's permitted observation to the Cop MCP server.
 10. The Cop returns either a movement action or a barrier-placement action.
-11. The engine validates and applies it, checks capture and move limits, updates the GUI, and writes an event record.
+11. The engine validates and applies it, checks capture and move limits, updates the terminal view, and writes an event record.
 12. At sub-game end, the engine computes role scores and records the outcome.
 13. Technical failures are marked invalid and replayed with a new attempt identifier until six valid sub-games exist.
 14. At series end, the system builds and validates the required JSON report.
@@ -169,7 +171,8 @@ The product is not merely a board-game simulation. Its principal learning object
 - A maximum of five Cop-placed barriers is allowed per sub-game by default.
 - `max_barriers` must default to `5` and be configurable.
 - The engine must reject placement on either player's current cell, on an existing barrier, or outside the permitted placement range.
-- The authoritative placement range must be resolved in Section 19 before the Phase 2 gate; the source specifies adjacent placement but does not fully define all edge cases.
+- A barrier target must be an orthogonally adjacent empty cell.
+- A placement must be rejected when it would leave either player with no legal movement action, avoiding an undefined no-move state.
 
 #### FR-GAME-008: Terminal precedence
 
@@ -217,7 +220,7 @@ The product is not merely a board-game simulation. Its principal learning object
 
 - The visibility rule must be configurable and described in the README's Dec-POMDP formulation.
 - The assignment does not prescribe a precise observation radius or sensor model; this is an explicit pre-implementation decision in Section 19.
-- Tests must prove that hidden fields cannot leak through prompts, tool outputs, errors, or GUI-to-agent coupling.
+- Tests must prove that hidden fields cannot leak through prompts, tool outputs, errors, or UI-to-agent coupling.
 
 #### FR-OBS-003: Formal model
 
@@ -285,23 +288,23 @@ The exact MCP primitives may be tools, resources, and/or prompts, but contracts 
 
 ### 8.5 Language model integration
 
-#### FR-LLM-001: Supported deployment approaches
+#### FR-LLM-001: Optional model deployment approaches
 
-The design must support at least one complete approach and document the alternatives:
+The required baseline uses simple deterministic or seeded heuristic policies behind the same MCP decision contract. If a model-backed policy is added later, the design may support one of these approaches:
 
 1. **External API:** an LLM provider API called by or through the MCP agent service.
 2. **Exposed local Ollama:** a local Ollama service securely published through ngrok, Localtonet, Nginx, or an equivalent gateway.
 3. **Hybrid, recommended:** Ollama remains local to the orchestrator/client host, while only the MCP servers are remotely exposed; communication uses outbound calls.
 
-#### FR-LLM-002: Provider abstraction
+#### FR-LLM-002: Policy and optional provider abstraction
 
-- Agent policy code must depend on an internal provider interface rather than one vendor SDK.
-- Model, endpoint, timeout, temperature, and credentials must be configurable.
+- Agent decision code must depend on a policy interface rather than one vendor SDK.
+- Any optional model, endpoint, timeout, temperature, and credentials must be configurable.
 - A deterministic test provider must exist for automated tests.
 
 #### FR-LLM-003: Safety and validation
 
-- Model output is untrusted input.
+- Policy/model output is untrusted input.
 - Invalid schema, illegal actions, prompt injection content, or excessive output must be rejected.
 - A bounded repair request may be attempted before declaring technical failure.
 - Secrets and hidden state must not appear in prompts.
@@ -325,11 +328,11 @@ The design must support at least one complete approach and document the alternat
 - Policy persistence must be versioned and role-specific.
 - Learning artifacts must not leak hidden observations between agents.
 
-### 8.7 GUI and CLI
+### 8.7 Terminal visualization and CLI
 
-#### FR-UI-001: GUI
+#### FR-UI-001: Terminal visualization
 
-The graphical interface must display in near real time:
+The terminal interface must display during play:
 
 - the grid;
 - Cop and Thief positions;
@@ -342,7 +345,9 @@ The graphical interface must display in near real time:
 - MCP connection/health state; and
 - technical failure/retry state.
 
-The GUI is an observer/controller shell and must not mutate authoritative game state directly.
+The terminal renderer is read-only and must not mutate authoritative game state directly.
+
+A graphical GUI is optional after all baseline requirements pass. If implemented, it must consume the same application events and must not duplicate game rules.
 
 #### FR-UI-002: Operator controls
 
@@ -357,7 +362,7 @@ The GUI is an observer/controller shell and must not mutate authoritative game s
 
 - All core functions must remain accessible headlessly.
 - CI and remote execution must not require a graphical display.
-- CLI and GUI must use the same application services and engine.
+- CLI and any optional GUI must use the same application services and engine.
 
 ### 8.8 Configuration
 
@@ -382,7 +387,7 @@ The GUI is an observer/controller shell and must not mutate authoritative game s
 | `scoring.thief_loss` | `5` |
 | `timezone` | `Asia/Jerusalem` |
 
-Configuration must additionally cover seeds, observation policy, MCP endpoints, timeouts, retry limits, authentication mode, model provider, GUI refresh, logging, reporting recipient, and learning parameters.
+Configuration must additionally cover seeds, observation policy, MCP endpoints, timeouts, retry limits, authentication mode, optional model provider, terminal refresh, logging, reporting recipient, and optional learning parameters.
 
 #### FR-CONFIG-003: Secret management
 
@@ -394,7 +399,7 @@ Configuration must additionally cover seeds, observation policy, MCP endpoints, 
 
 #### FR-DEPLOY-001: Local stage
 
-- Both MCP servers, orchestrator, engine, and GUI must run locally first.
+- Both MCP servers, orchestrator, engine, and terminal interface must run locally first.
 - Local health and complete six-game execution must pass before remote deployment.
 - Local development may use separate localhost ports.
 
@@ -541,7 +546,7 @@ The README must include:
 - natural-language decision protocol;
 - Q-learning design if implemented;
 - configuration reference;
-- GUI/CLI usage;
+- terminal/CLI usage and optional GUI usage if implemented;
 - local and remote deployment;
 - authentication and secret handling;
 - technical-failure semantics;
@@ -589,7 +594,7 @@ The README must include:
 
 ### 10.3 Performance
 
-- GUI state updates should appear within 250 ms after an action is committed locally.
+- Terminal state updates should appear promptly after an action is committed locally.
 - Orchestrator overhead excluding model latency should remain below 500 ms per action under normal local conditions.
 - Timeout values must accommodate remote model/MCP latency and remain configurable.
 
@@ -598,7 +603,7 @@ The README must include:
 - TLS for all public traffic.
 - Token authentication for public MCP endpoints.
 - Least-privilege Gmail scopes.
-- No secret values in Git, GUI, reports, prompts, or logs.
+- No secret values in Git, terminal UI, optional GUI, reports, prompts, or logs.
 - Dependency and configuration checks before deployment.
 
 ### 10.5 Maintainability
@@ -606,7 +611,7 @@ The README must include:
 - Separate domain, application, infrastructure, UI, and reporting layers.
 - Typed schemas at every external boundary.
 - Role-neutral shared code where behavior is identical; role-specific policy code where necessary.
-- No game-rule duplication in GUI or agents.
+- No game-rule duplication in UI or agents.
 
 ### 10.6 Portability
 
@@ -623,7 +628,7 @@ The README must include:
 ## 11. Proposed logical architecture
 
 ```text
-GUI / CLI
+Terminal UI / CLI
     |
 Application Orchestrator (MCP client, series controller)
     |                         |
@@ -641,8 +646,8 @@ Application Orchestrator (MCP client, series controller)
 - Engine contains rules and scoring only.
 - Orchestrator contains workflow and resilience only.
 - MCP servers contain decision policy only.
-- LLM provider adapters contain vendor/network details only.
-- GUI renders application state and sends operator commands only.
+- Optional LLM provider adapters contain vendor/network details only.
+- Terminal UI renders application state and sends operator commands only.
 - Gmail adapter sends an already validated report only.
 
 ## 12. Core data contracts
@@ -719,7 +724,7 @@ The final fields depend on the approved observation policy.
 | 1 | `2 x 2` | Basic algorithm, pipeline, transition, and observation correctness | All exhaustive state/action tests pass |
 | 2 | `3 x 2` / `3 x 3` | Synchronization, turn order, and simple strategy behavior | No illegal or duplicate transitions |
 | 3 | `4 x 3` / `4 x 4` | Partial observation, exploration, and initial Q-learning behavior | Deterministic replay and convergence smoke checks pass |
-| 4 | `5 x 5` | Final test run, GUI, report, and full six-game series | Release acceptance passes |
+| 4 | `5 x 5` | Final test run, terminal visualization, report, and full six-game series | Release acceptance passes |
 
 ### 13.2 Required automated test categories
 
@@ -730,7 +735,7 @@ The final fields depend on the approved observation policy.
 - Timeout, retry, duplicate-request, and idempotency tests.
 - Local two-server integration tests.
 - Remote endpoint authentication and availability tests.
-- GUI smoke tests against application state.
+- Terminal rendering tests against application state.
 - Deterministic replay tests.
 - JSON schema and canonical serialization tests.
 - Gmail adapter tests with a fake transport, followed by one authorized live smoke test.
@@ -746,7 +751,7 @@ The baseline release is accepted only when:
 4. the two agents use separate MCP servers and separate URLs;
 5. agent decisions traverse the natural-language MCP decision path;
 6. public endpoints are authenticated and reachable;
-7. the GUI accurately mirrors authoritative state;
+7. the terminal visualization accurately mirrors authoritative state;
 8. replay reproduces all final states and scores;
 9. the internal JSON report validates and contains no prose;
 10. Gmail API delivery succeeds to the required recipient;
@@ -779,7 +784,7 @@ Track at minimum:
 | Engine invariant failure | Two active turns | Abort attempt, preserve evidence, fail release test |
 | Reporting failure | Gmail API unavailable | Preserve validated report and retry idempotently; do not rerun games |
 
-The final treatment for repeated but syntactically valid illegal agent actions is an open decision; it must not be silently converted into a legal move.
+One correction request is allowed for a repeated but syntactically valid illegal agent action; a second failure invalidates the attempt as a technical failure and must never be silently converted into a legal move.
 
 ## 16. Requirement priority
 
@@ -791,7 +796,7 @@ The final treatment for repeated but syntactically valid illegal agent actions i
 - Natural-language decision flow and strict structured actions.
 - Local and remote execution.
 - Authentication and secure secret handling.
-- GUI and headless CLI.
+- Terminal visualization and headless CLI.
 - Config file and no hard-coded assignment parameters.
 - JSON audit/reporting and Gmail API delivery.
 - GitHub repository and scientific README.
@@ -799,7 +804,8 @@ The final treatment for repeated but syntactically valid illegal agent actions i
 
 ### Should
 
-- Q-table learning.
+- Optional Q-table learning after baseline completion.
+- Optional graphical GUI after baseline completion.
 - Deterministic replay with integrity hashes.
 - Automated remote deployment and endpoint probes.
 - Pause/resume and crash-safe checkpoints.
@@ -822,7 +828,7 @@ The final treatment for repeated but syntactically valid illegal agent actions i
 | Natural-language communication | Section 8.4.3 | Captured MCP decision trace |
 | LLM access alternatives | Section 8.5 | Deployment documentation |
 | Q-learning recommendation | Section 8.6 | Optional policy tests/artifact |
-| GUI and real-time view | Section 8.7 | GUI acceptance recording/test |
+| Terminal visualization | Section 8.7 | Terminal rendering acceptance test |
 | Remote cloud publication | Section 8.9 | HTTPS endpoint probes |
 | Authentication | Sections 8.9 and 10.4 | Unauthorized/authorized tests |
 | JSON reports | Section 8.11 | Schema validation |
@@ -844,23 +850,23 @@ The final treatment for repeated but syntactically valid illegal agent actions i
 | Gmail OAuth expires or is misconfigured | Submission failure | Preflight, least-privilege token refresh, fake adapter tests, preserved payload |
 | Assignment ambiguity causes incompatible behavior | Assessment risk | Resolve Section 19 before implementation gates and document final decisions |
 | Q-learning expands scope | Schedule risk | Keep optional and behind a policy interface |
-| GUI diverges from engine | Misleading evidence | Read-only event-driven projection and state-hash checks |
+| Visualization diverges from engine | Misleading evidence | Read-only event-driven projection and state-hash checks |
 
-## 19. Open decisions requiring explicit resolution
+## 19. Phase 0 decision register
 
-These items are not fully defined by the source assignment and must be decided before their indicated phase gate:
+The detailed rationale and exact baseline contracts are recorded in `docs/PHASE_0_BASELINE.md`.
 
-| ID | Decision | Required by | Recommended resolution |
+| ID | Decision | Status | Phase 0 resolution |
 |---|---|---|---|
-| OD-01 | Exact partial-observation sensor model | Phase 2 | Configurable Manhattan radius with explicit opponent/barrier visibility; never full-state by default |
-| OD-02 | Barrier placement range and whether placement can trap all legal moves | Phase 2 | Adjacent orthogonal empty cell; reject placements that violate an agreed reachability invariant |
-| OD-03 | Initial Cop/Thief collision behavior | Phase 2 | Require distinct seeded positions |
-| OD-04 | Treatment of repeated legal-schema but illegal game actions | Phase 3 | One repair request, then technical failure rather than silently choosing an action |
-| OD-05 | Exact `sub_games` JSON object schema | Phase 5 | Adopt the auditable schema described in FR-REPORT-003 and validate with JSON Schema |
-| OD-06 | Aggregate-score example inconsistency | Phase 2 | Treat the per-game score matrix as normative; calculate totals from events |
-| OD-07 | Final cloud/tunnel provider | Phase 6 | Select based on available account, TLS, stable URLs, and token support |
-| OD-08 | LLM provider for final demo | Phase 3 | Hybrid local Ollama where practical; external provider adapter as fallback |
+| OD-01 | Exact partial-observation sensor model | Closed | Configurable Manhattan radius, default `2`; explicit opponent/barrier visibility; never full-state by default |
+| OD-02 | Barrier placement and no-move state | Closed | Adjacent orthogonal empty cell; reject placement leaving either player without a legal movement action |
+| OD-03 | Initial Cop/Thief collision behavior | Closed | Require distinct seeded positions |
+| OD-04 | Repeated schema-valid but illegal action | Closed | One correction request, then technical failure; never invent a fallback action |
+| OD-05 | Exact internal `sub_games` object | Closed | Use the auditable schema in the Phase 0 baseline and validate it with JSON Schema |
+| OD-06 | Aggregate-score example inconsistency | Closed | Treat the per-game score matrix as normative and calculate totals from valid terminal events |
+| OD-07 | Final cloud/tunnel provider | Deferred, non-blocking | Select in deployment preparation based on available account, HTTPS, stable URLs, and token support |
+| OD-08 | Baseline decision provider | Closed | Use simple heuristic Cop/Thief policies; model-backed policies and Q-learning are optional after baseline completion |
 
 ## 20. Definition of done
 
-The product is done when the release acceptance criteria in Section 13.3 pass, all Must requirements have linked evidence, all open decisions are closed and reflected in configuration/documentation, the report has been delivered successfully, and the repository contains no secrets or unresolved critical defects.
+The product is done when the release acceptance criteria in Section 13.3 pass, all Must requirements have linked evidence, all blocking decisions are reflected in configuration/documentation, deferred deployment choices are closed before their phase, the report has been delivered successfully, and the repository contains no secrets or unresolved critical defects.

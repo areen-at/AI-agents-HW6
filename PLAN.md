@@ -2,7 +2,9 @@
 
 ## 1. Planning approach
 
-This plan converts `PRD.md` into gated increments. Each phase must leave the repository in a testable state. Later phases may not compensate for a failed earlier correctness gate; in particular, remote deployment, GUI work, and Q-learning must not begin before the authoritative game engine and MCP contracts are stable.
+This plan converts `PRD.md` into gated increments. Each phase must leave the repository in a testable state. Later phases may not compensate for a failed earlier correctness gate; in particular, remote deployment, optional GUI work, and Q-learning must not begin before the authoritative game engine and MCP contracts are stable.
+
+`todo.md` is the authoritative execution checklist and divides these strategic phases into finer-grained implementation phases. Phase 0 has the same meaning in both documents: inspection and decision closure only, with no implementation code.
 
 ### 1.1 Delivery principles
 
@@ -55,68 +57,62 @@ The exact package names may change, but the boundaries must remain.
 
 | Phase | Outcome | Mandatory gate |
 |---:|---|---|
-| 0 | Decisions, schemas, and project skeleton | Requirements and ambiguity review approved |
+| 0 | Repository inspection and decision closure | Requirements, scope, and ambiguity review approved |
 | 1 | Deterministic 2x2 engine | Exhaustive rule tests pass |
 | 2 | Full configurable 5x5 game and replay | Game/scoring invariants pass through progressive grids |
 | 3 | Agent policy and natural-language decision contracts | Deterministic provider and malformed-output tests pass |
 | 4 | Two local MCP servers and orchestrator | Six valid local games complete through MCP |
-| 5 | GUI, observability, report builder, and Gmail adapter | Replay, GUI, JSON, and fake-email tests pass |
+| 5 | Terminal visualization, observability, report builder, and Gmail adapter | Replay, terminal, JSON, and fake-email tests pass |
 | 6 | Secure remote deployment | Two authenticated public URLs pass external probes |
 | 7 | Full release rehearsal and submission | End-to-end acceptance and secret scan pass |
 | 8 | Optional Q-learning hardening | Strategy improves without breaking contracts |
 | 9 | Optional inter-group bonus | Joint six-game report is mutually validated |
 
-## 3. Phase 0 - Requirements closure and foundation
+## 3. Phase 0 - Repository inspection and decision closure
 
 ### Objective
 
-Turn the assignment and PRD into frozen contracts before implementation.
+Inspect the repository and turn the assignment, clarification, PRD, and plan into an approved baseline before implementation.
 
 ### Tasks
 
-1. Review `PRD.md` with the team.
-2. Resolve open decisions `OD-01` through `OD-08` or assign owners and deadlines.
-3. Decide the baseline Python version and dependency manager; Python 3.10+ with `uv` is recommended.
-4. Define package/module boundaries.
-5. Create `pyproject.toml` with lint, type-check, and test tooling.
-6. Create the example configuration and its validation schema.
-7. Define typed schemas for:
-   - game configuration;
-   - authoritative state;
-   - role observation;
-   - action request/response;
-   - MCP health/capabilities;
-   - event log;
-   - terminal result;
-   - internal report; and
-   - bonus report.
-8. Define error codes and technical-failure taxonomy.
-9. Establish logging and artifact directory conventions.
-10. Add `.gitignore`, `.env.example`, and a secret-handling policy.
-11. Configure CI for formatting, linting, type checking, and tests.
-12. Create a requirements-to-test traceability file or section in the README.
+1. Inventory existing files, Git state, remote history, and missing components.
+2. Read `PRD.md`, `PLAN.md`, `todo.md`, the assignment, and the bonus clarification.
+3. Fix required-versus-bonus scope and confirm only this group's two servers are production-owned.
+4. Resolve blocking decisions `OD-01` through `OD-06` and `OD-08`.
+5. Record `OD-07` as a non-blocking deployment choice with selection criteria and a deadline before deployment preparation.
+6. Define package/module boundaries without creating implementation packages.
+7. Define the internal `sub_games` contract at the documentation level.
+8. Define invalid-action, technical-failure, and retry semantics.
+9. Establish logging, artifact, report, and secret-handling conventions.
+10. Add and verify `.gitignore` protections.
+11. Reconcile the PRD and plan with the later clarification.
+12. Create a Phase 0 baseline evidence document and update the README landing page.
 
 ### Deliverables
 
-- Approved PRD and closed decision log.
-- Project skeleton.
-- Configuration and JSON schemas.
-- CI workflow.
-- Empty but runnable CLI entry point.
+- Approved PRD and decision register.
+- Repository inventory and missing-component list.
+- Phase 0 baseline evidence document.
+- Proposed package and test structure.
+- Secret-safe `.gitignore`.
+- README with scope, status, and document links.
 
 ### Verification
 
-- Configuration defaults match PRD Section 8.8.
-- Bad configuration fails fast.
-- Schema fixtures include valid and invalid examples.
-- CI runs without external secrets or network access.
-- Secret scan reports no findings.
+- Markdown structure and links are valid.
+- All Phase 0 checklist items have evidence.
+- Git history builds on the existing remote commit.
+- Ignore rules cover secrets, environments, caches, private reports, and assignment PDFs.
+- Secret and staged-file scans report no findings.
+- No implementation source, runtime configuration, schema code, or dependency setup is introduced.
 
 ### Exit gate
 
-- No unresolved rule ambiguity blocks the game engine.
-- Interfaces have named owners and version `1.0` drafts.
-- The team can explain which component owns every state transition.
+- No unresolved rule ambiguity blocks Phase 1.
+- Deferred deployment choice `OD-07` has explicit selection criteria.
+- The team can explain component ownership and the external-only bonus boundary.
+- Phase 0 is committed and pushed under the mandatory Git workflow.
 
 ## 4. Phase 1 - Deterministic game engine on 2x2
 
@@ -161,7 +157,7 @@ Prove the game model and transition rules in the smallest exhaustively testable 
 
 ### Deliverables
 
-- Pure game-domain package with no MCP, model, GUI, or Gmail dependency.
+- Pure game-domain package with no MCP, policy, UI, or Gmail dependency.
 - Unit/property test suite.
 - Minimal text simulation using scripted actions.
 
@@ -239,7 +235,7 @@ Scale the verified engine to the assignment game while preserving determinism an
 
 ### Objective
 
-Create a provider-independent decision layer that turns role observations into schema-valid action proposals.
+Create a policy-independent decision layer that turns role observations into schema-valid action proposals, using simple heuristics for the baseline.
 
 ### Tasks
 
@@ -260,16 +256,16 @@ Create a provider-independent decision layer that turns role observations into s
 4. Implement strict output parsing and schema validation.
 5. Implement one bounded repair round for malformed or illegal proposals.
 6. Implement the approved repeated-illegal-action policy from `OD-04`.
-7. Add an LLM provider abstraction.
-8. Implement the selected baseline provider.
-9. Add a local Ollama adapter or external provider adapter according to `OD-08`.
+7. Implement the simple heuristic Cop and Thief policies selected by `OD-08`.
+8. Adapt both heuristics to the natural-language request and structured response contract.
+9. Keep an optional provider interface extension point without requiring an LLM implementation.
 10. Add prompt/output redaction and size limits.
-11. Record latency, provider, model, validation, and repair metadata.
+11. Record latency, policy, validation, and repair metadata.
 
 ### Security checks
 
 - Prompt contains no secret or full authoritative state.
-- Model output cannot invoke arbitrary code.
+- Policy output cannot invoke arbitrary code.
 - Only schema-approved actions can reach the engine.
 - Provider errors do not reveal credentials.
 
@@ -278,7 +274,8 @@ Create a provider-independent decision layer that turns role observations into s
 - Policy abstraction and deterministic providers.
 - Natural-language prompt templates.
 - Validated action parser.
-- At least one real model provider adapter.
+- Simple Cop and Thief heuristic policy adapters.
+- Optional documented extension point for a later model-backed policy.
 
 ### Verification
 
@@ -345,21 +342,21 @@ Run both agents through separate local MCP servers and prove the distributed con
 - Fault-injected attempts are excluded and replaced.
 - Offline replay verifies the final series.
 
-## 8. Phase 5 - GUI, observability, reports, and Gmail
+## 8. Phase 5 - Terminal visualization, observability, reports, and Gmail
 
 ### Objective
 
 Make the system operable, auditable, and capable of producing the exact required submission report.
 
-### 8.1 GUI tasks
+### 8.1 Terminal visualization tasks
 
-1. Select a lightweight GUI framework compatible with headless core execution.
+1. Implement a lightweight terminal renderer compatible with headless core execution.
 2. Implement a read-only board projection driven by committed events.
 3. Render distinct Cop, Thief, barrier, visible/hidden information, and status elements.
 4. Display move counter, active role, game count, scores, endpoint health, and failure state.
-5. Add start, safe pause/resume, stop, and report-preview controls.
-6. Ensure controls call application services rather than the engine directly.
-7. Add accessibility labels and non-color indicators.
+5. Add clear start, progress, stop/error, and report-path status messages.
+6. Ensure CLI commands call application services rather than the engine directly.
+7. Use textual symbols and non-color indicators.
 
 ### 8.2 Observability tasks
 
@@ -371,7 +368,7 @@ Make the system operable, auditable, and capable of producing the exact required
 
 ### 8.3 Report tasks
 
-1. Finalize the `sub_games` schema under `OD-05`.
+1. Implement and validate the approved `sub_games` schema from `OD-05`.
 2. Implement internal report construction from immutable records.
 3. Implement bonus report construction separately.
 4. Calculate totals; never trust caller-provided totals.
@@ -394,14 +391,14 @@ Make the system operable, auditable, and capable of producing the exact required
 
 ### Deliverables
 
-- GUI and headless CLI parity.
+- Readable terminal visualization and headless CLI mode.
 - Structured logs and replay evidence.
 - Valid internal and bonus report builders.
 - Gmail API adapter and operator procedure.
 
 ### Exit gate
 
-- GUI projection always matches the engine event stream.
+- Terminal projection always matches the engine event stream.
 - Internal JSON validates and contains no free text.
 - Fake Gmail tests pass and live OAuth preflight succeeds.
 - Reporting failure can retry without rerunning games or sending duplicates.
@@ -424,10 +421,11 @@ Publish the two MCP servers at separate secure, externally reachable endpoints.
 8. Verify logs redact authorization headers.
 9. Add remote health probes.
 10. Document firewall, proxy, Nginx, ngrok/Localtonet, or Prefect settings used.
-11. Verify the selected LLM network path:
-    - external provider API; or
-    - securely tunneled local Ollama; or
-    - hybrid outbound architecture.
+11. Verify the selected policy network path:
+    - no model network dependency for the heuristic baseline; or
+    - external provider API for an optional model policy; or
+    - securely tunneled local Ollama for an optional model policy; or
+    - hybrid outbound architecture for an optional model policy.
 12. Run external authorized and unauthorized client probes.
 13. Run a remote six-valid-game series.
 14. Preserve endpoint availability instructions for assessment and bonus use.
@@ -486,7 +484,7 @@ Execute the exact final workflow and produce a complete, auditable submission.
 - Replay verification summary.
 - Canonical JSON report.
 - Gmail message ID.
-- Screenshots or recording of the GUI and remote endpoint status, if requested.
+- Terminal capture or optional GUI recording plus remote endpoint status, if requested.
 
 ### Release gate
 
@@ -575,7 +573,7 @@ Run a fair, mutually verifiable six-game series against another group's MCP agen
 | Policy | Prompt golden, parser, invalid output | Yes | No |
 | MCP contracts | Schema, role, version, idempotency | Yes | No/local |
 | Local integration | Two servers plus orchestrator | Yes where practical | No |
-| GUI | Projection and smoke tests | Yes/headless | No |
+| Terminal UI | Projection and rendering tests | Yes/headless | No |
 | Replay | State-hash equivalence | Yes | No |
 | Reports | JSON Schema and canonical serialization | Yes | No |
 | Gmail | Fake adapter | Yes | No |
@@ -604,7 +602,7 @@ Requirements and decisions
     -> observations and replay
     -> policy/model abstraction
     -> local MCP servers
-    -> GUI/reporting/Gmail
+    -> terminal UI/reporting/Gmail
     -> secure remote deployment
     -> release submission
     -> optional Q-learning and bonus competition
@@ -620,7 +618,7 @@ Before Phase 2, resolve observation, barrier, and scoring interpretations.
 
 ### Checkpoint B - Distributed correctness
 
-Before GUI work dominates the schedule, prove six local games through two MCP servers.
+Before optional GUI work is considered, prove six local games through two MCP servers and the terminal UI.
 
 ### Checkpoint C - Credentials
 
@@ -645,7 +643,7 @@ Use one issue per independently verifiable outcome. Suggested epics:
 5. `EPIC-MCP-COP` - Cop server.
 6. `EPIC-MCP-THIEF` - Thief server.
 7. `EPIC-CLIENT` - MCP client and coordinator.
-8. `EPIC-GUI` - live visualization and operator controls.
+8. `EPIC-UI` - terminal visualization and CLI status output.
 9. `EPIC-REPORT` - JSON schemas, Gmail API, and delivery receipt.
 10. `EPIC-DEPLOY` - HTTPS, authentication, public URLs, and monitoring.
 11. `EPIC-DOCS` - README, operational guide, and evidence mapping.
@@ -683,7 +681,7 @@ Each issue should identify its PRD requirement IDs, tests, configuration changes
 
 ### Product surface
 
-- [ ] GUI accurately displays the live state.
+- [ ] Terminal visualization accurately displays the live state.
 - [ ] Headless CLI works.
 - [ ] Configuration contains no hard-coded deployment secrets.
 

@@ -8,7 +8,7 @@
 - Optional mode: external-team bonus series
 - Repository target: `https://github.com/areen-at/AI-agents-HW6`
 - Default branch: `main`
-- Decision status: approved baseline for Phase 1 implementation
+- Decision status: polished and approved baseline for Phase 1 implementation
 
 ## 1. Repository inventory
 
@@ -17,11 +17,12 @@
 | Path | Purpose | Phase 0 treatment |
 |---|---|---|
 | `.gitignore` | Secret, generated-file, report, PDF, and workspace exclusions | Extended and verified |
-| `README.md` | Existing GitHub repository landing page | Preserved unchanged |
-| `PRD.md` | Detailed product requirements | Read and preserved |
-| `PLAN.md` | Phased delivery plan and Git workflow | Read and preserved except prior approved workflow additions |
+| `README.md` | GitHub repository landing page | Polished with scope, status, decisions, links, and Git workflow |
+| `PRD.md` | Detailed product requirements | Reconciled with Phase 0 decisions and the heuristic/terminal baseline |
+| `PLAN.md` | Phased delivery plan and Git workflow | Aligned so Phase 0 is inspection/decision closure only |
 | `todo.md` | Executable task checklist | Phase 0 items marked complete |
 | `docs/PHASE_0_BASELINE.md` | Phase 0 evidence and resolved decisions | Created |
+| `docs/PHASE_0_VERIFICATION.md` | Repeatable Phase 0 closure evidence | Created during polish audit |
 
 ### Local-only paths
 
@@ -275,7 +276,7 @@ Boundary rules:
 
 ## 9. Files protected from Phase 0 modification
 
-- Existing `README.md` content is preserved for a later documentation phase.
+- Existing README title was preserved and expanded into a Phase 0 project landing page; full operational instructions remain a later-phase deliverable.
 - No source code exists to modify.
 - No assignment PDF was copied or committed.
 - No report JSON was generated or committed.
@@ -334,7 +335,8 @@ Expected:
 - No implementation code was created.
 - `.gitignore` protects the required secret and generated-file categories.
 - Phase-specific tests are documentation, Git, ignore, and secret checks only.
+- PRD, plan, checklist, baseline evidence, and README now agree on required scope, bonus boundaries, heuristic-first policy, terminal visualization, and automatic ordinary pushes.
 
 ## 12. Next phase
 
-Phase 1 may establish Python tooling, the directory skeleton, validated configuration, and secret-safe examples. No Phase 1 implementation begins until Phase 0 is committed and the required push workflow is completed or the user elects to keep the commit local.
+Phase 1 may establish Python tooling, the directory skeleton, validated configuration, and secret-safe examples. No Phase 1 implementation begins until the polished Phase 0 is committed and automatically pushed under the required Git workflow.
