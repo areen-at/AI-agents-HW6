@@ -190,42 +190,42 @@
 
 ### Tasks
 
-- [ ] T0109 Create series controller independent of MCP.
-- [ ] T0110 Create unique series ID and six valid game slots.
-- [ ] T0111 Create a new attempt ID for every attempt.
-- [ ] T0112 Keep attempt count separate from valid-game count.
-- [ ] T0113 Stop after exactly six valid sub-games.
-- [ ] T0114 Prevent a seventh valid sub-game.
-- [ ] T0115 Define failures that invalidate an attempt.
-- [ ] T0116 Exclude invalid attempts from counts and scores.
-- [ ] T0117 Preserve invalid-attempt evidence.
-- [ ] T0118 Retry invalid attempts within configured safety limit.
-- [ ] T0119 Never convert infrastructure failure into strategic loss.
-- [ ] T0120 Aggregate Cop and Thief scores from terminal records.
-- [ ] T0121 Define versioned append-only event schema.
-- [ ] T0122 Log IDs, timestamps, seed, role, action, validation, state hash, result, and score.
-- [ ] T0123 Redact secrets from events.
-- [ ] T0124 Implement atomic event persistence.
-- [ ] T0125 Implement offline replay from seed and accepted actions.
-- [ ] T0126 Make replay independent of MCP and models.
-- [ ] T0127 Verify every replay state hash and final score.
-- [ ] T0128 Define full internal sub_game report entry.
-- [ ] T0129 Populate group_name, students, github_repo, owned URLs, and timezone.
-- [ ] T0130 Calculate report totals rather than trusting callers.
-- [ ] T0131 Validate exactly six internal sub-games.
-- [ ] T0132 Serialize JSON without surrounding prose.
-- [ ] T0133 Write reports/internal_game_report.json atomically.
-- [ ] T0134 Add engine-only internal CLI test command.
-- [ ] T0135 Inject timeouts and malformed actions to test replacement attempts.
-- [ ] T0136 Report phase files, commands, outputs, and tests then stop.
+- [x] T0109 Create series controller independent of MCP.
+- [x] T0110 Create unique series ID and six valid game slots.
+- [x] T0111 Create a new attempt ID for every attempt.
+- [x] T0112 Keep attempt count separate from valid-game count.
+- [x] T0113 Stop after exactly six valid sub-games.
+- [x] T0114 Prevent a seventh valid sub-game.
+- [x] T0115 Define failures that invalidate an attempt.
+- [x] T0116 Exclude invalid attempts from counts and scores.
+- [x] T0117 Preserve invalid-attempt evidence.
+- [x] T0118 Retry invalid attempts within configured safety limit.
+- [x] T0119 Never convert infrastructure failure into strategic loss.
+- [x] T0120 Aggregate Cop and Thief scores from terminal records.
+- [x] T0121 Define versioned append-only event schema.
+- [x] T0122 Log IDs, timestamps, seed, role, action, validation, state hash, result, and score.
+- [x] T0123 Redact secrets from events.
+- [x] T0124 Implement atomic event persistence.
+- [x] T0125 Implement offline replay from seed and accepted actions.
+- [x] T0126 Make replay independent of MCP and models.
+- [x] T0127 Verify every replay state hash and final score.
+- [x] T0128 Define full internal sub_game report entry.
+- [x] T0129 Populate group_name, students, github_repo, owned URLs, and timezone.
+- [x] T0130 Calculate report totals rather than trusting callers.
+- [x] T0131 Validate exactly six internal sub-games.
+- [x] T0132 Serialize JSON without surrounding prose.
+- [x] T0133 Write reports/internal_game_report.json atomically.
+- [x] T0134 Add engine-only internal CLI test command.
+- [x] T0135 Inject timeouts and malformed actions to test replacement attempts.
+- [x] T0136 Report phase files, commands, outputs, and tests then stop.
 
 ### Phase gate
 
-- [ ] All tasks required for this phase have evidence.
-- [ ] Automated and manual verification results are recorded.
-- [ ] Changed files and unrelated preserved files are listed.
-- [ ] Run commands and expected output are documented.
-- [ ] Work stops here for review before the next phase.
+- [x] All tasks required for this phase have evidence.
+- [x] Automated and manual verification results are recorded.
+- [x] Changed files and unrelated preserved files are listed.
+- [x] Run commands and expected output are documented.
+- [x] Work stops here for review before the next phase.
 
 ## Phase 5 - Simple heuristic agents
 

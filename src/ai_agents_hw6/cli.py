@@ -20,4 +20,9 @@ def build_parser() -> argparse.ArgumentParser:
         default="config.json",
         help="Path to config.json.",
     )
+    parser.add_argument(
+        "--engine-only",
+        action="store_true",
+        help="Run a deterministic engine-only six-game series and write the internal report.",
+    )
     return parser

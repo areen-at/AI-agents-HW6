@@ -4,9 +4,9 @@ This repository will implement a two-agent Cop-and-Thief game in which our Cop a
 
 ## Current status
 
-Phase 3 is complete. The repository now contains the polished Phase 1 foundation, the Phase 2 immutable domain model, and Phase 3 authoritative rules for movement, turn order, capture, survival, Cop barriers, scoring, and deterministic replay.
+Phase 4 is complete. The repository now contains the polished Phase 1 foundation, the Phase 2 immutable domain model, Phase 3 authoritative game rules, and Phase 4 engine-only series control with events, replay verification, and an internal report skeleton.
 
-The next authorized implementation phase is Phase 4: series control, events, replay persistence, and the internal report skeleton.
+The next authorized implementation phase is Phase 5: simple heuristic agents.
 
 ## Required baseline
 
@@ -55,6 +55,7 @@ An opponent mock may be used only in explicit test mode. Real opponent data will
 - [Phase 1 foundation evidence](docs/PHASE_1_FOUNDATION.md)
 - [Phase 2 domain model evidence](docs/PHASE_2_DOMAIN_MODEL.md)
 - [Phase 3 game rules evidence](docs/PHASE_3_GAME_RULES.md)
+- [Phase 4 series/replay/report evidence](docs/PHASE_4_SERIES_REPLAY_REPORT.md)
 
 ## Phase 1 validation commands
 
@@ -102,6 +103,20 @@ Expected:
 - default scores are `20/5` for Cop capture and `5/10` for Thief survival; and
 - barriers are adjacent, Cop-only, bounded by the max count, impassable, and cannot trap either
   player.
+
+## Phase 4 engine-only validation
+
+Phase 4 adds an engine-only internal smoke command:
+
+- python main.py --mode internal --config config.json --engine-only
+
+Expected:
+
+- six valid sub-games complete;
+- technical failures are replaced in tests without becoming strategic losses;
+- event logs and internal reports are written atomically;
+- replay verification checks final state hashes; and
+- 49 total unit tests pass.
 
 ## Git workflow
 
