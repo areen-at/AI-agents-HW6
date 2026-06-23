@@ -4,9 +4,12 @@ This repository will implement a two-agent Cop-and-Thief game in which our Cop a
 
 ## Current status
 
-Phase 9 is complete. The repository now contains the polished Phase 1 foundation, Phase 2 immutable domain model, Phase 3 authoritative game rules, Phase 4 engine-only series control, Phase 5 heuristic agents, Phase 6 observations/protocol, Phase 7 independent Cop/Thief local decision servers, Phase 8 local MCP orchestration, and Phase 9 terminal visualization and operational logging.
+Phase 10 implementation is complete. The repository now includes the prior game, MCP, replay, and
+terminal phases plus a tested Gmail API delivery workflow for the canonical internal JSON report.
+Live activation remains intentionally blocked until real group/student metadata and private Google
+Desktop OAuth files are provided outside the repository.
 
-The next authorized implementation phase is Phase 10: Gmail and normal-report delivery.
+Do not start Phase 11 until the Phase 10 live OAuth/send checklist is completed.
 
 ## Required baseline
 
@@ -61,6 +64,7 @@ An opponent mock may be used only in explicit test mode. Real opponent data will
 - [Phase 7 MCP server evidence](docs/PHASE_7_MCP_SERVERS.md)
 - [Phase 8 local MCP orchestrator evidence](docs/PHASE_8_LOCAL_MCP_ORCHESTRATOR.md)
 - [Phase 9 terminal and logging evidence](docs/PHASE_9_TERMINAL_LOGGING.md)
+- [Phase 10 Gmail delivery evidence](docs/PHASE_10_GMAIL_DELIVERY.md)
 
 ## Phase 1 validation commands
 
@@ -211,6 +215,41 @@ Expected:
 - an ignored Phase 9 evidence manifest links config digest, commit, tests, logs, replay, and report;
   and
 - 98 total unit tests pass.
+
+## Phase 10 Gmail delivery
+
+Install the optional Gmail dependencies:
+
+- `python -m pip install -e ".[gmail]"`
+
+Keep Google OAuth files outside this repository and set:
+
+- `GOOGLE_CREDENTIALS_FILE`
+- `GOOGLE_TOKEN_FILE`
+- optionally `GMAIL_DELIVERY_RECEIPT_FILE`
+
+Then:
+
+- configure a Google Cloud Desktop OAuth client and add the sending account as a test user;
+- replace `MY_GROUP_NAME` and the empty student list in `config.json` with the real assignment data;
+- generate the final six-game internal report;
+- run `python main.py --mode internal --config config.json --gmail-authorize` once;
+- run `python main.py --mode internal --config config.json --gmail-preflight`;
+- inspect the report and then run `python main.py --mode internal --config config.json --send-report`.
+
+The send command uses only `https://www.googleapis.com/auth/gmail.send`, sends to
+`rmisegal+uoh26b@gmail.com`, and puts the canonical JSON object alone in the decoded message body.
+It writes an ignored receipt containing the payload hash, Gmail message ID, and timestamp. A retry
+with the same receipt does not send again.
+
+Expected:
+
+- fake Gmail/MIME tests validate exact JSON-only content;
+- malformed reports, wrong totals, missing metadata, missing OAuth paths, and expired/revoked tokens
+  fail safely;
+- Gmail errors cannot change or rerun game results;
+- no OAuth credential or token file can be configured inside the repository; and
+- 108 tests pass.
 
 ## Git workflow
 

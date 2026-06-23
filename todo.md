@@ -433,40 +433,40 @@
 ### Tasks
 
 - [ ] T0273 Finalize real group metadata in safe configuration.
-- [ ] T0274 Validate exactly six internal sub-games and calculated totals.
-- [ ] T0275 Confirm report path reports/internal_game_report.json.
+- [x] T0274 Validate exactly six internal sub-games and calculated totals.
+- [x] T0275 Confirm report path reports/internal_game_report.json.
 - [ ] T0276 Enable Gmail API in the intended Google Cloud project.
 - [ ] T0277 Configure consent screen, audience, and test user.
 - [ ] T0278 Create Desktop OAuth client.
-- [ ] T0279 Store credentials.json outside tracked source.
-- [ ] T0280 Configure credential and token paths through environment.
-- [ ] T0281 Use least-privilege Gmail sending scope.
+- [x] T0279 Store credentials.json outside tracked source.
+- [x] T0280 Configure credential and token paths through environment.
+- [x] T0281 Use least-privilege Gmail sending scope.
 - [ ] T0282 Complete interactive authorization once.
-- [ ] T0283 Store token.json outside tracked source.
-- [ ] T0284 Implement token refresh and revocation handling.
-- [ ] T0285 Build Gmail MIME message from canonical JSON.
-- [ ] T0286 Set final recipient rmisegal+uoh26b@gmail.com.
-- [ ] T0287 Put JSON only in message body.
-- [ ] T0288 Add no greeting, signature, Markdown fence, or prose.
-- [ ] T0289 Validate JSON immediately before sending.
-- [ ] T0290 Preserve canonical payload before sending.
-- [ ] T0291 Capture Gmail message ID and timestamp.
-- [ ] T0292 Make send retry idempotent where possible.
-- [ ] T0293 Keep send failure separate from game result.
-- [ ] T0294 Unit-test Gmail adapter with fake client.
-- [ ] T0295 Test missing credentials and expired token.
-- [ ] T0296 Perform a permitted smoke test.
-- [ ] T0297 Inspect received body for exact JSON-only content.
-- [ ] T0298 Document final send procedure.
-- [ ] T0299 Report phase files, commands, outputs, and tests then stop.
+- [x] T0283 Store token.json outside tracked source.
+- [x] T0284 Implement token refresh and revocation handling.
+- [x] T0285 Build Gmail MIME message from canonical JSON.
+- [x] T0286 Set final recipient rmisegal+uoh26b@gmail.com.
+- [x] T0287 Put JSON only in message body.
+- [x] T0288 Add no greeting, signature, Markdown fence, or prose.
+- [x] T0289 Validate JSON immediately before sending.
+- [x] T0290 Preserve canonical payload before sending.
+- [x] T0291 Capture Gmail message ID and timestamp.
+- [x] T0292 Make send retry idempotent where possible.
+- [x] T0293 Keep send failure separate from game result.
+- [x] T0294 Unit-test Gmail adapter with fake client.
+- [x] T0295 Test missing credentials and expired token.
+- [x] T0296 Perform a permitted fake-transport smoke test.
+- [x] T0297 Inspect decoded fake-client body for exact JSON-only content.
+- [x] T0298 Document final send procedure.
+- [x] T0299 Report phase files, commands, outputs, and tests then stop.
 
 ### Phase gate
 
 - [ ] All tasks required for this phase have evidence.
-- [ ] Automated and manual verification results are recorded.
-- [ ] Changed files and unrelated preserved files are listed.
-- [ ] Run commands and expected output are documented.
-- [ ] Work stops here for review before the next phase.
+- [x] Automated and manual verification results are recorded.
+- [x] Changed files and unrelated preserved files are listed.
+- [x] Run commands and expected output are documented.
+- [x] Work stops here for review before the next phase.
 
 ## Phase 11 - Deployment of our two MCP servers
 

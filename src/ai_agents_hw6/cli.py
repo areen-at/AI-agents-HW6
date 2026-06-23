@@ -51,4 +51,19 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="PATH",
         help="Render committed state snapshots from a previously written event log, without MCP calls.",
     )
+    parser.add_argument(
+        "--gmail-preflight",
+        action="store_true",
+        help="Validate the existing internal report and Gmail OAuth readiness without sending.",
+    )
+    parser.add_argument(
+        "--gmail-authorize",
+        action="store_true",
+        help="Run the interactive Desktop OAuth flow and store the token at GOOGLE_TOKEN_FILE.",
+    )
+    parser.add_argument(
+        "--send-report",
+        action="store_true",
+        help="Send the existing internal JSON report through Gmail after strict validation.",
+    )
     return parser

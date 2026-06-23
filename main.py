@@ -16,6 +16,15 @@ from ai_agents_hw6.application import (
 )
 from ai_agents_hw6.reporting import build_internal_report, write_internal_report
 from ai_agents_hw6.ui import TerminalObserver, render_series_summary, replay_events
+from ai_agents_hw6.infrastructure import (
+    GmailDeliveryError,
+    GmailPaths,
+    build_google_transport,
+    deliver_report,
+    gmail_preflight,
+    load_canonical_report,
+    validate_production_metadata,
+)
 
 
 def main() -> int:
@@ -36,6 +45,52 @@ def main() -> int:
         )
         print(f"Replay complete: rendered_snapshots={rendered}")
         return 0
+
+    gmail_commands = sum(
+        bool(value) for value in (args.gmail_preflight, args.gmail_authorize, args.send_report)
+    )
+    if gmail_commands > 1:
+        parser.exit(
+            status=2,
+            message="Choose only one of --gmail-preflight, --gmail-authorize, or --send-report\n",
+        )
+    if gmail_commands:
+        try:
+            if args.gmail_preflight:
+                preflight = gmail_preflight(
+                    config,
+                    report_path=config.reports.internal_game_report,
+                )
+                print("Gmail preflight passed.")
+                print(f"Recipient: {preflight['recipient']}")
+                print(f"Scope: {preflight['scope']}")
+                print(f"Payload SHA-256: {preflight['payload_sha256']}")
+                return 0
+            if args.gmail_authorize:
+                paths = GmailPaths.from_environment()
+                build_google_transport(paths, interactive=True)
+                print(f"Gmail authorization completed. Token: {paths.token_file}")
+                return 0
+            report, canonical_payload = load_canonical_report(
+                config.reports.internal_game_report
+            )
+            validate_production_metadata(config, report)
+            paths = GmailPaths.from_environment()
+            transport = build_google_transport(paths, interactive=False)
+            receipt = deliver_report(
+                canonical_payload=canonical_payload,
+                transport=transport,
+                receipt_path=paths.receipt_file,
+            )
+            status = "already sent; existing receipt reused" if receipt.already_sent else "sent"
+            print(f"Gmail report {status}.")
+            print(f"Recipient: {receipt.recipient}")
+            print(f"Message ID: {receipt.message_id}")
+            print(f"Sent at: {receipt.sent_at}")
+            print(f"Receipt: {paths.receipt_file}")
+            return 0
+        except GmailDeliveryError as exc:
+            parser.exit(status=2, message=f"Gmail delivery error: {exc}\n")
 
     print(f"Config validation passed for mode {args.mode}.")
     print(f"Group: {config.group.name}")
