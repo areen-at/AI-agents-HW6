@@ -4,9 +4,9 @@ This repository will implement a two-agent Cop-and-Thief game in which our Cop a
 
 ## Current status
 
-Phase 6 is complete. The repository now contains the polished Phase 1 foundation, Phase 2 immutable domain model, Phase 3 authoritative game rules, Phase 4 engine-only series control, Phase 5 heuristic agents, and Phase 6 role observations plus the natural-language JSON action protocol.
+Phase 7 is complete. The repository now contains the polished Phase 1 foundation, Phase 2 immutable domain model, Phase 3 authoritative game rules, Phase 4 engine-only series control, Phase 5 heuristic agents, Phase 6 observations/protocol, and Phase 7 independent Cop/Thief local decision servers.
 
-The next authorized implementation phase is Phase 7: independent Cop and Thief MCP servers.
+The next authorized implementation phase is Phase 8: local MCP orchestrator and required run.
 
 ## Required baseline
 
@@ -58,6 +58,7 @@ An opponent mock may be used only in explicit test mode. Real opponent data will
 - [Phase 4 series/replay/report evidence](docs/PHASE_4_SERIES_REPLAY_REPORT.md)
 - [Phase 5 heuristic agents evidence](docs/PHASE_5_HEURISTIC_AGENTS.md)
 - [Phase 6 observation/protocol evidence](docs/PHASE_6_OBSERVATION_PROTOCOL.md)
+- [Phase 7 MCP server evidence](docs/PHASE_7_MCP_SERVERS.md)
 
 ## Phase 1 validation commands
 
@@ -149,6 +150,21 @@ Expected:
 - strict parser rejects malformed, oversized, mismatched, unknown, and illegal actions;
 - one repair is allowed before technical-failure classification; and
 - 73 total unit tests pass.
+
+## Phase 7 server validation
+
+Phase 7 adds local role server entry points:
+
+- python -m ai_agents_hw6.mcp_servers.http_server --role cop --host 127.0.0.1 --port 8001
+- python -m ai_agents_hw6.mcp_servers.http_server --role thief --host 127.0.0.1 --port 8002
+
+Expected:
+
+- Cop and Thief expose separate health, identity, capabilities, and decision operations;
+- each server rejects role/protocol/request mismatches;
+- optional bearer-token authentication is supported;
+- stopping one local server does not stop the other; and
+- 82 total unit tests pass.
 
 ## Git workflow
 

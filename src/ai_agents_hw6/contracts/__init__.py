@@ -8,7 +8,12 @@ from ai_agents_hw6.contracts.actions import (
     parse_action_response,
     should_request_repair,
 )
-from ai_agents_hw6.contracts.observation import Observation, build_observation
+from ai_agents_hw6.contracts.actions import parse_action_payload
+from ai_agents_hw6.contracts.observation import (
+    Observation,
+    build_observation,
+    observation_from_public_json,
+)
 from ai_agents_hw6.contracts.prompt import render_decision_prompt
 
 __all__ = [
@@ -19,6 +24,8 @@ __all__ = [
     "build_observation",
     "classify_unrecoverable_error",
     "parse_action_response",
+    "parse_action_payload",
+    "observation_from_public_json",
     "render_decision_prompt",
     "should_request_repair",
 ]

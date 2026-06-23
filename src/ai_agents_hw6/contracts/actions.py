@@ -90,6 +90,10 @@ def classify_unrecoverable_error(error_count: int) -> str:
     return "technical_failure" if error_count >= 2 else "repair_allowed"
 
 
+def parse_action_payload(payload: dict[str, Any], role: Role) -> GameAction:
+    return _parse_action(payload, role)
+
+
 def _parse_action(payload: dict[str, Any], role: Role) -> GameAction:
     action_type = payload.get("type")
     if action_type == "move":

@@ -311,41 +311,41 @@
 
 ### Tasks
 
-- [ ] T0191 Confirm FastMCP version and minimal dependency set.
-- [ ] T0192 Define shared MCP protocol version 1.0.
-- [ ] T0193 Create dedicated Cop server entry point.
-- [ ] T0194 Create dedicated Thief server entry point.
-- [ ] T0195 Run each server in its own process and port.
-- [ ] T0196 Give Cop server fixed Cop identity.
-- [ ] T0197 Give Thief server fixed Thief identity.
-- [ ] T0198 Expose health operation on each server.
-- [ ] T0199 Expose capabilities and protocol-version operations.
-- [ ] T0200 Expose natural-language decision operation on each server.
-- [ ] T0201 Accept only validated role-specific observations.
-- [ ] T0202 Invoke only the matching role policy.
-- [ ] T0203 Return one schema-valid action.
-- [ ] T0204 Reject role mismatch requests.
-- [ ] T0205 Add request and correlation IDs.
-- [ ] T0206 Add bounded request timeout handling.
-- [ ] T0207 Add token-authentication integration point.
-- [ ] T0208 Prevent shared mutable policy state.
-- [ ] T0209 Verify stopping one server does not stop the other.
-- [ ] T0210 Test both health and identity responses.
-- [ ] T0211 Test valid Cop and Thief requests.
-- [ ] T0212 Test malformed observations.
-- [ ] T0213 Test missing and duplicate request IDs.
-- [ ] T0214 Test protocol mismatch.
-- [ ] T0215 Test unauthorized requests when auth is enabled.
-- [ ] T0216 Verify MCP servers cannot mutate game state.
-- [ ] T0217 Report phase files, commands, outputs, and tests then stop.
+- [x] T0191 Confirm FastMCP version and minimal dependency set.
+- [x] T0192 Define shared MCP protocol version 1.0.
+- [x] T0193 Create dedicated Cop server entry point.
+- [x] T0194 Create dedicated Thief server entry point.
+- [x] T0195 Run each server in its own process and port.
+- [x] T0196 Give Cop server fixed Cop identity.
+- [x] T0197 Give Thief server fixed Thief identity.
+- [x] T0198 Expose health operation on each server.
+- [x] T0199 Expose capabilities and protocol-version operations.
+- [x] T0200 Expose natural-language decision operation on each server.
+- [x] T0201 Accept only validated role-specific observations.
+- [x] T0202 Invoke only the matching role policy.
+- [x] T0203 Return one schema-valid action.
+- [x] T0204 Reject role mismatch requests.
+- [x] T0205 Add request and correlation IDs.
+- [x] T0206 Add bounded request timeout handling.
+- [x] T0207 Add token-authentication integration point.
+- [x] T0208 Prevent shared mutable policy state.
+- [x] T0209 Verify stopping one server does not stop the other.
+- [x] T0210 Test both health and identity responses.
+- [x] T0211 Test valid Cop and Thief requests.
+- [x] T0212 Test malformed observations.
+- [x] T0213 Test missing and duplicate request IDs.
+- [x] T0214 Test protocol mismatch.
+- [x] T0215 Test unauthorized requests when auth is enabled.
+- [x] T0216 Verify MCP servers cannot mutate game state.
+- [x] T0217 Report phase files, commands, outputs, and tests then stop.
 
 ### Phase gate
 
-- [ ] All tasks required for this phase have evidence.
-- [ ] Automated and manual verification results are recorded.
-- [ ] Changed files and unrelated preserved files are listed.
-- [ ] Run commands and expected output are documented.
-- [ ] Work stops here for review before the next phase.
+- [x] All tasks required for this phase have evidence.
+- [x] Automated and manual verification results are recorded.
+- [x] Changed files and unrelated preserved files are listed.
+- [x] Run commands and expected output are documented.
+- [x] Work stops here for review before the next phase.
 
 ## Phase 8 - Local MCP orchestrator and required run
 
