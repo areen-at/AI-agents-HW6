@@ -149,42 +149,42 @@
 
 ### Tasks
 
-- [ ] T0081 Generate legal Cop moves.
-- [ ] T0082 Generate legal Thief moves.
-- [ ] T0083 Reject out-of-bounds moves.
-- [ ] T0084 Reject diagonal and unsupported stay moves.
-- [ ] T0085 Reject moves onto barriers.
-- [ ] T0086 Guarantee invalid actions do not mutate state.
-- [ ] T0087 Enforce Thief-first turn order.
-- [ ] T0088 Prevent repeated or out-of-turn actions.
-- [ ] T0089 Switch to Cop after valid non-terminal Thief action.
-- [ ] T0090 Switch to Thief after valid non-terminal Cop action.
-- [ ] T0091 Detect capture only on exact cell equality.
-- [ ] T0092 Stop all actions immediately after capture.
-- [ ] T0093 Declare Thief win at configured move limit.
-- [ ] T0094 Implement approved round-counter semantics.
-- [ ] T0095 Apply capture precedence on final round.
-- [ ] T0096 Permit barrier placement only by Cop.
-- [ ] T0097 Make barrier placement consume Cop turn.
-- [ ] T0098 Reject barrier on a player, existing barrier, or invalid cell.
-- [ ] T0099 Enforce five-barrier default maximum.
-- [ ] T0100 Make barriers impassable to both roles.
-- [ ] T0101 Implement score lookup from configuration.
-- [ ] T0102 Award 20/5 on Cop capture by default.
-- [ ] T0103 Award 5/10 on Thief survival by default.
-- [ ] T0104 Ignore any score supplied by an agent.
-- [ ] T0105 Exhaustively test 2x2 behavior where practical.
-- [ ] T0106 Run sanity suites on 3x2, 3x3, 4x3, 4x4, and 5x5.
-- [ ] T0107 Test terminal-state immutability and deterministic transitions.
-- [ ] T0108 Report phase files, commands, outputs, and tests then stop.
+- [x] T0081 Generate legal Cop moves.
+- [x] T0082 Generate legal Thief moves.
+- [x] T0083 Reject out-of-bounds moves.
+- [x] T0084 Reject diagonal and unsupported stay moves.
+- [x] T0085 Reject moves onto barriers.
+- [x] T0086 Guarantee invalid actions do not mutate state.
+- [x] T0087 Enforce Thief-first turn order.
+- [x] T0088 Prevent repeated or out-of-turn actions.
+- [x] T0089 Switch to Cop after valid non-terminal Thief action.
+- [x] T0090 Switch to Thief after valid non-terminal Cop action.
+- [x] T0091 Detect capture only on exact cell equality.
+- [x] T0092 Stop all actions immediately after capture.
+- [x] T0093 Declare Thief win at configured move limit.
+- [x] T0094 Implement approved round-counter semantics.
+- [x] T0095 Apply capture precedence on final round.
+- [x] T0096 Permit barrier placement only by Cop.
+- [x] T0097 Make barrier placement consume Cop turn.
+- [x] T0098 Reject barrier on a player, existing barrier, or invalid cell.
+- [x] T0099 Enforce five-barrier default maximum.
+- [x] T0100 Make barriers impassable to both roles.
+- [x] T0101 Implement score lookup from configuration.
+- [x] T0102 Award 20/5 on Cop capture by default.
+- [x] T0103 Award 5/10 on Thief survival by default.
+- [x] T0104 Ignore any score supplied by an agent.
+- [x] T0105 Exhaustively test 2x2 behavior where practical.
+- [x] T0106 Run sanity suites on 3x2, 3x3, 4x3, 4x4, and 5x5.
+- [x] T0107 Test terminal-state immutability and deterministic transitions.
+- [x] T0108 Report phase files, commands, outputs, and tests then stop.
 
 ### Phase gate
 
-- [ ] All tasks required for this phase have evidence.
-- [ ] Automated and manual verification results are recorded.
-- [ ] Changed files and unrelated preserved files are listed.
-- [ ] Run commands and expected output are documented.
-- [ ] Work stops here for review before the next phase.
+- [x] All tasks required for this phase have evidence.
+- [x] Automated and manual verification results are recorded.
+- [x] Changed files and unrelated preserved files are listed.
+- [x] Run commands and expected output are documented.
+- [x] Work stops here for review before the next phase.
 
 ## Phase 4 - Series control, events, replay, and internal report
 

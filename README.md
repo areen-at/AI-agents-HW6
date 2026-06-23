@@ -4,9 +4,9 @@ This repository will implement a two-agent Cop-and-Thief game in which our Cop a
 
 ## Current status
 
-Phase 2 is complete. The repository now contains the polished Phase 1 foundation plus a pure domain model with immutable coordinates, grid sizes, identifiers, authoritative state snapshots, seeded initialization, and invariant tests.
+Phase 3 is complete. The repository now contains the polished Phase 1 foundation, the Phase 2 immutable domain model, and Phase 3 authoritative rules for movement, turn order, capture, survival, Cop barriers, scoring, and deterministic replay.
 
-The next authorized implementation phase is Phase 3: game rules, scoring, and small-board checks.
+The next authorized implementation phase is Phase 4: series control, events, replay persistence, and the internal report skeleton.
 
 ## Required baseline
 
@@ -54,6 +54,7 @@ An opponent mock may be used only in explicit test mode. Real opponent data will
 - [Phase 0 closure verification](docs/PHASE_0_VERIFICATION.md)
 - [Phase 1 foundation evidence](docs/PHASE_1_FOUNDATION.md)
 - [Phase 2 domain model evidence](docs/PHASE_2_DOMAIN_MODEL.md)
+- [Phase 3 game rules evidence](docs/PHASE_3_GAME_RULES.md)
 
 ## Phase 1 validation commands
 
@@ -86,6 +87,21 @@ Expected:
 - initialized games start with distinct positions, empty barriers, and Thief active;
 - invalid state construction is rejected; and
 - the domain package imports no MCP, UI, Gmail, provider, reporting, or infrastructure modules.
+
+## Phase 3 rules validation
+
+The Phase 3 unit suite adds coverage for legal actions, invalid-action rejection, turn switching,
+capture, survival, Cop barriers, scoring, deterministic replay, `2 x 2` exhaustive sanity, and
+progressive grid sanity.
+
+Expected:
+
+- 42 total unit tests pass;
+- invalid actions raise `DomainError` without mutating the original immutable state;
+- capture and survival terminal outcomes use the documented precedence;
+- default scores are `20/5` for Cop capture and `5/10` for Thief survival; and
+- barriers are adjacent, Cop-only, bounded by the max count, impassable, and cannot trap either
+  player.
 
 ## Git workflow
 
