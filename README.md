@@ -4,9 +4,9 @@ This repository will implement a two-agent Cop-and-Thief game in which our Cop a
 
 ## Current status
 
-Phase 1 is complete and polished. The repository now contains requirements, decisions, implementation planning aligned to `todo.md`, Git safety rules, Phase 0 evidence, Python project metadata, a package skeleton, a safe example configuration, and a stdlib configuration loader/validator with tests.
+Phase 2 is complete. The repository now contains the polished Phase 1 foundation plus a pure domain model with immutable coordinates, grid sizes, identifiers, authoritative state snapshots, seeded initialization, and invariant tests.
 
-The next authorized implementation phase is Phase 2: core domain model.
+The next authorized implementation phase is Phase 3: game rules, scoring, and small-board checks.
 
 ## Required baseline
 
@@ -53,6 +53,7 @@ An opponent mock may be used only in explicit test mode. Real opponent data will
 - [Phase 0 baseline and decision evidence](docs/PHASE_0_BASELINE.md)
 - [Phase 0 closure verification](docs/PHASE_0_VERIFICATION.md)
 - [Phase 1 foundation evidence](docs/PHASE_1_FOUNDATION.md)
+- [Phase 2 domain model evidence](docs/PHASE_2_DOMAIN_MODEL.md)
 
 ## Phase 1 validation commands
 
@@ -72,6 +73,19 @@ Expected:
 - bonus mode rejects placeholder opponent data until a real class team is configured;
 - all unit tests pass, including malformed JSON, URL, logging-level, and blank-student validation;
 - bytecode compilation succeeds.
+
+## Phase 2 domain validation
+
+The Phase 2 unit suite adds coverage for immutable domain objects, seeded initialization, state
+invariants, and domain-layer dependency boundaries.
+
+Expected:
+
+- 23 total unit tests pass;
+- same-seed initialization is reproducible;
+- initialized games start with distinct positions, empty barriers, and Thief active;
+- invalid state construction is rejected; and
+- the domain package imports no MCP, UI, Gmail, provider, reporting, or infrastructure modules.
 
 ## Git workflow
 

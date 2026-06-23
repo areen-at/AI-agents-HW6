@@ -110,40 +110,40 @@
 
 ### Tasks
 
-- [ ] T0055 Define Role COP and THIEF.
-- [ ] T0056 Define orthogonal Direction values.
-- [ ] T0057 Define MOVE and PLACE_BARRIER action types.
-- [ ] T0058 Define terminal outcomes and reason codes.
-- [ ] T0059 Define technical-failure reason codes.
-- [ ] T0060 Create immutable Coordinate value object.
-- [ ] T0061 Create immutable GridSize value object.
-- [ ] T0062 Implement coordinate serialization.
-- [ ] T0063 Implement direction-to-delta conversion.
-- [ ] T0064 Implement bounded orthogonal neighbor generation.
-- [ ] T0065 Define immutable authoritative GameState.
-- [ ] T0066 Include grid, positions, barriers, active role, counter, terminal metadata, and seed.
-- [ ] T0067 Prevent mutable collection leakage from GameState.
-- [ ] T0068 Create unique series, sub-game, attempt, and request identifiers.
-- [ ] T0069 Implement seeded initial placement.
-- [ ] T0070 Place both agents inside board bounds.
-- [ ] T0071 Guarantee distinct initial positions.
-- [ ] T0072 Start with empty barriers and Thief active.
-- [ ] T0073 Validate player positions never overlap barriers.
-- [ ] T0074 Validate barriers are unique and in bounds.
-- [ ] T0075 Validate move and barrier counts are non-negative.
-- [ ] T0076 Validate terminal state invariants.
-- [ ] T0077 Test corners, edges, and interior coordinates.
-- [ ] T0078 Test same-seed initialization reproducibility.
-- [ ] T0079 Ensure domain layer imports no MCP, UI, Gmail, or provider code.
-- [ ] T0080 Report phase files, commands, outputs, and tests then stop.
+- [x] T0055 Define Role COP and THIEF.
+- [x] T0056 Define orthogonal Direction values.
+- [x] T0057 Define MOVE and PLACE_BARRIER action types.
+- [x] T0058 Define terminal outcomes and reason codes.
+- [x] T0059 Define technical-failure reason codes.
+- [x] T0060 Create immutable Coordinate value object.
+- [x] T0061 Create immutable GridSize value object.
+- [x] T0062 Implement coordinate serialization.
+- [x] T0063 Implement direction-to-delta conversion.
+- [x] T0064 Implement bounded orthogonal neighbor generation.
+- [x] T0065 Define immutable authoritative GameState.
+- [x] T0066 Include grid, positions, barriers, active role, counter, terminal metadata, and seed.
+- [x] T0067 Prevent mutable collection leakage from GameState.
+- [x] T0068 Create unique series, sub-game, attempt, and request identifiers.
+- [x] T0069 Implement seeded initial placement.
+- [x] T0070 Place both agents inside board bounds.
+- [x] T0071 Guarantee distinct initial positions.
+- [x] T0072 Start with empty barriers and Thief active.
+- [x] T0073 Validate player positions never overlap barriers.
+- [x] T0074 Validate barriers are unique and in bounds.
+- [x] T0075 Validate move and barrier counts are non-negative.
+- [x] T0076 Validate terminal state invariants.
+- [x] T0077 Test corners, edges, and interior coordinates.
+- [x] T0078 Test same-seed initialization reproducibility.
+- [x] T0079 Ensure domain layer imports no MCP, UI, Gmail, or provider code.
+- [x] T0080 Report phase files, commands, outputs, and tests then stop.
 
 ### Phase gate
 
-- [ ] All tasks required for this phase have evidence.
-- [ ] Automated and manual verification results are recorded.
-- [ ] Changed files and unrelated preserved files are listed.
-- [ ] Run commands and expected output are documented.
-- [ ] Work stops here for review before the next phase.
+- [x] All tasks required for this phase have evidence.
+- [x] Automated and manual verification results are recorded.
+- [x] Changed files and unrelated preserved files are listed.
+- [x] Run commands and expected output are documented.
+- [x] Work stops here for review before the next phase.
 
 ## Phase 3 - Game rules, scoring, and small-board checks
 
