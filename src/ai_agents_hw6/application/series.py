@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable
+from typing import Any, Callable, Protocol
 
 from ai_agents_hw6.application.events import (
     EventLog,
@@ -34,6 +34,16 @@ from ai_agents_hw6.domain import (
 
 
 DecisionProvider = Callable[[GameState], GameAction]
+
+
+class SeriesObserver(Protocol):
+    """Read-only consumer of committed application events."""
+
+    def on_event(self, event: dict[str, Any], state: GameState) -> None: ...
+
+    def on_endpoint_status(self, role: Role, status: str, url: str) -> None: ...
+
+    def on_series_finished(self, result: "SeriesResult") -> None: ...
 
 
 class TechnicalFailure(RuntimeError):
@@ -108,6 +118,7 @@ def run_series(
     settings: SeriesSettings,
     scoring: ScoreMatrix,
     decision_provider: DecisionProvider,
+    observer: SeriesObserver | None = None,
 ) -> SeriesResult:
     if settings.num_games != 6:
         raise ValueError("Phase 4 production series requires exactly six valid games")
@@ -134,7 +145,9 @@ def run_series(
                 attempt_id=attempt_id,
             )
             accepted_actions: list[tuple[Role, GameAction]] = []
-            event_log.append(
+            _append_event(
+                event_log=event_log,
+                observer=observer,
                 event_type="attempt_started",
                 state=state,
                 valid_game_index=valid_game_index,
@@ -147,6 +160,7 @@ def run_series(
                     role = state.active_role
                     before = state
                     action = decision_provider(state)
+                    request_id, correlation_id = _decision_metadata(decision_provider)
                     after = apply_action(
                         state,
                         role=role,
@@ -155,19 +169,22 @@ def run_series(
                         max_barriers=settings.max_barriers,
                     )
                     accepted_actions.append((role, action))
-                    event_log.append(
+                    _append_event(
+                        event_log=event_log,
+                        observer=observer,
                         event_type="action_applied",
                         state=after,
                         valid_game_index=valid_game_index,
                         attempt_number=attempt_number,
                         payload={
-                            "request_id": None,
-                            "correlation_id": None,
+                            "request_id": request_id,
+                            "correlation_id": correlation_id,
                             "role": role.value,
                             "action": action_to_json(action),
                             "validation": "accepted",
                             "before_state_hash": state_hash(before),
                             "after_state_hash": state_hash(after),
+                            "state": state_to_json(after),
                         },
                     )
                     state = after
@@ -182,7 +199,9 @@ def run_series(
                         event_log_path=settings.event_log_path,
                     )
                 )
-                event_log.append(
+                _append_event(
+                    event_log=event_log,
+                    observer=observer,
                     event_type="attempt_invalid",
                     state=state,
                     valid_game_index=valid_game_index,
@@ -201,7 +220,9 @@ def run_series(
                         event_log_path=settings.event_log_path,
                     )
                 )
-                event_log.append(
+                _append_event(
+                    event_log=event_log,
+                    observer=observer,
                     event_type="attempt_invalid",
                     state=state,
                     valid_game_index=valid_game_index,
@@ -229,7 +250,9 @@ def run_series(
             if state_hash(replayed) != state_hash(state):
                 raise RuntimeError("replay verification failed for valid sub-game")
 
-            event_log.append(
+            _append_event(
+                event_log=event_log,
+                observer=observer,
                 event_type="sub_game_finished",
                 state=state,
                 valid_game_index=valid_game_index,
@@ -240,6 +263,7 @@ def run_series(
                     "terminal_reason": state.terminal_reason.value if state.terminal_reason else None,
                     "move_count": state.move_round,
                     "score": score_to_json(score),
+                    "state": state_to_json(state),
                     "accepted_actions": [
                         role_action_to_json(role, action) for role, action in accepted_actions
                     ],
@@ -283,6 +307,8 @@ def run_series(
 
     if settings.event_log_path:
         atomic_write_json(settings.event_log_path, result.events)
+    if observer is not None:
+        observer.on_series_finished(result)
     return result
 
 
@@ -296,11 +322,24 @@ def first_legal_action_provider(state: GameState) -> GameAction:
     return actions[0]
 
 
-def write_engine_only_series(config: AppConfig) -> SeriesResult:
-    return write_engine_only_series_with_policy(config, policy_name="heuristic")
+def write_engine_only_series(
+    config: AppConfig,
+    *,
+    observer: SeriesObserver | None = None,
+) -> SeriesResult:
+    return write_engine_only_series_with_policy(
+        config,
+        policy_name="heuristic",
+        observer=observer,
+    )
 
 
-def write_engine_only_series_with_policy(config: AppConfig, *, policy_name: str) -> SeriesResult:
+def write_engine_only_series_with_policy(
+    config: AppConfig,
+    *,
+    policy_name: str,
+    observer: SeriesObserver | None = None,
+) -> SeriesResult:
     settings = SeriesSettings.from_config(config)
     scoring = ScoreMatrix.from_config(config.game.scoring)
     if policy_name == "first-legal":
@@ -313,6 +352,7 @@ def write_engine_only_series_with_policy(config: AppConfig, *, policy_name: str)
         settings=settings,
         scoring=scoring,
         decision_provider=decision_provider,
+        observer=observer,
     )
 
 
@@ -337,4 +377,39 @@ def _record_invalid_attempt(
         failure_reason=reason,
         failure_detail=detail,
         event_log_path=event_log_path,
+    )
+
+
+def _append_event(
+    *,
+    event_log: EventLog,
+    observer: SeriesObserver | None,
+    event_type: str,
+    state: GameState,
+    valid_game_index: int,
+    attempt_number: int,
+    payload: dict[str, Any],
+) -> None:
+    record = event_log.append(
+        event_type=event_type,
+        state=state,
+        valid_game_index=valid_game_index,
+        attempt_number=attempt_number,
+        payload=payload,
+    )
+    if observer is not None:
+        observer.on_event(record.to_json(), state)
+
+
+def _decision_metadata(
+    decision_provider: DecisionProvider,
+) -> tuple[str | None, str | None]:
+    owner = getattr(decision_provider, "__self__", None)
+    if owner is None:
+        return (None, None)
+    request_id = getattr(owner, "last_request_id", None)
+    correlation_id = getattr(owner, "last_correlation_id", None)
+    return (
+        request_id if isinstance(request_id, str) else None,
+        correlation_id if isinstance(correlation_id, str) else None,
     )

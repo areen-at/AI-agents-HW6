@@ -3,6 +3,7 @@
 
 from ai_agents_hw6.application.series import (
     SeriesResult,
+    SeriesObserver,
     SeriesSettings,
     TechnicalFailure,
     first_legal_action_provider,
@@ -18,9 +19,11 @@ from ai_agents_hw6.application.mcp_client import (
     preflight_clients,
     run_local_mcp_series,
 )
+from ai_agents_hw6.application.evidence import build_evidence_manifest, write_evidence_manifest
 
 __all__ = [
     "SeriesResult",
+    "SeriesObserver",
     "SeriesSettings",
     "TechnicalFailure",
     "first_legal_action_provider",
@@ -33,4 +36,6 @@ __all__ = [
     "RoleMcpClient",
     "preflight_clients",
     "run_local_mcp_series",
+    "build_evidence_manifest",
+    "write_evidence_manifest",
 ]

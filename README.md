@@ -4,9 +4,9 @@ This repository will implement a two-agent Cop-and-Thief game in which our Cop a
 
 ## Current status
 
-Phase 8 is complete. The repository now contains the polished Phase 1 foundation, Phase 2 immutable domain model, Phase 3 authoritative game rules, Phase 4 engine-only series control, Phase 5 heuristic agents, Phase 6 observations/protocol, Phase 7 independent Cop/Thief local decision servers, and Phase 8 local MCP orchestration.
+Phase 9 is complete. The repository now contains the polished Phase 1 foundation, Phase 2 immutable domain model, Phase 3 authoritative game rules, Phase 4 engine-only series control, Phase 5 heuristic agents, Phase 6 observations/protocol, Phase 7 independent Cop/Thief local decision servers, Phase 8 local MCP orchestration, and Phase 9 terminal visualization and operational logging.
 
-The next authorized implementation phase is Phase 9: terminal visualization and operational logging.
+The next authorized implementation phase is Phase 10: Gmail and normal-report delivery.
 
 ## Required baseline
 
@@ -60,6 +60,7 @@ An opponent mock may be used only in explicit test mode. Real opponent data will
 - [Phase 6 observation/protocol evidence](docs/PHASE_6_OBSERVATION_PROTOCOL.md)
 - [Phase 7 MCP server evidence](docs/PHASE_7_MCP_SERVERS.md)
 - [Phase 8 local MCP orchestrator evidence](docs/PHASE_8_LOCAL_MCP_ORCHESTRATOR.md)
+- [Phase 9 terminal and logging evidence](docs/PHASE_9_TERMINAL_LOGGING.md)
 
 ## Phase 1 validation commands
 
@@ -183,6 +184,33 @@ Expected:
 - six valid games complete;
 - report JSON is generated locally and ignored by Git; and
 - 90 total unit tests pass.
+
+## Phase 9 terminal and logging validation
+
+Phase 9 adds a live read-only terminal observer, redacted JSON-lines operational output, and offline
+replay from committed event snapshots:
+
+- `python main.py --mode internal --config config.json --engine-only`
+- `python main.py --mode internal --config config.json --engine-only --quiet`
+- `python main.py --mode internal --config config.json --engine-only --quiet --json-logs`
+- `python main.py --config config.json --replay-events artifacts/logs/engine_only_events.json`
+
+The terminal uses zero-based `[row,column]` coordinates, with row `0` at the top and column `0` at
+the left. Symbols never depend on color: `C` is Cop, `T` is Thief, `#` is a barrier, and `.` is an
+empty cell.
+
+Expected:
+
+- rectangular boards include row and column labels;
+- only committed immutable states are rendered;
+- identifiers, round, role, barriers, actions, validation, scores, outcomes, retries, and paths are
+  visible;
+- `--quiet` suppresses live boards for CI/headless runs;
+- `--json-logs` emits redacted machine-readable events according to `logging.level`;
+- replay performs no MCP or agent calls and agrees with the recorded event stream;
+- an ignored Phase 9 evidence manifest links config digest, commit, tests, logs, replay, and report;
+  and
+- 98 total unit tests pass.
 
 ## Git workflow
 

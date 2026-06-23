@@ -392,41 +392,41 @@
 
 ### Tasks
 
-- [ ] T0246 Render a rectangular grid for configured dimensions.
-- [ ] T0247 Render Cop as an unambiguous symbol.
-- [ ] T0248 Render Thief as an unambiguous symbol.
-- [ ] T0249 Render barriers and empty cells distinctly.
-- [ ] T0250 Add row and column labels where useful.
-- [ ] T0251 Document coordinate orientation.
-- [ ] T0252 Avoid color-only meaning and support no-color output.
-- [ ] T0253 Display series, sub-game, and attempt identifiers.
-- [ ] T0254 Display move-round count and active role.
-- [ ] T0255 Display placed and remaining Cop barriers.
-- [ ] T0256 Display selected action and validation status.
-- [ ] T0257 Display current score totals.
-- [ ] T0258 Display terminal result and reason.
-- [ ] T0259 Display technical failures and replacement attempts.
-- [ ] T0260 Display report output path at completion.
-- [ ] T0261 Render only committed authoritative state.
-- [ ] T0262 Keep renderer read-only.
-- [ ] T0263 Keep all rule logic out of renderer.
-- [ ] T0264 Never feed rendered board to agents.
-- [ ] T0265 Support quiet/headless mode for tests.
-- [ ] T0266 Emit structured JSON logs.
-- [ ] T0267 Emit concise human-readable logs.
-- [ ] T0268 Redact tokens, credentials, and authorization headers.
-- [ ] T0269 Add configurable log level.
-- [ ] T0270 Keep a fancy GUI deferred until baseline passes.
-- [ ] T0271 Verify humans can follow a complete 5x5 game.
-- [ ] T0272 Report phase files, commands, outputs, and tests then stop.
+- [x] T0246 Render a rectangular grid for configured dimensions.
+- [x] T0247 Render Cop as an unambiguous symbol.
+- [x] T0248 Render Thief as an unambiguous symbol.
+- [x] T0249 Render barriers and empty cells distinctly.
+- [x] T0250 Add row and column labels where useful.
+- [x] T0251 Document coordinate orientation.
+- [x] T0252 Avoid color-only meaning and support no-color output.
+- [x] T0253 Display series, sub-game, and attempt identifiers.
+- [x] T0254 Display move-round count and active role.
+- [x] T0255 Display placed and remaining Cop barriers.
+- [x] T0256 Display selected action and validation status.
+- [x] T0257 Display current score totals.
+- [x] T0258 Display terminal result and reason.
+- [x] T0259 Display technical failures and replacement attempts.
+- [x] T0260 Display report output path at completion.
+- [x] T0261 Render only committed authoritative state.
+- [x] T0262 Keep renderer read-only.
+- [x] T0263 Keep all rule logic out of renderer.
+- [x] T0264 Never feed rendered board to agents.
+- [x] T0265 Support quiet/headless mode for tests.
+- [x] T0266 Emit structured JSON logs.
+- [x] T0267 Emit concise human-readable logs.
+- [x] T0268 Redact tokens, credentials, and authorization headers.
+- [x] T0269 Add configurable log level.
+- [x] T0270 Keep a fancy GUI deferred until baseline passes.
+- [x] T0271 Verify humans can follow a complete 5x5 game.
+- [x] T0272 Report phase files, commands, outputs, and tests then stop.
 
 ### Phase gate
 
-- [ ] All tasks required for this phase have evidence.
-- [ ] Automated and manual verification results are recorded.
-- [ ] Changed files and unrelated preserved files are listed.
-- [ ] Run commands and expected output are documented.
-- [ ] Work stops here for review before the next phase.
+- [x] All tasks required for this phase have evidence.
+- [x] Automated and manual verification results are recorded.
+- [x] Changed files and unrelated preserved files are listed.
+- [x] Run commands and expected output are documented.
+- [x] Work stops here for review before the next phase.
 
 ## Phase 10 - Gmail and normal-report delivery
 

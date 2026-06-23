@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -15,6 +16,13 @@ from ai_agents_hw6.domain import (
     PlaceBarrierAction,
     Role,
     ScoreResult,
+    AttemptId,
+    Coordinate,
+    GridSize,
+    SeriesId,
+    SubGameId,
+    TerminalOutcome,
+    TerminalReason,
 )
 
 
@@ -127,6 +135,30 @@ def state_to_json(state: GameState) -> dict[str, Any]:
     }
 
 
+def state_from_json(value: dict[str, Any]) -> GameState:
+    """Rebuild a committed state snapshot for replay/display, never live mutation."""
+
+    return GameState(
+        series_id=SeriesId(value["series_id"]),
+        sub_game_id=SubGameId(value["sub_game_id"]),
+        attempt_id=AttemptId(value["attempt_id"]),
+        grid=GridSize.from_json(value["grid"]),
+        cop_position=Coordinate.from_json(value["cop_position"]),
+        thief_position=Coordinate.from_json(value["thief_position"]),
+        active_role=Role(value["active_role"]),
+        seed=value["seed"],
+        move_round=value["move_round"],
+        barriers=(Coordinate.from_json(item) for item in value["barriers"]),
+        barriers_placed=value["barriers_placed"],
+        terminal_outcome=(
+            TerminalOutcome(value["terminal_outcome"]) if value["terminal_outcome"] else None
+        ),
+        terminal_reason=(
+            TerminalReason(value["terminal_reason"]) if value["terminal_reason"] else None
+        ),
+    )
+
+
 def state_hash(state: GameState) -> str:
     canonical = json.dumps(state_to_json(state), sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
@@ -147,6 +179,13 @@ def redact(value: Any) -> Any:
         return redacted
     if isinstance(value, list):
         return [redact(item) for item in value]
+    if isinstance(value, str):
+        value = re.sub(r"(?i)\bBearer\s+[A-Za-z0-9._~+/=-]+", "Bearer [REDACTED]", value)
+        value = re.sub(
+            r"(?i)\b(api[_-]?key|token|password|client[_-]?secret)\s*[:=]\s*\S+",
+            r"\1=[REDACTED]",
+            value,
+        )
     return value
 
 

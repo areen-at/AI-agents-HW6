@@ -36,4 +36,19 @@ def build_parser() -> argparse.ArgumentParser:
         default="heuristic",
         help="Engine-only policy to use when --engine-only is set.",
     )
+    parser.add_argument(
+        "--quiet",
+        action="store_true",
+        help="Disable live board rendering while preserving reports and structured event logs.",
+    )
+    parser.add_argument(
+        "--json-logs",
+        action="store_true",
+        help="Emit redacted operational events as JSON lines.",
+    )
+    parser.add_argument(
+        "--replay-events",
+        metavar="PATH",
+        help="Render committed state snapshots from a previously written event log, without MCP calls.",
+    )
     return parser

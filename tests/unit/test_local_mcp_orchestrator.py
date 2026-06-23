@@ -174,6 +174,10 @@ class LocalMcpOrchestratorTests(unittest.TestCase):
 
         self.assertEqual(len(result.valid_sub_games), 6)
         self.assertEqual(result.invalid_attempts, tuple())
+        action_events = [event for event in result.events if event["event_type"] == "action_applied"]
+        self.assertTrue(action_events)
+        self.assertTrue(all(event["payload"]["request_id"] for event in action_events))
+        self.assertTrue(all(event["payload"]["correlation_id"] for event in action_events))
         self.assertIn("Game 1:", summary)
         self.assertIn("Totals:", summary)
 

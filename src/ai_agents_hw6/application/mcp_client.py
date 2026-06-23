@@ -8,7 +8,13 @@ from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 from uuid import uuid4
 
-from ai_agents_hw6.application.series import SeriesResult, SeriesSettings, TechnicalFailure, run_series
+from ai_agents_hw6.application.series import (
+    SeriesObserver,
+    SeriesResult,
+    SeriesSettings,
+    TechnicalFailure,
+    run_series,
+)
 from ai_agents_hw6.config import AppConfig
 from ai_agents_hw6.contracts import build_observation, parse_action_response
 from ai_agents_hw6.domain import GameAction, GameState, Role, ScoreMatrix, TechnicalFailureReason
@@ -106,8 +112,12 @@ class LocalMcpDecisionProvider:
     manhattan_radius: int
     max_retries: int = 2
     _applied_request_ids: set[str] = field(default_factory=set)
+    last_request_id: str | None = None
+    last_correlation_id: str | None = None
 
     def decide(self, state: GameState) -> GameAction:
+        self.last_request_id = None
+        self.last_correlation_id = None
         role = state.active_role
         client = self.cop_client if role is Role.COP else self.thief_client
         request_id = str(uuid4())
@@ -141,6 +151,8 @@ class LocalMcpDecisionProvider:
                     raise McpClientError("correlation_id mismatch")
                 parsed = parse_action_response(json.dumps(response.get("decision")), observation)
                 self._applied_request_ids.add(request_id)
+                self.last_request_id = request_id
+                self.last_correlation_id = correlation_id
                 return parsed.action
             except TechnicalFailure:
                 raise
@@ -167,7 +179,11 @@ def preflight_clients(cop_client: RoleMcpClient, thief_client: RoleMcpClient) ->
             raise McpClientError(f"{expected_role.value} missing decide capability")
 
 
-def run_local_mcp_series(config: AppConfig) -> SeriesResult:
+def run_local_mcp_series(
+    config: AppConfig,
+    *,
+    observer: SeriesObserver | None = None,
+) -> SeriesResult:
     client_config = McpClientConfig.from_config(config)
     cop_client = RoleMcpClient(
         role=Role.COP,
@@ -182,6 +198,9 @@ def run_local_mcp_series(config: AppConfig) -> SeriesResult:
         timeout_seconds=client_config.timeout_seconds,
     )
     preflight_clients(cop_client, thief_client)
+    if observer is not None:
+        observer.on_endpoint_status(Role.COP, "healthy", client_config.cop_url)
+        observer.on_endpoint_status(Role.THIEF, "healthy", client_config.thief_url)
     settings = SeriesSettings.from_config(config)
     provider = LocalMcpDecisionProvider(
         cop_client=cop_client,
@@ -195,4 +214,5 @@ def run_local_mcp_series(config: AppConfig) -> SeriesResult:
         settings=settings,
         scoring=ScoreMatrix.from_config(config.game.scoring),
         decision_provider=provider.decide,
+        observer=observer,
     )
