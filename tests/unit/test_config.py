@@ -69,6 +69,14 @@ def _deep_update(target: dict, updates: dict) -> None:
 
 
 class ConfigTests(unittest.TestCase):
+    def test_malformed_json_is_rejected_with_path_context(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "config.json"
+            path.write_text('{"group":', encoding="utf-8")
+
+            with self.assertRaisesRegex(ConfigError, "invalid JSON"):
+                load_config(path)
+
     def test_default_config_loads_and_validates_for_internal_mode(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             config = load_config(_write_config(Path(temp_dir)))
@@ -125,6 +133,37 @@ class ConfigTests(unittest.TestCase):
 
         with self.assertRaisesRegex(ConfigError, "num_games"):
             validate_for_mode(config, "internal")
+
+    def test_my_server_urls_must_be_valid_urls(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config = load_config(
+                _write_config(
+                    Path(temp_dir),
+                    {"my_servers": {"cop_mcp_url": "not-a-url"}},
+                )
+            )
+
+        with self.assertRaisesRegex(ConfigError, "my_servers.cop_mcp_url"):
+            validate_for_mode(config, "internal")
+
+    def test_blank_student_names_are_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = _write_config(Path(temp_dir), {"group": {"students": [" "]}})
+
+            with self.assertRaisesRegex(ConfigError, "group.students"):
+                load_config(path)
+
+    def test_logging_level_is_normalized_and_validated(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config = load_config(_write_config(Path(temp_dir), {"logging": {"level": "debug"}}))
+
+        self.assertEqual(config.logging.level, "DEBUG")
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = _write_config(Path(temp_dir), {"logging": {"level": "LOUD"}})
+
+            with self.assertRaisesRegex(ConfigError, "logging.level"):
+                load_config(path)
 
 
 if __name__ == "__main__":

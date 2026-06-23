@@ -17,6 +17,7 @@ PASS - Phase 1 project foundation and configuration validation are complete. No 
 | reports/.gitkeep | Track report directory without private JSON |
 | artifacts/.gitkeep | Track artifact root without runtime logs |
 | README.md | Updated current status and validation commands |
+| PLAN.md | Reconciled with the execution phase numbering used by todo.md |
 | todo.md | Phase 1 tasks and gate marked complete |
 
 ## Implemented foundation
@@ -28,10 +29,14 @@ PASS - Phase 1 project foundation and configuration validation are complete. No 
 - AppConfig dataclasses for group, server URLs, opponent metadata, game, scoring, observation, runtime, report paths, and logging.
 - load_config() JSON parser with field-specific errors.
 - validate_for_mode() for internal, bonus, and bonus-mock.
+- Local owned MCP URLs are validated as HTTP/HTTPS URLs, with localhost HTTP allowed for development.
 - Real bonus mode rejects placeholder opponent data and requires HTTPS opponent URLs.
 - Internal mode and bonus-mock mode do not require real opponent data.
+- Logging levels are normalized and restricted to standard Python logging levels.
+- Student lists reject blank strings while allowing an empty placeholder list before real metadata is known.
 - Root main.py validates configuration for the requested mode.
 - Unit tests use only the Python standard library.
+- PLAN.md now matches the `todo.md` phase sequence: Phase 1 is foundation/configuration and Phase 2 is the core domain model.
 
 ## Commands run
 
@@ -50,7 +55,7 @@ Codex bundled runtime:
 - internal mode prints Config validation passed for mode internal.
 - bonus-mock mode prints Config validation passed for mode bonus-mock.
 - real bonus mode exits with status 2 and reports that bonus_opponent.group_name must be real production data.
-- unit tests report Ran 6 tests and OK.
+- unit tests report Ran 10 tests and OK.
 - compile check exits successfully with no output.
 
 ## Test coverage
@@ -63,6 +68,10 @@ The Phase 1 unit tests verify:
 - real bonus mode requires HTTPS opponent URLs;
 - invalid grid size is rejected;
 - production modes require exactly six games.
+- malformed JSON is rejected with path context;
+- owned MCP server URL fields must be valid URLs;
+- blank student names are rejected; and
+- logging levels are normalized and validated.
 
 ## Phase 2 boundary
 

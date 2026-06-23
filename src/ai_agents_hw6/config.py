@@ -101,6 +101,8 @@ PLACEHOLDER_VALUES = {
     "OTHER_TEAM_THIEF_MCP_URL",
 }
 
+VALID_LOG_LEVELS = {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}
+
 
 def load_config(path: str | Path) -> AppConfig:
     config_path = Path(path)
@@ -125,22 +127,38 @@ def validate_for_mode(config: AppConfig, mode: str) -> None:
     if config.game.num_games != 6:
         raise ConfigError("production modes require game.num_games to be exactly 6")
 
+    _require_valid_url(
+        "my_servers.cop_mcp_url",
+        config.my_servers.cop_mcp_url,
+        require_https=False,
+        allow_local_http=True,
+    )
+    _require_valid_url(
+        "my_servers.thief_mcp_url",
+        config.my_servers.thief_mcp_url,
+        require_https=False,
+        allow_local_http=True,
+    )
+
     if mode == "bonus":
         _require_real_text("bonus_opponent.group_name", config.bonus_opponent.group_name)
         _require_valid_url(
             "bonus_opponent.github_repo",
             config.bonus_opponent.github_repo,
             require_https=True,
+            allow_local_http=False,
         )
         _require_valid_url(
             "bonus_opponent.cop_mcp_url",
             config.bonus_opponent.cop_mcp_url,
             require_https=True,
+            allow_local_http=False,
         )
         _require_valid_url(
             "bonus_opponent.thief_mcp_url",
             config.bonus_opponent.thief_mcp_url,
             require_https=True,
+            allow_local_http=False,
         )
 
 
@@ -269,7 +287,7 @@ def _parse_config(raw: dict[str, Any]) -> AppConfig:
             ),
         ),
         logging=LoggingConfig(
-            level=_require_string(logging_raw, "logging.level", key="level"),
+            level=_require_log_level(logging_raw),
             event_log_dir=_require_string(logging_raw, "logging.event_log_dir", key="event_log_dir"),
         ),
     )
@@ -299,7 +317,10 @@ def _require_string_tuple(container: dict[str, Any], path: str, *, key: str) -> 
     value = container.get(key)
     if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
         raise ConfigError(f"{path} must be a list of strings")
-    return tuple(item.strip() for item in value)
+    cleaned = tuple(item.strip() for item in value)
+    if any(not item for item in cleaned):
+        raise ConfigError(f"{path} must not contain blank strings")
+    return cleaned
 
 
 def _require_int(container: dict[str, Any], path: str, *, key: str) -> int:
@@ -334,15 +355,35 @@ def _require_grid_size(container: dict[str, Any]) -> tuple[int, int]:
     return (value[0], value[1])
 
 
+def _require_log_level(container: dict[str, Any]) -> str:
+    value = _require_string(container, "logging.level", key="level").upper()
+    if value not in VALID_LOG_LEVELS:
+        raise ConfigError(
+            "logging.level must be one of DEBUG, INFO, WARNING, ERROR, or CRITICAL"
+        )
+    return value
+
+
 def _require_real_text(path: str, value: str) -> None:
     if value.strip() in PLACEHOLDER_VALUES or "example.com" in value:
         raise ConfigError(f"{path} must be real production data, not a placeholder")
 
 
-def _require_valid_url(path: str, value: str, *, require_https: bool) -> None:
-    _require_real_text(path, value)
+def _require_valid_url(
+    path: str,
+    value: str,
+    *,
+    require_https: bool,
+    allow_local_http: bool,
+) -> None:
+    if not allow_local_http:
+        _require_real_text(path, value)
     parsed = urlparse(value)
     if require_https and parsed.scheme != "https":
         raise ConfigError(f"{path} must be an HTTPS URL")
     if not parsed.netloc:
         raise ConfigError(f"{path} must include a host")
+    if parsed.scheme not in {"http", "https"}:
+        raise ConfigError(f"{path} must be an HTTP or HTTPS URL")
+    if parsed.scheme == "http" and not allow_local_http:
+        raise ConfigError(f"{path} must use HTTPS outside local development")

@@ -4,7 +4,7 @@ This repository will implement a two-agent Cop-and-Thief game in which our Cop a
 
 ## Current status
 
-Phase 1 is complete. The repository now contains requirements, decisions, implementation planning, Git safety rules, Phase 0 evidence, Python project metadata, a package skeleton, a safe example configuration, and a stdlib configuration loader/validator with tests.
+Phase 1 is complete and polished. The repository now contains requirements, decisions, implementation planning aligned to `todo.md`, Git safety rules, Phase 0 evidence, Python project metadata, a package skeleton, a safe example configuration, and a stdlib configuration loader/validator with tests.
 
 The next authorized implementation phase is Phase 2: core domain model.
 
@@ -70,7 +70,7 @@ Expected:
 
 - internal and bonus-mock config validation pass;
 - bonus mode rejects placeholder opponent data until a real class team is configured;
-- all unit tests pass;
+- all unit tests pass, including malformed JSON, URL, logging-level, and blank-student validation;
 - bytecode compilation succeeds.
 
 ## Git workflow

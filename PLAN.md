@@ -2,664 +2,573 @@
 
 ## 1. Planning approach
 
-This plan converts `PRD.md` into gated increments. Each phase must leave the repository in a testable state. Later phases may not compensate for a failed earlier correctness gate; in particular, remote deployment, optional GUI work, and Q-learning must not begin before the authoritative game engine and MCP contracts are stable.
+This plan converts `PRD.md` and `todo.md` into gated implementation phases. The checklist in
+`todo.md` is the task-level source of truth; this document explains the intent, deliverables,
+verification, and dependencies for each phase.
 
-`todo.md` is the authoritative execution checklist and divides these strategic phases into finer-grained implementation phases. Phase 0 has the same meaning in both documents: inspection and decision closure only, with no implementation code.
+Every phase must leave the repository in a testable state. Later phases may not compensate for a
+failed earlier correctness gate. In particular, deployment, Gmail delivery, bonus automation, GUI
+work, and Q-learning must not begin before the deterministic game behavior and MCP boundaries are
+stable.
 
-### 1.1 Delivery principles
+Phase 0 and Phase 1 are already complete:
 
-- Build the deterministic core before any model integration.
-- Keep policy, transport, orchestration, engine, UI, and reporting separate.
-- Add one distributed boundary at a time.
-- Use progressive board sizes: `2x2`, `3x2/3x3`, `4x3/4x4`, then `5x5`.
-- Preserve evidence at every gate.
-- Treat Q-learning and bonus automation as extensions, not blockers for baseline compliance.
-- Never commit real secrets.
+- Phase 0 closed the assignment decisions and repository baseline.
+- Phase 1 created the Python foundation, safe configuration, package skeleton, config validator,
+  tests, and Git safety workflow.
 
-### 1.2 Proposed repository layout
+The next implementation phase is Phase 2: core domain model.
+
+## 2. Delivery principles
+
+- Build deterministic domain objects before game rules.
+- Build game rules before observations.
+- Build observations before agent prompts.
+- Build local MCP before remote MCP.
+- Build required normal mode before optional bonus mode.
+- Use simple deterministic/heuristic policies before Q-learning.
+- Keep the orchestrator authoritative for workflow only; it must not invent strategic moves.
+- Keep secrets outside committed files.
+- Record evidence at every gate.
+
+## 3. Repository layout
+
+The active package layout is:
 
 ```text
 .
 |-- README.md
 |-- PRD.md
 |-- PLAN.md
+|-- todo.md
 |-- pyproject.toml
-|-- config/
-|   |-- config.example.yaml
-|   `-- schemas/
-|-- src/
-|   |-- domain/
-|   |-- application/
-|   |-- contracts/
-|   |-- agents/
-|   |-- mcp_servers/
-|   |-- infrastructure/
-|   |-- reporting/
-|   |-- ui/
-|   `-- cli/
-|-- tests/
-|   |-- unit/
-|   |-- contract/
-|   |-- integration/
-|   |-- e2e/
-|   `-- fixtures/
+|-- config.json
+|-- main.py
+|-- .env.example
+|-- docs/
+|-- reports/
 |-- artifacts/
-|   |-- logs/
-|   |-- replays/
-|   `-- reports/
-|-- scripts/
-`-- deploy/
+|-- src/
+|   `-- ai_agents_hw6/
+|       |-- agents/
+|       |-- application/
+|       |-- contracts/
+|       |-- domain/
+|       |-- infrastructure/
+|       |-- mcp_servers/
+|       |-- reporting/
+|       `-- ui/
+`-- tests/
+    `-- unit/
 ```
 
-The exact package names may change, but the boundaries must remain.
+The package boundaries are intentional:
 
-## 2. Phase summary
+- `domain` owns value objects, state, rules, scoring, and invariant checks.
+- `application` owns series workflow, technical-failure recovery, replay, and orchestration logic.
+- `contracts` owns action, observation, report, and MCP schemas.
+- `agents` owns deterministic, heuristic, optional model-backed, and optional learning policies.
+- `mcp_servers` owns the two role-specific MCP server entry points.
+- `infrastructure` owns configuration, persistence, network clients, Gmail, and deployment adapters.
+- `reporting` owns JSON report construction and validation.
+- `ui` owns terminal rendering and any optional future GUI projection.
+
+## 4. Phase summary
 
 | Phase | Outcome | Mandatory gate |
 |---:|---|---|
-| 0 | Repository inspection and decision closure | Requirements, scope, and ambiguity review approved |
-| 1 | Deterministic 2x2 engine | Exhaustive rule tests pass |
-| 2 | Full configurable 5x5 game and replay | Game/scoring invariants pass through progressive grids |
-| 3 | Agent policy and natural-language decision contracts | Deterministic provider and malformed-output tests pass |
-| 4 | Two local MCP servers and orchestrator | Six valid local games complete through MCP |
-| 5 | Terminal visualization, observability, report builder, and Gmail adapter | Replay, terminal, JSON, and fake-email tests pass |
-| 6 | Secure remote deployment | Two authenticated public URLs pass external probes |
-| 7 | Full release rehearsal and submission | End-to-end acceptance and secret scan pass |
-| 8 | Optional Q-learning hardening | Strategy improves without breaking contracts |
-| 9 | Optional inter-group bonus | Joint six-game report is mutually validated |
+| 0 | Repository inspection and decision closure | Requirements, scope, ambiguity, and Git baseline approved |
+| 1 | Project foundation and configuration | Config validator, package skeleton, tests, and safety workflow pass |
+| 2 | Core domain model | Value objects, immutable state, seeded initialization, and invariants pass |
+| 3 | Game rules, scoring, and small-board checks | Legal actions, transitions, terminal logic, and scoring pass |
+| 4 | Series control, events, replay, and internal report | Six valid engine-only games and replay/report skeleton pass |
+| 5 | Simple heuristic agents | Cop and Thief policies produce legal typed actions from role inputs |
+| 6 | Partial observations and natural-language protocol | No hidden state leaks; prompts and action parsing are validated |
+| 7 | Independent Cop and Thief MCP servers | Separate role servers expose health, identity, protocol, and decision operations |
+| 8 | Local MCP orchestrator and required run | Six valid local games complete exclusively through MCP decisions |
+| 9 | Terminal visualization and operational logging | Terminal projection, structured logs, and evidence manifest match events |
+| 10 | Gmail and normal-report delivery | Internal JSON validates; fake Gmail passes; live delivery is ready when authorized |
+| 11 | Deployment of our two MCP servers | Two secure public URLs pass health, auth, and remote-run checks |
+| 12 | README and scientific documentation | Scientific/operational README covers Dec-POMDP, setup, deployment, and evidence |
+| 13 | Required release rehearsal | Full normal submission rehearsal passes with no secrets or unresolved blockers |
+| 14 | Bonus configuration and mock isolation | Bonus config supports real opponents; mock remains test-only |
+| 15 | External bonus match orchestration | Six valid cross-group games complete against real external URLs |
+| 16 | Bonus report and mutual agreement | Joint JSON validates and is mutually approved |
+| 17 | Optional Q-learning after completion | Learning is measured and feature-flagged without breaking baseline behavior |
 
-## 3. Phase 0 - Repository inspection and decision closure
+## 5. Phase 0 - Repository inspection and decisions
+
+Phase 0 is complete. Its evidence is recorded in:
+
+- `docs/PHASE_0_BASELINE.md`
+- `docs/PHASE_0_VERIFICATION.md`
+
+Exit conditions already satisfied:
+
+- assignment and clarification read;
+- normal-vs-bonus scope resolved;
+- opponent bonus servers defined as external production URLs only;
+- coordinate, turn-order, observation, barrier, retry, and report decisions closed;
+- `.gitignore` protections added; and
+- phase evidence committed and pushed.
+
+## 6. Phase 1 - Project foundation and configuration
+
+Phase 1 is complete. Its evidence is recorded in:
+
+- `docs/PHASE_1_FOUNDATION.md`
+
+Delivered:
+
+1. Python project metadata in `pyproject.toml`.
+2. Safe example config in `config.json`.
+3. Names-only secret template in `.env.example`.
+4. Package skeleton under `src/ai_agents_hw6`.
+5. Minimal CLI in `main.py`.
+6. Typed config loader and mode validator.
+7. Standard-library unit tests for configuration behavior.
+8. Git workflow and ignore-rule safeguards.
+
+Verification commands:
+
+```powershell
+python main.py --mode internal --config config.json
+python main.py --mode bonus-mock --config config.json
+python main.py --mode bonus --config config.json
+$env:PYTHONPATH='src'; python -m unittest discover -s tests -p 'test_*.py'
+python -m compileall -q main.py src tests
+python -m pip check
+```
+
+Expected results:
+
+- `internal` and `bonus-mock` validation pass;
+- `bonus` rejects placeholder opponent data until real external team data is configured;
+- unit tests pass;
+- bytecode compilation succeeds;
+- dependency check passes; and
+- no secrets, assignment PDFs, private reports, caches, or virtual environments are staged.
+
+## 7. Phase 2 - Core domain model
 
 ### Objective
 
-Inspect the repository and turn the assignment, clarification, PRD, and plan into an approved baseline before implementation.
+Create the pure domain foundation without implementing full transition rules yet.
 
 ### Tasks
 
-1. Inventory existing files, Git state, remote history, and missing components.
-2. Read `PRD.md`, `PLAN.md`, `todo.md`, the assignment, and the bonus clarification.
-3. Fix required-versus-bonus scope and confirm only this group's two servers are production-owned.
-4. Resolve blocking decisions `OD-01` through `OD-06` and `OD-08`.
-5. Record `OD-07` as a non-blocking deployment choice with selection criteria and a deadline before deployment preparation.
-6. Define package/module boundaries without creating implementation packages.
-7. Define the internal `sub_games` contract at the documentation level.
-8. Define invalid-action, technical-failure, and retry semantics.
-9. Establish logging, artifact, report, and secret-handling conventions.
-10. Add and verify `.gitignore` protections.
-11. Reconcile the PRD and plan with the later clarification.
-12. Create a Phase 0 baseline evidence document and update the README landing page.
+1. Define roles, directions, action kinds, terminal outcomes, terminal reasons, and technical-failure
+   reason codes.
+2. Implement immutable `Coordinate` and `GridSize` value objects.
+3. Implement coordinate serialization, direction deltas, and bounded orthogonal neighbors.
+4. Define immutable identifiers for series, sub-games, attempts, and requests.
+5. Define immutable authoritative `GameState`.
+6. Include grid, Cop position, Thief position, barriers, active role, move counter, barrier count,
+   seed, and terminal metadata.
+7. Prevent mutable collection leakage from domain objects.
+8. Implement seeded initial placement inside bounds with distinct positions.
+9. Start every initialized game with empty barriers and Thief active.
+10. Enforce basic invariants:
+    - positions in bounds;
+    - barriers in bounds;
+    - no barrier under a player;
+    - unique barriers;
+    - non-negative counters;
+    - valid active role; and
+    - terminal metadata consistency.
 
 ### Deliverables
 
-- Approved PRD and decision register.
-- Repository inventory and missing-component list.
-- Phase 0 baseline evidence document.
-- Proposed package and test structure.
-- Secret-safe `.gitignore`.
-- README with scope, status, and document links.
-
-### Verification
-
-- Markdown structure and links are valid.
-- All Phase 0 checklist items have evidence.
-- Git history builds on the existing remote commit.
-- Ignore rules cover secrets, environments, caches, private reports, and assignment PDFs.
-- Secret and staged-file scans report no findings.
-- No implementation source, runtime configuration, schema code, or dependency setup is introduced.
+- Domain enums and value objects.
+- Immutable authoritative state.
+- Seeded initialization function.
+- Unit tests for corners, edges, serialization, reproducibility, and invariant failures.
+- Phase 2 evidence document.
 
 ### Exit gate
 
-- No unresolved rule ambiguity blocks Phase 1.
-- Deferred deployment choice `OD-07` has explicit selection criteria.
-- The team can explain component ownership and the external-only bonus boundary.
-- Phase 0 is committed and pushed under the mandatory Git workflow.
+- All domain tests pass.
+- Same seed produces the same initial state.
+- Invalid state construction is rejected with useful errors.
+- `domain` imports no MCP, UI, Gmail, provider, or infrastructure code.
 
-## 4. Phase 1 - Deterministic game engine on 2x2
+## 8. Phase 3 - Game rules, scoring, and small-board checks
 
 ### Objective
 
-Prove the game model and transition rules in the smallest exhaustively testable environment.
+Implement authoritative rules and scoring on top of the Phase 2 domain model.
 
 ### Tasks
 
-1. Implement immutable/value domain objects:
-   - coordinates;
-   - grid dimensions;
-   - roles;
-   - directions;
-   - barriers;
-   - actions;
-   - score values;
-   - terminal reasons; and
-   - game identifiers.
-2. Implement seeded initialization with distinct valid positions.
-3. Implement legal movement generation.
-4. Implement action validation without mutation.
-5. Implement Thief-first turn sequencing.
-6. Implement Cop capture.
-7. Implement move-limit survival.
-8. Implement barrier placement and maximum count.
-9. Implement terminal-state immutability.
-10. Implement score calculation from terminal result.
-11. Implement authoritative state serialization and hashing.
-12. Write exhaustive `2x2` state/action tests.
+1. Generate legal movement actions for both roles.
+2. Reject out-of-bounds, diagonal, stay, barrier-collision, and out-of-turn actions.
+3. Enforce Thief-first sequencing.
+4. Detect exact-cell Cop capture.
+5. Declare Thief survival at the configured move limit.
+6. Apply capture precedence on the final round.
+7. Implement Cop-only adjacent barrier placement.
+8. Enforce maximum barrier count.
+9. Reject barrier placement on players, existing barriers, out-of-bounds cells, or trapping states.
+10. Guarantee invalid actions do not mutate state.
+11. Compute score from terminal outcome and config.
+12. Exhaustively test `2 x 2` behavior where practical.
+13. Run sanity suites on progressive grids up to `5 x 5`.
 
-### Required invariants
+### Exit gate
 
-- Exactly one active role at any non-terminal transition.
-- Positions and barriers always remain within bounds.
-- No player occupies a barrier.
-- A barrier cannot be duplicated.
-- Invalid actions leave the state byte-for-byte equivalent.
-- Cop capture occurs only under the approved capture rule.
+- Rule and scoring tests pass.
 - Terminal state accepts no new game action.
 - Scores always match the configured matrix.
+- Deterministic action replay reaches the same final state.
 
-### Deliverables
-
-- Pure game-domain package with no MCP, policy, UI, or Gmail dependency.
-- Unit/property test suite.
-- Minimal text simulation using scripted actions.
-
-### Verification
-
-- Exhaust all reachable `2x2` states where practical.
-- Test all boundary movements and barrier placements.
-- Test terminal precedence on the final move.
-- Test all four score outputs.
-- Test identical replay from seed and action sequence.
-
-### Exit gate
-
-- 100% branch coverage for rule and scoring modules is the target.
-- No unresolved high-severity engine defect.
-- The engine is deterministic under a fixed seed and action stream.
-
-## 5. Phase 2 - Full configurable game, observations, and replay
+## 9. Phase 4 - Series control, events, replay, and internal report
 
 ### Objective
 
-Scale the verified engine to the assignment game while preserving determinism and partial observability.
+Run complete engine-only series and record enough evidence for replay and report generation.
 
 ### Tasks
 
-1. Implement the approved observation function from `OD-01`.
-2. Create role-specific observation DTOs with no reference to mutable engine state.
-3. Add observation-leak tests.
-4. Scale through `3x2`, `3x3`, `4x3`, `4x4`, and `5x5` fixtures.
-5. Implement the six-valid-game series state machine.
-6. Assign unique series, sub-game, and attempt IDs.
-7. Implement append-only event records.
-8. Implement deterministic replay without MCP or models.
-9. Add state and event integrity hashes.
-10. Implement technical-attempt invalidation and replacement.
-11. Add safety limits for repeated technical failures without counting them as valid games.
-12. Implement aggregate scoring directly from immutable terminal records.
-13. Add configuration digest and code-version metadata.
-
-### Progressive verification
-
-#### 3x2 / 3x3
-
-- Verify turn synchronization and barrier edge cases.
-- Run deterministic scripted agents through full episodes.
-- Confirm no duplicate action application.
-
-#### 4x3 / 4x4
-
-- Verify partial observations across positions and barriers.
-- Verify replay integrity for longer games.
-- Fuzz legal/illegal action sequences.
-
-#### 5x5
-
-- Run six scripted valid games at 25-move cap.
-- Inject technical failures and confirm replacements.
-- Confirm final totals equal the sum of immutable sub-game records.
-
-### Deliverables
-
-- Full configurable engine.
-- Observation service.
-- Series controller independent of transport.
-- Event log and offline replay command.
+1. Implement a series controller independent of MCP.
+2. Track six valid game slots and replacement attempts.
+3. Separate valid-game count from technical-attempt count.
+4. Preserve invalid-attempt evidence without scoring it.
+5. Add append-only events with IDs, timestamps, seed, actions, validation, state hashes, terminal
+   reason, and scores.
+6. Implement atomic event persistence.
+7. Implement offline replay from seed and accepted actions.
+8. Verify replay hashes and final scores.
+9. Build the internal `sub_games` report entries from immutable terminal records.
+10. Calculate aggregate totals.
+11. Write `reports/internal_game_report.json` atomically.
 
 ### Exit gate
 
-- All progressive board stages pass.
-- Six valid games complete after injected invalid attempts.
-- Every valid game replays to the same terminal state and score.
-- No hidden authoritative field reaches an agent observation.
+- Engine-only six-game run completes.
+- Injected technical failures are excluded and replaced.
+- Replay verifies all valid games.
+- Internal report JSON validates and contains exactly six valid `sub_games`.
 
-## 6. Phase 3 - Agent policy and natural-language protocol
+## 10. Phase 5 - Simple heuristic agents
 
 ### Objective
 
-Create a policy-independent decision layer that turns role observations into schema-valid action proposals, using simple heuristics for the baseline.
+Provide reliable baseline policies before optional model-backed or learning behavior.
 
 ### Tasks
 
-1. Define a role-neutral `Policy` interface.
-2. Implement deterministic policies for tests:
-   - fixed action;
-   - seeded random legal action;
-   - scripted action sequence; and
-   - malformed/timeout fault injectors.
-3. Build role-specific prompt templates describing:
-   - identity and objective;
-   - current observation;
-   - legal action vocabulary;
-   - known history;
-   - barrier rules for the Cop;
-   - output JSON schema; and
-   - prohibition on inventing hidden state.
-4. Implement strict output parsing and schema validation.
-5. Implement one bounded repair round for malformed or illegal proposals.
-6. Implement the approved repeated-illegal-action policy from `OD-04`.
-7. Implement the simple heuristic Cop and Thief policies selected by `OD-08`.
-8. Adapt both heuristics to the natural-language request and structured response contract.
-9. Keep an optional provider interface extension point without requiring an LLM implementation.
-10. Add prompt/output redaction and size limits.
-11. Record latency, policy, validation, and repair metadata.
-
-### Security checks
-
-- Prompt contains no secret or full authoritative state.
-- Policy output cannot invoke arbitrary code.
-- Only schema-approved actions can reach the engine.
-- Provider errors do not reveal credentials.
-
-### Deliverables
-
-- Policy abstraction and deterministic providers.
-- Natural-language prompt templates.
-- Validated action parser.
-- Simple Cop and Thief heuristic policy adapters.
-- Optional documented extension point for a later model-backed policy.
-
-### Verification
-
-- Golden prompt tests for Cop and Thief.
-- Valid, malformed, oversized, adversarial, and illegal output tests.
-- Provider timeout and retry tests.
-- Deterministic test provider completes a full series.
+1. Define role-neutral policy input and output interfaces.
+2. Implement deterministic seeded tie-breaking.
+3. Implement Cop pursuit using only permitted role input.
+4. Implement Thief evasion using only permitted role input.
+5. Implement deterministic scripted and random policies for tests.
+6. Add illegal-action and timeout/fault-injection policies for later recovery tests.
 
 ### Exit gate
 
-- No raw model output can bypass validation.
-- A valid role observation produces one typed action.
-- Repair and failure semantics match the PRD.
+- Heuristic policies produce typed actions.
+- Policies do not import engine internals that expose hidden state.
+- Engine-only games can run with policy adapters.
 
-## 7. Phase 4 - Local dual MCP architecture
+## 11. Phase 6 - Partial observations and natural-language protocol
 
 ### Objective
 
-Run both agents through separate local MCP servers and prove the distributed control path.
+Turn authoritative state into role-safe observations and role prompts, then parse untrusted action
+responses.
+
+### Tasks
+
+1. Implement Manhattan-radius observations with default radius `2`.
+2. Build role-specific observation DTOs.
+3. Prove hidden opponent/barrier data cannot leak outside the configured sensor model.
+4. Create natural-language decision prompts.
+5. Define strict structured action response schema.
+6. Validate policy/model outputs.
+7. Allow one bounded repair request for malformed or illegal output.
+8. Mark repeated failures as technical failures.
+
+### Exit gate
+
+- Observation leak tests pass.
+- Golden prompt tests pass.
+- Malformed, oversized, adversarial, and illegal outputs are rejected safely.
+
+## 12. Phase 7 - Independent Cop and Thief MCP servers
+
+### Objective
+
+Expose the Cop and Thief as separate local MCP services with compatible contracts.
 
 ### Tasks
 
 1. Implement Cop MCP server entry point.
 2. Implement Thief MCP server entry point.
-3. Give each server separate configuration and role identity.
-4. Expose MCP operations for:
-   - health/capabilities;
-   - role identity;
-   - protocol version;
-   - decision request; and
-   - optional policy import/export.
-5. Implement the orchestrator's MCP client adapter.
-6. Add request IDs, correlation IDs, idempotency keys, and timeouts.
-7. Prevent duplicate decision responses from applying twice.
-8. Implement startup compatibility checks.
-9. Add local token authentication if supported by the selected transport; otherwise enforce it at the gateway and preserve the same client contract.
-10. Provide commands/scripts to launch both servers and the orchestrator.
-11. Add health wait/retry before starting a series.
-12. Capture protocol traces with sensitive data redacted.
-
-### Deliverables
-
-- Two independently runnable MCP servers.
-- MCP client/orchestrator integration.
-- Local launch documentation.
-- Contract and integration tests.
-
-### Failure injection matrix
-
-| Fault | Expected behavior |
-|---|---|
-| One server absent at startup | Series does not start |
-| Timeout before action commit | Bounded retry with same idempotency key |
-| Duplicate response | Apply once |
-| Wrong role server | Compatibility failure |
-| Schema version mismatch | Fail fast |
-| Malformed action after repair | Attempt marked technical failure |
-| Server crash mid-game | Attempt preserved as invalid and replacement scheduled |
+3. Give each server separate role identity and config.
+4. Expose health/capabilities, role identity, protocol version, and decision operations.
+5. Add request IDs, correlation IDs, idempotency keys, and timeouts.
+6. Add local token authentication or preserve the same adapter contract for gateway auth.
+7. Add contract tests for schema, role, version, and wrong-role failures.
 
 ### Exit gate
 
 - Cop and Thief run in separate processes and ports.
-- Six valid games complete exclusively through MCP decisions.
+- Role and protocol compatibility checks pass.
+- MCP decision responses are schema-validated before engine use.
+
+## 13. Phase 8 - Local MCP orchestrator and required run
+
+### Objective
+
+Run the required six valid games through the actual local MCP decision path.
+
+### Tasks
+
+1. Implement MCP client adapters.
+2. Start or connect to both local role servers.
+3. Run health waits before series start.
+4. Request Thief and Cop decisions in turn order.
+5. Prevent duplicate decisions from being applied twice.
+6. Convert exhausted retries, server crashes, and unrecoverable malformed outputs into technical
+   failures.
+7. Replace invalid attempts until six valid games exist or the safety limit is reached.
+
+### Exit gate
+
+- Six valid local games complete exclusively through MCP.
 - Fault-injected attempts are excluded and replaced.
-- Offline replay verifies the final series.
+- Offline replay verifies the MCP-generated series.
 
-## 8. Phase 5 - Terminal visualization, observability, reports, and Gmail
-
-### Objective
-
-Make the system operable, auditable, and capable of producing the exact required submission report.
-
-### 8.1 Terminal visualization tasks
-
-1. Implement a lightweight terminal renderer compatible with headless core execution.
-2. Implement a read-only board projection driven by committed events.
-3. Render distinct Cop, Thief, barrier, visible/hidden information, and status elements.
-4. Display move counter, active role, game count, scores, endpoint health, and failure state.
-5. Add clear start, progress, stop/error, and report-path status messages.
-6. Ensure CLI commands call application services rather than the engine directly.
-7. Use textual symbols and non-color indicators.
-
-### 8.2 Observability tasks
-
-1. Emit structured JSON logs.
-2. Add human-readable console logs without secrets.
-3. Expose operational counters and final summary.
-4. Add a replay viewer or replay-to-console mode.
-5. Produce an evidence manifest linking tests, logs, replays, reports, code version, and configuration digest.
-
-### 8.3 Report tasks
-
-1. Implement and validate the approved `sub_games` schema from `OD-05`.
-2. Implement internal report construction from immutable records.
-3. Implement bonus report construction separately.
-4. Calculate totals; never trust caller-provided totals.
-5. Validate against JSON Schema.
-6. Serialize canonical JSON with no surrounding prose.
-7. Store the payload atomically before send.
-
-### 8.4 Gmail tasks
-
-1. Follow the supplied Google API installation guide.
-2. Configure the Google Auth consent screen and test user.
-3. Enable Gmail API with least-privilege scopes suitable for sending.
-4. Obtain local OAuth client credentials without committing them.
-5. Implement a Gmail transport adapter.
-6. Implement token refresh and redacted error handling.
-7. Add fake-transport tests.
-8. Perform one authorized live smoke email to a safe test destination if allowed.
-9. Add final recipient `rmisegal+uoh26b@gmail.com` through validated configuration.
-10. Record the Gmail message ID after final delivery.
-
-### Deliverables
-
-- Readable terminal visualization and headless CLI mode.
-- Structured logs and replay evidence.
-- Valid internal and bonus report builders.
-- Gmail API adapter and operator procedure.
-
-### Exit gate
-
-- Terminal projection always matches the engine event stream.
-- Internal JSON validates and contains no free text.
-- Fake Gmail tests pass and live OAuth preflight succeeds.
-- Reporting failure can retry without rerunning games or sending duplicates.
-
-## 9. Phase 6 - Secure remote deployment
+## 14. Phase 9 - Terminal visualization and operational logging
 
 ### Objective
 
-Publish the two MCP servers at separate secure, externally reachable endpoints.
+Make the system observable and usable in a terminal-first workflow.
 
 ### Tasks
 
-1. Select cloud/tunnel architecture under `OD-07`.
-2. Package both role servers reproducibly.
-3. Create separate deployment definitions and environment configurations.
-4. Provision separate Cop and Thief URLs.
-5. Configure HTTPS/TLS.
-6. Configure token authentication, rotation, and revocation.
-7. Configure rate limits and request-size limits.
-8. Verify logs redact authorization headers.
-9. Add remote health probes.
-10. Document firewall, proxy, Nginx, ngrok/Localtonet, or Prefect settings used.
-11. Verify the selected policy network path:
-    - no model network dependency for the heuristic baseline; or
-    - external provider API for an optional model policy; or
-    - securely tunneled local Ollama for an optional model policy; or
-    - hybrid outbound architecture for an optional model policy.
-12. Run external authorized and unauthorized client probes.
-13. Run a remote six-valid-game series.
-14. Preserve endpoint availability instructions for assessment and bonus use.
-
-### Deployment acceptance checklist
-
-- [ ] Cop and Thief URLs are different.
-- [ ] Both use HTTPS.
-- [ ] Requests without credentials fail.
-- [ ] Requests with valid scoped credentials succeed.
-- [ ] Tokens can be revoked and rotated.
-- [ ] Role and protocol versions are correct.
-- [ ] No inbound dependency on inaccessible localhost exists.
-- [ ] Six valid remote games complete.
-- [ ] Remote results replay locally.
+1. Render the board from committed events or read-only projections.
+2. Show Cop, Thief, barriers, visible/hidden status, active role, move counter, game count, scores,
+   endpoint health, and technical-failure state.
+3. Emit structured logs with correlation IDs.
+4. Redact secrets automatically.
+5. Produce a replay-to-console mode.
+6. Produce an evidence manifest linking config digest, commit, tests, logs, replays, and reports.
 
 ### Exit gate
 
-- Two authenticated public MCP URLs pass external probes.
-- A complete remote series succeeds.
-- Threat and secret reviews have no unresolved critical findings.
+- Terminal projection matches the event stream.
+- Logs contain no secrets.
+- Replay and live views agree.
 
-## 10. Phase 7 - Release rehearsal and primary submission
+## 15. Phase 10 - Gmail and normal-report delivery
 
 ### Objective
 
-Execute the exact final workflow and produce a complete, auditable submission.
+Implement the required Gmail API delivery path for the internal JSON report.
 
 ### Tasks
 
-1. Freeze code, schemas, configuration defaults, and protocol version.
-2. Run formatting, linting, type checking, unit, property, contract, integration, and end-to-end tests.
+1. Follow `main-google-api-installtion-guid.pdf`.
+2. Configure OAuth credentials outside Git.
+3. Implement least-privilege Gmail send adapter.
+4. Implement token refresh and redacted errors.
+5. Add fake Gmail tests.
+6. Validate JSON-only message body.
+7. Record Gmail message ID and timestamp after final send.
+
+### Exit gate
+
+- Fake Gmail tests pass.
+- Live OAuth preflight is ready when credentials are provided.
+- Report failure can be retried without rerunning games or duplicating sends.
+
+## 16. Phase 11 - Deployment of our two MCP servers
+
+### Objective
+
+Publish our two production-owned role servers through secure external URLs.
+
+### Tasks
+
+1. Choose the cloud/tunnel provider for `OD-07`.
+2. Package Cop and Thief services reproducibly.
+3. Configure separate HTTPS URLs.
+4. Configure scoped token authentication, rotation, and revocation.
+5. Add remote health probes.
+6. Run authorized and unauthorized external client checks.
+7. Run a full remote six-valid-game series.
+
+### Exit gate
+
+- Cop and Thief URLs are distinct, public, HTTPS, and authenticated.
+- Unauthorized requests fail safely.
+- Remote results replay locally.
+
+## 17. Phase 12 - README and scientific documentation
+
+### Objective
+
+Complete the scientific and operational README expected by the assignment.
+
+### Tasks
+
+1. Document installation, configuration, and secrets.
+2. Document the Dec-POMDP tuple and mapping.
+3. Document actions, transitions, rewards, observations, and discount factor if learning is enabled.
+4. Document MCP server/client boundaries and natural-language protocol.
+5. Document terminal operation, reports, Gmail, deployment, and troubleshooting.
+6. Document tests, evidence, known limitations, and public endpoint availability.
+
+### Exit gate
+
+- README is enough for an assessor to reproduce the run.
+- All Must requirements in the PRD have linked evidence or an explicit remaining phase.
+
+## 18. Phase 13 - Required release rehearsal
+
+### Objective
+
+Execute the exact final normal-mode workflow before final submission.
+
+### Tasks
+
+1. Freeze code, schemas, config defaults, and protocol version.
+2. Run formatting, linting, typing, unit, contract, integration, replay, report, and end-to-end tests.
 3. Run dependency and secret scans.
-4. Verify GitHub repository visibility and README completeness.
-5. Verify public endpoints and credentials from a clean external client.
-6. Run the final six-valid-game series.
-7. Confirm any technical attempts were excluded and replaced.
-8. Replay all six valid games offline.
-9. Compare replay state hashes and scores.
-10. Build the internal JSON report.
-11. Review group/student/repository/URL metadata.
-12. Validate JSON and confirm the email body contains JSON only.
-13. Send through Gmail API to `rmisegal+uoh26b@gmail.com`.
-14. Record the message ID and timestamp.
-15. Archive the final configuration digest, code commit, logs, replays, report, and delivery receipt.
-16. Keep public endpoints available for the required assessment/bonus period.
-
-### Final evidence bundle
-
-- Git commit identifier.
-- Public GitHub URL.
-- Cop MCP URL and Thief MCP URL.
-- Sanitized configuration.
-- Test summary.
-- Six valid sub-game event logs.
-- Replay verification summary.
-- Canonical JSON report.
-- Gmail message ID.
-- Terminal capture or optional GUI recording plus remote endpoint status, if requested.
-
-### Release gate
-
-- Every Must requirement in `PRD.md` has evidence.
-- No unresolved critical/high defect.
-- No tracked secret.
-- Gmail delivery is confirmed.
-
-## 11. Phase 8 - Optional Q-learning hardening
-
-### Objective
-
-Improve strategic quality without destabilizing the compliant baseline.
-
-### Tasks
-
-1. Define separate state encodings for Cop and Thief observations.
-2. Define role-specific action masks.
-3. Implement Q-table initialization and update.
-4. Handle terminal rewards without bootstrapping.
-5. Add epsilon-greedy selection.
-6. Make `alpha`, `gamma`, and epsilon schedule configurable.
-7. Version and persist role-specific tables.
-8. Prevent table sharing between agents unless explicitly permitted.
-9. Compare against seeded random and heuristic baselines.
-10. Visualize aggregate performance, not hidden per-turn state.
-11. Keep a feature flag to revert to the baseline policy.
-
-### Evaluation
-
-- Fixed evaluation seeds separate from training seeds.
-- Win rate and score by role.
-- Illegal-action rate.
-- Average moves to capture/survival.
-- Stability across repeated runs.
-- No regression in protocol, security, replay, or reporting tests.
+4. Verify GitHub repository accessibility.
+5. Verify public MCP endpoints from a clean external client.
+6. Run final six valid sub-games.
+7. Replay all valid games.
+8. Build and validate internal report.
+9. Send or stage Gmail delivery according to final operator authorization.
+10. Archive commit ID, config digest, logs, replays, report, and delivery receipt.
 
 ### Exit gate
 
-- Learning demonstrates measurable benefit or is disabled for release.
-- Baseline compliance remains unchanged.
+- Full normal submission rehearsal passes.
+- No unresolved critical/high defect remains.
+- No secret or private data is tracked.
 
-## 12. Phase 9 - Optional inter-group bonus
+## 19. Phase 14 - Bonus configuration and mock isolation
 
 ### Objective
 
-Run a fair, mutually verifiable six-game series against another group's MCP agents.
+Prepare optional bonus mode without inventing another production team.
 
-### Preparation
+### Tasks
 
-1. Exchange GitHub URLs, MCP URLs, protocol versions, and authentication procedure.
-2. Agree on schedule, config, seeds, observation policy, barrier interpretation, timeouts, and retry policy.
-3. Verify all four endpoints independently.
-4. Freeze both code versions and record commit IDs.
-5. Agree on one report builder/schema version.
+1. Require real opponent metadata and HTTPS URLs in `--mode bonus`.
+2. Keep placeholder opponent values valid only in `--mode bonus-mock`.
+3. Keep mock opponent servers test-only.
+4. Validate bonus report schema separately from internal report schema.
+5. Document that mutual agreement starts false until both teams approve.
 
-### Match execution
+### Exit gate
 
-1. Run three games with Group A Cop versus Group B Thief.
-2. Run three games with Group B Cop versus Group A Thief.
-3. Exclude and replay technical failures.
-4. Give both groups the same event/result artifacts.
-5. Recalculate scores independently.
-6. Resolve discrepancies before report generation.
+- Real bonus mode fails fast without real opponent data.
+- Bonus mock tests cannot be mistaken for production bonus evidence.
 
-### Reporting
+## 20. Phase 15 - External bonus match orchestration
 
-1. Build the bonus JSON report.
-2. Set `mutual_agreement` to `true` only after both groups approve the exact payload.
-3. Apply bonus claim values: winner 10, loser 7, or draw 5 each.
-4. Validate JSON-only formatting.
-5. Send one mutually agreed report as instructed.
+### Objective
+
+Run the optional inter-group series against another real class team's MCP URLs.
+
+### Tasks
+
+1. Exchange GitHub URLs, MCP URLs, protocol versions, and authentication instructions.
+2. Agree on schedule, seeds, observation policy, barrier interpretation, timeouts, and retry policy.
+3. Verify all four endpoints.
+4. Run three games with our Cop versus opponent Thief.
+5. Run three games with opponent Cop versus our Thief.
+6. Exclude and replay technical failures.
+7. Share artifacts with the opponent group.
 
 ### Exit gate
 
 - Six valid cross-group games exist.
-- Both groups agree on scores and payload.
-- The report contains all four MCP URLs and both GitHub URLs.
+- Both groups can independently recalculate scores from the same events.
 
-## 13. Cross-cutting test matrix
+## 21. Phase 16 - Bonus report and mutual agreement
 
-| Layer | Tests | Runs in CI | Requires network/secrets |
-|---|---|---:|---:|
-| Domain | Unit, property, exhaustive small-board | Yes | No |
-| Observation | Leak and visibility tests | Yes | No |
-| Policy | Prompt golden, parser, invalid output | Yes | No |
-| MCP contracts | Schema, role, version, idempotency | Yes | No/local |
-| Local integration | Two servers plus orchestrator | Yes where practical | No |
-| Terminal UI | Projection and rendering tests | Yes/headless | No |
-| Replay | State-hash equivalence | Yes | No |
-| Reports | JSON Schema and canonical serialization | Yes | No |
-| Gmail | Fake adapter | Yes | No |
-| Gmail live | OAuth/send smoke | Manual gated | Yes |
-| Remote MCP | Auth, TLS, health, full series | Manual/release | Yes |
-| Bonus | Four-endpoint interoperability | Manual | Yes |
+### Objective
 
-## 14. Milestone-level definition of done
+Produce the mutually agreed optional bonus JSON report.
 
-Every phase is complete only when:
+### Tasks
 
-- code and documentation are updated together;
-- new external contracts have schemas and examples;
-- tests cover success, failure, and boundary behavior;
-- logs contain correlation IDs and no secrets;
-- acceptance evidence is stored or linked;
-- known issues are recorded with severity and owner; and
-- the next phase does not need to reinterpret completed behavior.
+1. Build canonical bonus report JSON.
+2. Include both groups, repositories, all four MCP URLs, students, sub-games, totals, and bonus claim.
+3. Set `mutual_agreement` to `true` only after both groups approve the exact payload.
+4. Validate JSON-only formatting.
+5. Send according to the assignment procedure.
 
-## 15. Dependency order
+### Exit gate
 
-```text
-Requirements and decisions
-    -> schemas/configuration
-    -> deterministic engine
-    -> observations and replay
-    -> policy/model abstraction
-    -> local MCP servers
-    -> terminal UI/reporting/Gmail
-    -> secure remote deployment
-    -> release submission
-    -> optional Q-learning and bonus competition
-```
+- Bonus report validates.
+- Both groups approve the exact payload.
+- Delivery evidence is preserved.
 
-Q-learning can begin experimentally after the policy interface is stable, but it cannot replace the Phase 4 MCP gate.
+## 22. Phase 17 - Optional Q-learning after completion
 
-## 16. Risk-driven checkpoints
+### Objective
 
-### Checkpoint A - Rules
+Improve strategy only after the required baseline is stable.
 
-Before Phase 2, resolve observation, barrier, and scoring interpretations.
+### Tasks
 
-### Checkpoint B - Distributed correctness
+1. Define role-specific state encodings from observations.
+2. Define action masks.
+3. Implement Q-table initialization, update, and persistence.
+4. Add epsilon-greedy selection.
+5. Keep alpha, gamma, and epsilon configurable.
+6. Compare learned behavior against random and heuristic baselines.
+7. Keep a feature flag to revert to the required heuristic baseline.
 
-Before optional GUI work is considered, prove six local games through two MCP servers and the terminal UI.
+### Exit gate
 
-### Checkpoint C - Credentials
+- Learning improves or is disabled.
+- Baseline MCP, report, replay, and security behavior remains unchanged.
 
-Before final week, complete Gmail OAuth and remote endpoint authentication preflights.
+## 23. Mandatory GitHub phase workflow
 
-### Checkpoint D - Remote stability
+After every completed phase, Codex must:
 
-Before final submission, complete at least one full remote rehearsal and one failure-recovery rehearsal.
+1. Run the tests and checks defined for that phase.
+2. Run `git status`.
+3. Inspect changed, staged, untracked, and intentionally ignored paths.
+4. Review staged content for secrets, credentials, tokens, private reports, generated junk, and
+   assignment PDFs.
+5. Confirm `.gitignore` protects:
+   - `.env`
+   - `*.env`
+   - API keys, tokens, credentials, and private keys
+   - `__pycache__/`
+   - `*.pyc`
+   - `.venv/`
+   - `venv/`
+   - `.DS_Store`
+   - private `reports/*.json`
+   - assignment PDFs unless explicitly authorized
+6. Stage only files belonging to the phase.
+7. Commit with a clear phase-specific message.
+8. Present an informational pre-push summary.
+9. Push ordinary phase commits automatically to `origin/main`.
+10. Verify local and remote branch synchronization.
 
-### Checkpoint E - Exact reporting
+Ordinary pushes are pre-authorized by the user. Force-pushes, history rewrites, destructive Git
+operations, or changing the target remote/branch still require explicit approval.
 
-Before sending, validate the canonical JSON against schema and inspect the MIME body to ensure no prose is added.
-
-## 17. Suggested issue breakdown
-
-Use one issue per independently verifiable outcome. Suggested epics:
-
-1. `EPIC-ENGINE` - rules, scoring, initialization, and invariants.
-2. `EPIC-OBS` - partial observations and Dec-POMDP mapping.
-3. `EPIC-SERIES` - six-game orchestration, technical failures, and replay.
-4. `EPIC-POLICY` - prompts, parsing, providers, and optional Q-learning.
-5. `EPIC-MCP-COP` - Cop server.
-6. `EPIC-MCP-THIEF` - Thief server.
-7. `EPIC-CLIENT` - MCP client and coordinator.
-8. `EPIC-UI` - terminal visualization and CLI status output.
-9. `EPIC-REPORT` - JSON schemas, Gmail API, and delivery receipt.
-10. `EPIC-DEPLOY` - HTTPS, authentication, public URLs, and monitoring.
-11. `EPIC-DOCS` - README, operational guide, and evidence mapping.
-12. `EPIC-BONUS` - cross-group interoperability and report.
-
-Each issue should identify its PRD requirement IDs, tests, configuration changes, and evidence artifact.
-
-## 18. Primary release checklist
+## 24. Primary release checklist
 
 ### Rules and series
 
-- [ ] 5x5 default grid.
+- [ ] `5 x 5` default grid.
 - [ ] Thief acts before Cop.
 - [ ] Orthogonal movement only.
-- [ ] Capture and survival terminal conditions correct.
-- [ ] Cop barrier action and five-barrier maximum correct.
+- [ ] Exact-cell capture and move-limit survival.
+- [ ] Cop barriers and five-barrier maximum.
 - [ ] Six valid games complete.
 - [ ] Score matrix and totals correct.
 
@@ -667,94 +576,22 @@ Each issue should identify its PRD requirement IDs, tests, configuration changes
 
 - [ ] Separate Cop and Thief MCP processes.
 - [ ] Separate MCP URLs.
-- [ ] MCP client/orchestrator contains no strategic fallback.
-- [ ] Natural-language prompts and structured actions used.
+- [ ] Natural-language decision requests and structured actions.
 - [ ] Partial observations verified.
+- [ ] Orchestrator contains no strategic fallback.
 
 ### Operations
 
 - [ ] Local run succeeds.
 - [ ] Remote HTTPS run succeeds.
-- [ ] Authentication, rotation, and revocation tested.
+- [ ] Authentication and revocation tested.
 - [ ] Technical failures replayed.
-- [ ] Logs and replay artifacts verified.
-
-### Product surface
-
-- [ ] Terminal visualization accurately displays the live state.
-- [ ] Headless CLI works.
-- [ ] Configuration contains no hard-coded deployment secrets.
+- [ ] Logs, replay artifacts, and reports verified.
 
 ### Submission
 
 - [ ] GitHub repository accessible.
 - [ ] Scientific README complete.
 - [ ] Internal JSON report validates.
-- [ ] Email body is JSON only.
-- [ ] Gmail API delivery confirmed.
+- [ ] Gmail API delivery confirmed when authorized.
 - [ ] No secrets in repository or evidence bundle.
-
-## 19. Mandatory GitHub phase workflow
-
-### Repository destination
-
-- Target GitHub repository: `https://github.com/areen-at/AI-agents-HW6`
-- The local repository should use this URL as `origin` after the workspace Git metadata is valid.
-- Codex performs routine status, staging, commit, and push operations for each completed phase.
-- Ordinary phase pushes are pre-authorized and run automatically after the pre-push summary and safety checks.
-
-### Required sequence after every phase
-
-1. Run all tests and checks defined by that phase.
-2. Run `git status` and inspect tracked, modified, deleted, and untracked paths.
-3. Review the complete staged diff before committing.
-4. Scan staged content and filenames for secrets, credentials, tokens, private reports, and generated junk.
-5. Confirm `.gitignore` protects environment files, credentials, Python caches, virtual environments, OS junk, private JSON reports, and assignment PDFs.
-6. Stage only files belonging to the completed phase.
-7. Commit with a clear phase-specific message.
-8. Re-run `git status` and identify anything intentionally left uncommitted or ignored.
-9. Present a concise pre-push summary containing:
-   - files changed;
-   - files staged/committed;
-   - relevant ignored files;
-   - checks and tests run;
-   - commit message; and
-   - target branch and remote.
-10. Present the informational pre-push summary.
-11. Push the phase commit to GitHub without waiting for an additional confirmation.
-12. Verify local and remote branch synchronization.
-13. Report the pushed branch and commit identifier.
-
-### Git safety rules
-
-- Never stage or commit `.env` or `*.env` files except sanitized `*.example` templates.
-- Never stage or commit API keys, authorization headers, OAuth tokens, refresh tokens, or MCP tokens.
-- Never stage or commit `credentials.json`, client-secret downloads, private keys, or certificates.
-- Never stage generated caches, virtual environments, compiled Python files, logs, or editor junk.
-- Treat `reports/*.json` as private by default; commit only sanitized examples or schemas after inspection.
-- Do not commit assignment PDFs unless the user explicitly authorizes the specific files.
-- Do not use broad staging as a substitute for inspection; verify every staged path.
-- Do not include unrelated user changes in a phase commit.
-- Do not amend, rewrite, force-push, or delete history without explicit user authorization.
-- Do not pause for approval on an ordinary phase push after the displayed summary.
-- Continue to require explicit authorization for force-pushes, history rewrites, destructive Git operations, or a different remote/branch target.
-
-### Commit-message convention
-
-Use an imperative, phase-scoped message, for example:
-
-```text
-phase 3: implement game rules and scoring
-```
-
-Optional commit body:
-
-```text
-- add capture, survival, and barrier validation
-- add small-board rule tests
-- document phase verification commands
-```
-
-### Phase Git gate
-
-A phase is not fully closed until its tests pass, its approved files are committed, the ordinary push succeeds, and local and remote branches are verified as synchronized. If a push fails, report the failure and keep the verified local commit intact for a safe retry.
