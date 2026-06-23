@@ -4,6 +4,7 @@
 !.env.example
 .env.*
 !.env.*.example
+!.env.example
 
 # Credentials, keys, and tokens
 credentials.json

@@ -69,42 +69,42 @@
 
 ### Tasks
 
-- [ ] T0027 Select Python 3.10+ and uv unless existing tooling requires otherwise.
-- [ ] T0028 Create or validate pyproject.toml.
-- [ ] T0029 Add only necessary runtime dependencies.
-- [ ] T0030 Add formatter, linter, type checker, and pytest configuration.
-- [ ] T0031 Create src/domain, src/application, src/contracts, src/agents, and src/mcp_servers.
-- [ ] T0032 Create src/reporting, src/infrastructure, src/ui, and tests hierarchy.
-- [ ] T0033 Create config.json example with no real secrets.
-- [ ] T0034 Set grid_size default to [5,5].
-- [ ] T0035 Set max_moves default to 25.
-- [ ] T0036 Set num_games default to 6.
-- [ ] T0037 Set max_barriers default to 5.
-- [ ] T0038 Set scoring defaults 20,10,5,5.
-- [ ] T0039 Set timezone default to Asia/Jerusalem.
-- [ ] T0040 Add deterministic random_seed setting.
-- [ ] T0041 Add observation, timeout, retry, and logging settings.
-- [ ] T0042 Add real-group metadata placeholders.
-- [ ] T0043 Add my_servers Cop and Thief URL fields.
-- [ ] T0044 Add bonus_opponent metadata fields without invented values.
-- [ ] T0045 Add report output paths.
-- [ ] T0046 Implement typed configuration loading.
-- [ ] T0047 Reject malformed JSON with field-specific errors.
-- [ ] T0048 Require exactly six games in production modes.
-- [ ] T0049 Require opponent fields only in production bonus mode.
-- [ ] T0050 Create .env.example with names only.
-- [ ] T0051 Ignore .env, credentials.json, token.json, logs, and secret artifacts.
-- [ ] T0052 Run a tracked-file secret scan.
-- [ ] T0053 Verify clean dependency installation.
-- [ ] T0054 Report phase files, commands, outputs, and tests then stop.
+- [x] T0027 Select Python 3.10+ and uv unless existing tooling requires otherwise.
+- [x] T0028 Create or validate pyproject.toml.
+- [x] T0029 Add only necessary runtime dependencies.
+- [x] T0030 Add formatter, linter, type checker, and pytest configuration.
+- [x] T0031 Create src/domain, src/application, src/contracts, src/agents, and src/mcp_servers.
+- [x] T0032 Create src/reporting, src/infrastructure, src/ui, and tests hierarchy.
+- [x] T0033 Create config.json example with no real secrets.
+- [x] T0034 Set grid_size default to [5,5].
+- [x] T0035 Set max_moves default to 25.
+- [x] T0036 Set num_games default to 6.
+- [x] T0037 Set max_barriers default to 5.
+- [x] T0038 Set scoring defaults 20,10,5,5.
+- [x] T0039 Set timezone default to Asia/Jerusalem.
+- [x] T0040 Add deterministic random_seed setting.
+- [x] T0041 Add observation, timeout, retry, and logging settings.
+- [x] T0042 Add real-group metadata placeholders.
+- [x] T0043 Add my_servers Cop and Thief URL fields.
+- [x] T0044 Add bonus_opponent metadata fields without invented values.
+- [x] T0045 Add report output paths.
+- [x] T0046 Implement typed configuration loading.
+- [x] T0047 Reject malformed JSON with field-specific errors.
+- [x] T0048 Require exactly six games in production modes.
+- [x] T0049 Require opponent fields only in production bonus mode.
+- [x] T0050 Create .env.example with names only.
+- [x] T0051 Ignore .env, credentials.json, token.json, logs, and secret artifacts.
+- [x] T0052 Run a tracked-file secret scan.
+- [x] T0053 Verify clean dependency installation.
+- [x] T0054 Report phase files, commands, outputs, and tests then stop.
 
 ### Phase gate
 
-- [ ] All tasks required for this phase have evidence.
-- [ ] Automated and manual verification results are recorded.
-- [ ] Changed files and unrelated preserved files are listed.
-- [ ] Run commands and expected output are documented.
-- [ ] Work stops here for review before the next phase.
+- [x] All tasks required for this phase have evidence.
+- [x] Automated and manual verification results are recorded.
+- [x] Changed files and unrelated preserved files are listed.
+- [x] Run commands and expected output are documented.
+- [x] Work stops here for review before the next phase.
 
 ## Phase 2 - Core domain model
 

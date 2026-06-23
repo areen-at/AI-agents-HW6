@@ -4,9 +4,9 @@ This repository will implement a two-agent Cop-and-Thief game in which our Cop a
 
 ## Current status
 
-Phase 0 is complete and polished. The repository currently contains requirements, decisions, implementation planning, Git safety rules, and Phase 0 evidence. No application code has been implemented yet.
+Phase 1 is complete. The repository now contains requirements, decisions, implementation planning, Git safety rules, Phase 0 evidence, Python project metadata, a package skeleton, a safe example configuration, and a stdlib configuration loader/validator with tests.
 
-The next authorized implementation phase is Phase 1: project foundation and validated configuration.
+The next authorized implementation phase is Phase 2: core domain model.
 
 ## Required baseline
 
@@ -52,6 +52,26 @@ An opponent mock may be used only in explicit test mode. Real opponent data will
 - [Executable task checklist](todo.md)
 - [Phase 0 baseline and decision evidence](docs/PHASE_0_BASELINE.md)
 - [Phase 0 closure verification](docs/PHASE_0_VERIFICATION.md)
+- [Phase 1 foundation evidence](docs/PHASE_1_FOUNDATION.md)
+
+## Phase 1 validation commands
+
+The Codex workspace uses a bundled Python executable. On a normal development machine, replace that full path with python after installing Python 3.10 or newer.
+
+Commands:
+
+- python main.py --mode internal --config config.json
+- python main.py --mode bonus-mock --config config.json
+- python main.py --mode bonus --config config.json
+- $env:PYTHONPATH='src'; python -m unittest discover -s tests -p 'test_*.py'
+- python -m compileall -q main.py src tests
+
+Expected:
+
+- internal and bonus-mock config validation pass;
+- bonus mode rejects placeholder opponent data until a real class team is configured;
+- all unit tests pass;
+- bytecode compilation succeeds.
 
 ## Git workflow
 

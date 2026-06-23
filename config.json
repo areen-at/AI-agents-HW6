@@ -1,0 +1,49 @@
+{
+  "group": {
+    "name": "MY_GROUP_NAME",
+    "github_repo": "https://github.com/areen-at/AI-agents-HW6",
+    "students": []
+  },
+  "my_servers": {
+    "cop_mcp_url": "http://127.0.0.1:8001/mcp",
+    "thief_mcp_url": "http://127.0.0.1:8002/mcp"
+  },
+  "bonus_opponent": {
+    "group_name": "OTHER_TEAM_NAME",
+    "github_repo": "https://example.com/other-team-repo",
+    "students": [],
+    "cop_mcp_url": "https://example.com/other-team-cop-mcp",
+    "thief_mcp_url": "https://example.com/other-team-thief-mcp"
+  },
+  "game": {
+    "grid_size": [5, 5],
+    "max_moves": 25,
+    "num_games": 6,
+    "max_barriers": 5,
+    "scoring": {
+      "cop_win": 20,
+      "thief_win": 10,
+      "cop_loss": 5,
+      "thief_loss": 5
+    }
+  },
+  "observation": {
+    "manhattan_radius": 2
+  },
+  "runtime": {
+    "timezone": "Asia/Jerusalem",
+    "random_seed": 12345,
+    "decision_timeout_seconds": 20,
+    "max_retries": 2,
+    "technical_attempt_limit_per_slot": 10
+  },
+  "reports": {
+    "internal_game_report": "reports/internal_game_report.json",
+    "bonus_game_report": "reports/bonus_game_report.json",
+    "bonus_mock_report": "reports/bonus_game_report.mock.json"
+  },
+  "logging": {
+    "level": "INFO",
+    "event_log_dir": "artifacts/logs"
+  }
+}
