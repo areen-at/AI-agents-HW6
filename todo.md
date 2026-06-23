@@ -231,41 +231,41 @@
 
 ### Tasks
 
-- [ ] T0137 Define policy input as role observation rather than true state.
-- [ ] T0138 Define policy output as one typed action.
-- [ ] T0139 Include current legal actions in policy input.
-- [ ] T0140 Implement Cop Manhattan-distance pursuit.
-- [ ] T0141 Use only observable or remembered Thief estimates.
-- [ ] T0142 Prefer legal Cop moves that reduce estimated distance.
-- [ ] T0143 Use deterministic or seeded tie breaking.
-- [ ] T0144 Define a small measurable barrier-usefulness rule.
-- [ ] T0145 Place a Cop barrier only when legal and useful.
-- [ ] T0146 Fall back to a legal Cop move when barrier is not useful.
-- [ ] T0147 Implement Thief Manhattan-distance escape.
-- [ ] T0148 Use only observable or remembered Cop estimates.
-- [ ] T0149 Prefer legal Thief moves that increase estimated distance.
-- [ ] T0150 Avoid traps and barriers when a safer move exists.
-- [ ] T0151 Never permit Thief barrier actions.
-- [ ] T0152 Handle no-visible-opponent cases deterministically.
-- [ ] T0153 Handle no-legal-move cases according to approved rule.
-- [ ] T0154 Test pursuit in open grid.
-- [ ] T0155 Test pursuit around barriers.
-- [ ] T0156 Test escape in open grid.
-- [ ] T0157 Test escape around barriers.
-- [ ] T0158 Test barrier maximum behavior.
-- [ ] T0159 Test every heuristic result against engine legal actions.
-- [ ] T0160 Run six engine-only games with heuristics.
-- [ ] T0161 Keep Q-learning and expensive search out of this phase.
-- [ ] T0162 Document every tie breaker and assumption.
-- [ ] T0163 Report phase files, commands, outputs, and tests then stop.
+- [x] T0137 Define policy input as role observation rather than true state.
+- [x] T0138 Define policy output as one typed action.
+- [x] T0139 Include current legal actions in policy input.
+- [x] T0140 Implement Cop Manhattan-distance pursuit.
+- [x] T0141 Use only observable or remembered Thief estimates.
+- [x] T0142 Prefer legal Cop moves that reduce estimated distance.
+- [x] T0143 Use deterministic or seeded tie breaking.
+- [x] T0144 Define a small measurable barrier-usefulness rule.
+- [x] T0145 Place a Cop barrier only when legal and useful.
+- [x] T0146 Fall back to a legal Cop move when barrier is not useful.
+- [x] T0147 Implement Thief Manhattan-distance escape.
+- [x] T0148 Use only observable or remembered Cop estimates.
+- [x] T0149 Prefer legal Thief moves that increase estimated distance.
+- [x] T0150 Avoid traps and barriers when a safer move exists.
+- [x] T0151 Never permit Thief barrier actions.
+- [x] T0152 Handle no-visible-opponent cases deterministically.
+- [x] T0153 Handle no-legal-move cases according to approved rule.
+- [x] T0154 Test pursuit in open grid.
+- [x] T0155 Test pursuit around barriers.
+- [x] T0156 Test escape in open grid.
+- [x] T0157 Test escape around barriers.
+- [x] T0158 Test barrier maximum behavior.
+- [x] T0159 Test every heuristic result against engine legal actions.
+- [x] T0160 Run six engine-only games with heuristics.
+- [x] T0161 Keep Q-learning and expensive search out of this phase.
+- [x] T0162 Document every tie breaker and assumption.
+- [x] T0163 Report phase files, commands, outputs, and tests then stop.
 
 ### Phase gate
 
-- [ ] All tasks required for this phase have evidence.
-- [ ] Automated and manual verification results are recorded.
-- [ ] Changed files and unrelated preserved files are listed.
-- [ ] Run commands and expected output are documented.
-- [ ] Work stops here for review before the next phase.
+- [x] All tasks required for this phase have evidence.
+- [x] Automated and manual verification results are recorded.
+- [x] Changed files and unrelated preserved files are listed.
+- [x] Run commands and expected output are documented.
+- [x] Work stops here for review before the next phase.
 
 ## Phase 6 - Partial observations and natural-language protocol
 

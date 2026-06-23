@@ -25,4 +25,10 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Run a deterministic engine-only six-game series and write the internal report.",
     )
+    parser.add_argument(
+        "--policy",
+        choices=("heuristic", "first-legal"),
+        default="heuristic",
+        help="Engine-only policy to use when --engine-only is set.",
+    )
     return parser

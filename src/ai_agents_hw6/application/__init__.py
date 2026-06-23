@@ -8,6 +8,7 @@ from ai_agents_hw6.application.series import (
     first_legal_action_provider,
     run_series,
     write_engine_only_series,
+    write_engine_only_series_with_policy,
 )
 
 __all__ = [
@@ -17,4 +18,5 @@ __all__ = [
     "first_legal_action_provider",
     "run_series",
     "write_engine_only_series",
+    "write_engine_only_series_with_policy",
 ]

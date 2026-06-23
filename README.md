@@ -4,9 +4,9 @@ This repository will implement a two-agent Cop-and-Thief game in which our Cop a
 
 ## Current status
 
-Phase 4 is complete. The repository now contains the polished Phase 1 foundation, the Phase 2 immutable domain model, Phase 3 authoritative game rules, and Phase 4 engine-only series control with events, replay verification, and an internal report skeleton.
+Phase 5 is complete. The repository now contains the polished Phase 1 foundation, the Phase 2 immutable domain model, Phase 3 authoritative game rules, Phase 4 engine-only series control, and Phase 5 simple heuristic Cop/Thief agents.
 
-The next authorized implementation phase is Phase 5: simple heuristic agents.
+The next authorized implementation phase is Phase 6: partial observations and natural-language protocol.
 
 ## Required baseline
 
@@ -56,6 +56,7 @@ An opponent mock may be used only in explicit test mode. Real opponent data will
 - [Phase 2 domain model evidence](docs/PHASE_2_DOMAIN_MODEL.md)
 - [Phase 3 game rules evidence](docs/PHASE_3_GAME_RULES.md)
 - [Phase 4 series/replay/report evidence](docs/PHASE_4_SERIES_REPLAY_REPORT.md)
+- [Phase 5 heuristic agents evidence](docs/PHASE_5_HEURISTIC_AGENTS.md)
 
 ## Phase 1 validation commands
 
@@ -117,6 +118,21 @@ Expected:
 - event logs and internal reports are written atomically;
 - replay verification checks final state hashes; and
 - 49 total unit tests pass.
+
+## Phase 5 heuristic validation
+
+Phase 5 makes the engine-only run use simple heuristic agents by default:
+
+- python main.py --mode internal --config config.json --engine-only --policy heuristic
+- python main.py --mode internal --config config.json --engine-only --policy first-legal
+
+Expected:
+
+- six valid sub-games complete with the heuristic policy;
+- Cop pursues visible Thief positions and places only useful legal barriers;
+- Thief returns only movement actions and prefers safer escape moves;
+- every heuristic output is validated against engine legal actions; and
+- 60 total unit tests pass.
 
 ## Git workflow
 
