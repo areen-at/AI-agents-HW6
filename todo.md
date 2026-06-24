@@ -553,41 +553,41 @@
 
 ### Tasks
 
-- [ ] T0355 Set up from a clean checkout or clean environment.
-- [ ] T0356 Install dependencies using README commands.
-- [ ] T0357 Create configuration and environment from examples.
-- [ ] T0358 Start owned Cop and Thief MCP servers.
-- [ ] T0359 Verify both health checks.
-- [ ] T0360 Run final internal mode command.
-- [ ] T0361 Confirm Thief acts first and Cop second.
-- [ ] T0362 Confirm barriers and movement rules.
-- [ ] T0363 Confirm no game exceeds 25 rounds.
-- [ ] T0364 Confirm exactly six valid sub-games.
-- [ ] T0365 Confirm score matrix in every result.
-- [ ] T0366 Inject and replace at least one technical failure in rehearsal.
-- [ ] T0367 Verify terminal output.
-- [ ] T0368 Verify structured logs.
-- [ ] T0369 Replay all six valid games.
-- [ ] T0370 Verify internal report schema and totals.
-- [ ] T0371 Run formatter check.
-- [ ] T0372 Run linter and type checker.
-- [ ] T0373 Run unit, contract, integration, and end-to-end tests.
-- [ ] T0374 Run secret scan.
-- [ ] T0375 Record commit ID and sanitized config digest.
-- [ ] T0376 Record six valid game IDs and replay result.
-- [ ] T0377 Record public owned MCP URLs.
-- [ ] T0378 Send or rehearse final Gmail JSON procedure as authorized.
-- [ ] T0379 Confirm no bonus or Q-learning dependency exists.
-- [ ] T0380 Confirm no critical defect remains.
-- [ ] T0381 Report phase files, commands, outputs, and tests then stop.
+- [x] T0355 Set up from a clean checkout or clean environment.
+- [x] T0356 Install dependencies using README commands.
+- [x] T0357 Create configuration and environment from examples.
+- [x] T0358 Start owned Cop and Thief MCP servers.
+- [x] T0359 Verify both health checks.
+- [x] T0360 Run final internal mode command.
+- [x] T0361 Confirm Thief acts first and Cop second.
+- [x] T0362 Confirm barriers and movement rules.
+- [x] T0363 Confirm no game exceeds 25 rounds.
+- [x] T0364 Confirm exactly six valid sub-games.
+- [x] T0365 Confirm score matrix in every result.
+- [x] T0366 Inject and replace at least one technical failure in rehearsal.
+- [x] T0367 Verify terminal output.
+- [x] T0368 Verify structured logs.
+- [x] T0369 Replay all six valid games.
+- [x] T0370 Verify internal report schema and totals.
+- [x] T0371 Run formatter check.
+- [x] T0372 Run linter and type checker.
+- [x] T0373 Run unit, contract, integration, and end-to-end tests.
+- [x] T0374 Run secret scan.
+- [x] T0375 Record commit ID and sanitized config digest.
+- [x] T0376 Record six valid game IDs and replay result.
+- [x] T0377 Record public owned MCP URLs.
+- [x] T0378 Send or rehearse final Gmail JSON procedure as authorized.
+- [x] T0379 Confirm no bonus or Q-learning dependency exists.
+- [x] T0380 Confirm no critical defect remains.
+- [x] T0381 Report phase files, commands, outputs, and tests then stop.
 
 ### Phase gate
 
-- [ ] All tasks required for this phase have evidence.
-- [ ] Automated and manual verification results are recorded.
-- [ ] Changed files and unrelated preserved files are listed.
-- [ ] Run commands and expected output are documented.
-- [ ] Work stops here for review before the next phase.
+- [x] All tasks required for this phase have evidence.
+- [x] Automated and manual verification results are recorded.
+- [x] Changed files and unrelated preserved files are listed.
+- [x] Run commands and expected output are documented.
+- [x] Work stops here for review before the next phase.
 
 ## Phase 14 - Bonus configuration and mock isolation
 

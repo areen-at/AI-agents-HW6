@@ -28,6 +28,10 @@ The required normal mode is complete:
 - canonical internal JSON report; and
 - Gmail API delivery of the JSON-only report.
 
+The Phase 13 clean release rehearsal passed from GitHub commit `8e9e60b`, including formatting,
+linting, strict typing, 110 tests, authenticated public execution, report validation, replay, Gmail
+preflight, and secret scanning.
+
 Q-learning and inter-group bonus automation are optional later phases. The working baseline uses
 deterministic heuristic policies.
 
@@ -592,6 +596,7 @@ log, fix the service problem, and allow the bounded replacement policy to comple
 - [Phase 10 Gmail delivery](docs/PHASE_10_GMAIL_DELIVERY.md)
 - [Phase 11 deployment](docs/PHASE_11_DEPLOYMENT.md)
 - [Phase 12 scientific README](docs/PHASE_12_README.md)
+- [Phase 13 release rehearsal](docs/PHASE_13_RELEASE_REHEARSAL.md)
 
 ## Known limitations and next phases
 
