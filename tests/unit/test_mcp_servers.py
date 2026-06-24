@@ -126,7 +126,9 @@ class RoleDecisionServiceTests(unittest.TestCase):
         state = _state(active=Role.COP, cop=Coordinate(1, 0), thief=Coordinate(0, 0))
         before = state
 
-        RoleDecisionService(Role.COP).decide(_decision_payload(state, role=Role.COP, request_id="mut-1"))
+        RoleDecisionService(Role.COP).decide(
+            _decision_payload(state, role=Role.COP, request_id="mut-1")
+        )
 
         self.assertEqual(state, before)
 

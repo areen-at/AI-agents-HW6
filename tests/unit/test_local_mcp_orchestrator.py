@@ -5,7 +5,6 @@ import tempfile
 import threading
 import unittest
 from pathlib import Path
-from urllib.error import URLError
 
 from ai_agents_hw6.application import (
     LocalMcpDecisionProvider,
@@ -14,11 +13,17 @@ from ai_agents_hw6.application import (
     preflight_clients,
     run_local_mcp_series,
 )
-from ai_agents_hw6.application.mcp_client import McpClientConfig
 from ai_agents_hw6.application.series import SeriesSettings, TechnicalFailure, run_series
 from ai_agents_hw6.config import load_config
-from ai_agents_hw6.domain import Coordinate, GameState, GridSize, Role, ScoreMatrix, TechnicalFailureReason
-from ai_agents_hw6.domain import MoveAction
+from ai_agents_hw6.domain import (
+    Coordinate,
+    GameState,
+    GridSize,
+    MoveAction,
+    Role,
+    ScoreMatrix,
+    TechnicalFailureReason,
+)
 from ai_agents_hw6.mcp_servers.http_server import build_server
 from ai_agents_hw6.ui import render_series_summary
 
@@ -30,7 +35,7 @@ class LocalServerPair:
         self.cop_thread = threading.Thread(target=self.cop_server.serve_forever, daemon=True)
         self.thief_thread = threading.Thread(target=self.thief_server.serve_forever, daemon=True)
 
-    def __enter__(self) -> "LocalServerPair":
+    def __enter__(self) -> LocalServerPair:
         self.cop_thread.start()
         self.thief_thread.start()
         return self
@@ -125,12 +130,18 @@ class LocalMcpOrchestratorTests(unittest.TestCase):
 
         self.assertEqual(len(result.valid_sub_games), 6)
         self.assertEqual(len(result.invalid_attempts), 1)
-        self.assertEqual(result.invalid_attempts[0].failure_reason, TechnicalFailureReason.MCP_TIMEOUT)
+        self.assertEqual(
+            result.invalid_attempts[0].failure_reason, TechnicalFailureReason.MCP_TIMEOUT
+        )
 
     def test_malformed_response_is_retried_or_marked_technical_failure(self) -> None:
         class MalformedClient(RoleMcpClient):
             def decide(self, payload: dict) -> dict:
-                return {"request_id": payload["request_id"], "correlation_id": "wrong", "decision": {}}
+                return {
+                    "request_id": payload["request_id"],
+                    "correlation_id": "wrong",
+                    "decision": {},
+                }
 
         provider = LocalMcpDecisionProvider(
             cop_client=MalformedClient(role=Role.COP, base_url="http://unused"),
@@ -174,7 +185,9 @@ class LocalMcpOrchestratorTests(unittest.TestCase):
 
         self.assertEqual(len(result.valid_sub_games), 6)
         self.assertEqual(result.invalid_attempts, tuple())
-        action_events = [event for event in result.events if event["event_type"] == "action_applied"]
+        action_events = [
+            event for event in result.events if event["event_type"] == "action_applied"
+        ]
         self.assertTrue(action_events)
         self.assertTrue(all(event["payload"]["request_id"] for event in action_events))
         self.assertTrue(all(event["payload"]["correlation_id"] for event in action_events))

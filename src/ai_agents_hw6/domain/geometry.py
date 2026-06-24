@@ -27,7 +27,7 @@ class Coordinate:
         return [self.row, self.column]
 
     @classmethod
-    def from_json(cls, value: object) -> "Coordinate":
+    def from_json(cls, value: object) -> Coordinate:
         if (
             not isinstance(value, list)
             or len(value) != 2
@@ -36,7 +36,7 @@ class Coordinate:
             raise DomainError("coordinate JSON value must be [row, column]")
         return cls(row=value[0], column=value[1])
 
-    def moved(self, direction: Direction) -> "Coordinate":
+    def moved(self, direction: Direction) -> Coordinate:
         delta = direction_delta(direction)
         return Coordinate(row=self.row + delta[0], column=self.column + delta[1])
 
@@ -80,7 +80,7 @@ class GridSize:
         return [self.rows, self.columns]
 
     @classmethod
-    def from_json(cls, value: object) -> "GridSize":
+    def from_json(cls, value: object) -> GridSize:
         if (
             not isinstance(value, list)
             or len(value) != 2

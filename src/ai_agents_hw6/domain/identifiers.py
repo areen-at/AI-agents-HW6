@@ -21,7 +21,7 @@ class _Identifier:
         object.__setattr__(self, "value", normalized)
 
     @classmethod
-    def new(cls) -> "_Identifier":
+    def new(cls) -> _Identifier:
         return cls(str(uuid4()))
 
     def __str__(self) -> str:
@@ -31,26 +31,26 @@ class _Identifier:
 @dataclass(frozen=True)
 class SeriesId(_Identifier):
     @classmethod
-    def new(cls) -> "SeriesId":
+    def new(cls) -> SeriesId:
         return cls(str(uuid4()))
 
 
 @dataclass(frozen=True)
 class SubGameId(_Identifier):
     @classmethod
-    def new(cls) -> "SubGameId":
+    def new(cls) -> SubGameId:
         return cls(str(uuid4()))
 
 
 @dataclass(frozen=True)
 class AttemptId(_Identifier):
     @classmethod
-    def new(cls) -> "AttemptId":
+    def new(cls) -> AttemptId:
         return cls(str(uuid4()))
 
 
 @dataclass(frozen=True)
 class RequestId(_Identifier):
     @classmethod
-    def new(cls) -> "RequestId":
+    def new(cls) -> RequestId:
         return cls(str(uuid4()))

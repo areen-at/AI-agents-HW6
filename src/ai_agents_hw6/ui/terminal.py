@@ -10,7 +10,6 @@ from ai_agents_hw6.application.events import redact, state_from_json
 from ai_agents_hw6.application.series import SeriesResult
 from ai_agents_hw6.domain import GameAction, GameState, MoveAction, PlaceBarrierAction, Role
 
-
 SYMBOLS = {"cop": "C", "thief": "T", "barrier": "#", "empty": "."}
 COORDINATE_HELP = "Coordinates are zero-based [row,column]; row 0 is top, column 0 is left."
 
@@ -32,9 +31,7 @@ def render_board(state: GameState) -> str:
                 symbol = SYMBOLS["cop"]
             elif coordinate == (state.thief_position.row, state.thief_position.column):
                 symbol = SYMBOLS["thief"]
-            elif any(
-                barrier.row == row and barrier.column == column for barrier in state.barriers
-            ):
+            elif any(barrier.row == row and barrier.column == column for barrier in state.barriers):
                 symbol = SYMBOLS["barrier"]
             else:
                 symbol = SYMBOLS["empty"]
@@ -77,6 +74,8 @@ def render_state(
         COORDINATE_HELP,
     ]
     if state.is_terminal:
+        assert state.terminal_outcome is not None
+        assert state.terminal_reason is not None
         lines.append(
             f"Terminal: outcome={state.terminal_outcome.value} reason={state.terminal_reason.value}"
         )
@@ -96,7 +95,12 @@ class TerminalObserver:
         self._threshold = getattr(logging, self.log_level.upper(), logging.INFO)
 
     def on_endpoint_status(self, role: Role, status: str, url: str) -> None:
-        payload = {"event_type": "endpoint_status", "role": role.value, "status": status, "url": url}
+        payload = {
+            "event_type": "endpoint_status",
+            "role": role.value,
+            "status": status,
+            "url": url,
+        }
         self._log(payload, level=logging.INFO)
         if not self.quiet:
             self.stream.write(f"MCP endpoint: role={role.value} status={status} url={url}\n")
@@ -148,7 +152,8 @@ class TerminalObserver:
             self.totals["thief"] += score["thief"]
             self.stream.write(
                 f"Result: outcome={payload['terminal_outcome']} "
-                f"reason={payload['terminal_reason']} score=Cop:{score['cop']},Thief:{score['thief']} "
+                f"reason={payload['terminal_reason']} "
+                f"score=Cop:{score['cop']},Thief:{score['thief']} "
                 f"totals=Cop:{self.totals['cop']},Thief:{self.totals['thief']}\n"
             )
 

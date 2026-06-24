@@ -5,16 +5,15 @@ import hashlib
 import json
 import os
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from email import policy
 from email.message import EmailMessage
 from email.parser import BytesParser
 from pathlib import Path
-from typing import Any, Protocol
+from typing import Any, Protocol, cast
 
 from ai_agents_hw6.application.events import atomic_write_json, redact
-from ai_agents_hw6.config import AppConfig, PLACEHOLDER_VALUES
-
+from ai_agents_hw6.config import PLACEHOLDER_VALUES, AppConfig
 
 GMAIL_SEND_SCOPE = "https://www.googleapis.com/auth/gmail.send"
 FINAL_RECIPIENT = "rmisegal+uoh26b@gmail.com"
@@ -36,7 +35,7 @@ class GmailPaths:
     receipt_file: Path
 
     @classmethod
-    def from_environment(cls) -> "GmailPaths":
+    def from_environment(cls) -> GmailPaths:
         credentials = os.environ.get("GOOGLE_CREDENTIALS_FILE")
         token = os.environ.get("GOOGLE_TOKEN_FILE")
         if not credentials:
@@ -119,7 +118,9 @@ def validate_internal_report(report: dict[str, Any]) -> None:
 
 def validate_production_metadata(config: AppConfig, report: dict[str, Any]) -> None:
     if config.group.name in PLACEHOLDER_VALUES or not config.group.students:
-        raise GmailDeliveryError("real group name and at least one student are required before sending")
+        raise GmailDeliveryError(
+            "real group name and at least one student are required before sending"
+        )
     if report.get("group_name") != config.group.name:
         raise GmailDeliveryError("report group_name does not match configuration")
     if report.get("students") != list(config.group.students):
@@ -201,7 +202,7 @@ def deliver_report(
         payload_sha256=payload_sha256,
         recipient=FINAL_RECIPIENT,
         message_id=message_id,
-        sent_at=datetime.now(UTC).isoformat(),
+        sent_at=datetime.now(timezone.utc).isoformat(),
     )
     atomic_write_json(receipt_path, receipt.to_json())
     return receipt
@@ -212,12 +213,10 @@ class GoogleGmailTransport:
         self._service = service
 
     def send(self, *, raw_message: str) -> dict[str, Any]:
-        return (
-            self._service.users()
-            .messages()
-            .send(userId="me", body={"raw": raw_message})
-            .execute()
+        response = (
+            self._service.users().messages().send(userId="me", body={"raw": raw_message}).execute()
         )
+        return cast(dict[str, Any], response)
 
 
 def build_google_transport(
@@ -228,8 +227,8 @@ def build_google_transport(
     try:
         from google.auth.transport.requests import Request
         from google.oauth2.credentials import Credentials
-        from google_auth_oauthlib.flow import InstalledAppFlow
-        from googleapiclient.discovery import build
+        from google_auth_oauthlib.flow import InstalledAppFlow  # type: ignore[import-untyped]
+        from googleapiclient.discovery import build  # type: ignore[import-untyped]
     except ImportError as exc:
         raise GmailDeliveryError(
             "Gmail dependencies are missing; install the project with the gmail extra"
@@ -238,7 +237,7 @@ def build_google_transport(
     credentials = None
     if paths.token_file.exists():
         try:
-            credentials = Credentials.from_authorized_user_file(
+            credentials = Credentials.from_authorized_user_file(  # type: ignore[no-untyped-call]
                 str(paths.token_file),
                 [GMAIL_SEND_SCOPE],
             )
@@ -268,7 +267,9 @@ def build_google_transport(
             paths.token_file.write_text(credentials.to_json(), encoding="utf-8")
         except Exception as exc:
             raise GmailDeliveryError("interactive Gmail authorization failed") from exc
-    return GoogleGmailTransport(build("gmail", "v1", credentials=credentials, cache_discovery=False))
+    return GoogleGmailTransport(
+        build("gmail", "v1", credentials=credentials, cache_discovery=False)
+    )
 
 
 def _refresh_existing_credentials(

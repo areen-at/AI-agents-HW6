@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-
 from typing import Any
 
 from ai_agents_hw6.domain import Coordinate, GameAction, GameState, GridSize, Role, legal_actions
@@ -23,7 +22,7 @@ class Observation:
     max_barriers: int
     history_summary: tuple[str, ...] = ()
 
-    def to_public_json(self) -> dict:
+    def to_public_json(self) -> dict[str, Any]:
         return {
             "protocol_version": self.protocol_version,
             "request_id": self.request_id,
@@ -118,7 +117,7 @@ def manhattan_distance(first: Coordinate, second: Coordinate) -> int:
     return abs(first.row - second.row) + abs(first.column - second.column)
 
 
-def _action_public_json(action: GameAction) -> dict:
+def _action_public_json(action: GameAction) -> dict[str, Any]:
     from ai_agents_hw6.domain import MoveAction, PlaceBarrierAction
 
     if isinstance(action, MoveAction):

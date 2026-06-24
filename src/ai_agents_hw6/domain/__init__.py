@@ -13,7 +13,13 @@ from ai_agents_hw6.domain.errors import DomainError
 from ai_agents_hw6.domain.geometry import Coordinate, GridSize, direction_delta
 from ai_agents_hw6.domain.identifiers import AttemptId, RequestId, SeriesId, SubGameId
 from ai_agents_hw6.domain.initialization import create_initial_state
-from ai_agents_hw6.domain.rules import apply_action, legal_actions, legal_barrier_actions, legal_move_actions, replay_actions
+from ai_agents_hw6.domain.rules import (
+    apply_action,
+    legal_actions,
+    legal_barrier_actions,
+    legal_move_actions,
+    replay_actions,
+)
 from ai_agents_hw6.domain.scoring import ScoreMatrix, ScoreResult, score_state
 from ai_agents_hw6.domain.state import GameState
 

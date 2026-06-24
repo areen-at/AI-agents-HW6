@@ -16,7 +16,6 @@ from ai_agents_hw6.domain import (
     Role,
 )
 
-
 MAX_ACTION_RESPONSE_CHARS = 2000
 
 

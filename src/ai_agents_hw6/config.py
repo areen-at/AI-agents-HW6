@@ -244,7 +244,9 @@ def _parse_config(raw: dict[str, Any]) -> AppConfig:
                 key="max_barriers",
             ),
             scoring=ScoringConfig(
-                cop_win=_require_non_negative_int(scoring_raw, "game.scoring.cop_win", key="cop_win"),
+                cop_win=_require_non_negative_int(
+                    scoring_raw, "game.scoring.cop_win", key="cop_win"
+                ),
                 thief_win=_require_non_negative_int(
                     scoring_raw,
                     "game.scoring.thief_win",
@@ -307,7 +309,9 @@ def _parse_config(raw: dict[str, Any]) -> AppConfig:
         ),
         logging=LoggingConfig(
             level=_require_log_level(logging_raw),
-            event_log_dir=_require_string(logging_raw, "logging.event_log_dir", key="event_log_dir"),
+            event_log_dir=_require_string(
+                logging_raw, "logging.event_log_dir", key="event_log_dir"
+            ),
         ),
     )
 
@@ -317,7 +321,9 @@ def _parse_config(raw: dict[str, Any]) -> AppConfig:
     return config
 
 
-def _require_object(container: dict[str, Any], path: str, *, key: str | None = None) -> dict[str, Any]:
+def _require_object(
+    container: dict[str, Any], path: str, *, key: str | None = None
+) -> dict[str, Any]:
     lookup = key if key is not None else path
     value = container.get(lookup)
     if not isinstance(value, dict):
@@ -377,9 +383,7 @@ def _require_grid_size(container: dict[str, Any]) -> tuple[int, int]:
 def _require_log_level(container: dict[str, Any]) -> str:
     value = _require_string(container, "logging.level", key="level").upper()
     if value not in VALID_LOG_LEVELS:
-        raise ConfigError(
-            "logging.level must be one of DEBUG, INFO, WARNING, ERROR, or CRITICAL"
-        )
+        raise ConfigError("logging.level must be one of DEBUG, INFO, WARNING, ERROR, or CRITICAL")
     return value
 
 

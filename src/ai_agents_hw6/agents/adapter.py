@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Callable
+
 from ai_agents_hw6.agents.heuristic import HeuristicPolicy
 from ai_agents_hw6.agents.policy import Policy, PolicyInput
 from ai_agents_hw6.contracts import (
@@ -38,14 +40,21 @@ def policy_input_from_state(state: GameState, *, max_barriers: int = 5) -> Polic
     )
 
 
-def policy_decision_provider(policy: Policy, *, max_barriers: int = 5):
+def policy_decision_provider(
+    policy: Policy,
+    *,
+    max_barriers: int = 5,
+) -> Callable[[GameState], GameAction]:
     def decide(state: GameState) -> GameAction:
         return policy.choose_action(policy_input_from_state(state, max_barriers=max_barriers))
 
     return decide
 
 
-def heuristic_decision_provider(*, max_barriers: int = 5):
+def heuristic_decision_provider(
+    *,
+    max_barriers: int = 5,
+) -> Callable[[GameState], GameAction]:
     return policy_decision_provider(HeuristicPolicy(), max_barriers=max_barriers)
 
 
@@ -64,7 +73,11 @@ def heuristic_protocol_decision(
     )
 
 
-def heuristic_protocol_decision_provider(*, max_barriers: int = 5, manhattan_radius: int = 2):
+def heuristic_protocol_decision_provider(
+    *,
+    max_barriers: int = 5,
+    manhattan_radius: int = 2,
+) -> Callable[[GameState], GameAction]:
     def decide(state: GameState) -> GameAction:
         observation = build_observation(
             state,

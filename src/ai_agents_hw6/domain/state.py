@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Iterable
 
 from ai_agents_hw6.domain.enums import Role, TerminalOutcome, TerminalReason
 from ai_agents_hw6.domain.errors import DomainError
@@ -22,7 +21,7 @@ class GameState:
     active_role: Role
     seed: int
     move_round: int = 0
-    barriers: Iterable[Coordinate] = field(default_factory=frozenset)
+    barriers: frozenset[Coordinate] = field(default_factory=frozenset)
     barriers_placed: int = 0
     terminal_outcome: TerminalOutcome | None = None
     terminal_reason: TerminalReason | None = None

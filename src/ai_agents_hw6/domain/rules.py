@@ -25,7 +25,9 @@ def legal_move_actions(state: GameState, role: Role) -> tuple[MoveAction, ...]:
     return tuple(legal)
 
 
-def legal_barrier_actions(state: GameState, max_barriers: int = 5) -> tuple[PlaceBarrierAction, ...]:
+def legal_barrier_actions(
+    state: GameState, max_barriers: int = 5
+) -> tuple[PlaceBarrierAction, ...]:
     """Return legal Cop barrier actions using the approved adjacent-empty-cell rule."""
 
     _require_non_terminal(state)
@@ -79,7 +81,9 @@ def apply_action(
     if not isinstance(role, Role):
         raise DomainError("role must be a Role")
     if role is not state.active_role:
-        raise DomainError(f"out-of-turn action: expected {state.active_role.value}, got {role.value}")
+        raise DomainError(
+            f"out-of-turn action: expected {state.active_role.value}, got {role.value}"
+        )
 
     if isinstance(action, MoveAction):
         return _apply_move(state, role=role, action=action, max_moves=max_moves)
@@ -223,10 +227,7 @@ def _is_legal_barrier_target(state: GameState, target: Coordinate) -> bool:
 
 def _has_any_movement(state: GameState, role: Role) -> bool:
     position = _position_for_role(state, role)
-    return any(
-        target not in state.barriers
-        for target in state.grid.bounded_neighbors(position)
-    )
+    return any(target not in state.barriers for target in state.grid.bounded_neighbors(position))
 
 
 def _require_non_terminal(state: GameState) -> None:

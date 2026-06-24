@@ -30,13 +30,17 @@ from ai_agents_hw6.domain import (
     legal_actions,
 )
 
+DEFAULT_COP = Coordinate(4, 4)
+DEFAULT_THIEF = Coordinate(0, 0)
+DEFAULT_BARRIERS = frozenset({Coordinate(0, 1), Coordinate(4, 3)})
+
 
 def _state(
     *,
-    cop: Coordinate = Coordinate(4, 4),
-    thief: Coordinate = Coordinate(0, 0),
+    cop: Coordinate = DEFAULT_COP,
+    thief: Coordinate = DEFAULT_THIEF,
     active: Role = Role.THIEF,
-    barriers: frozenset[Coordinate] = frozenset({Coordinate(0, 1), Coordinate(4, 3)}),
+    barriers: frozenset[Coordinate] = DEFAULT_BARRIERS,
 ) -> GameState:
     return GameState(
         series_id=SeriesId.new(),
@@ -126,7 +130,9 @@ class PromptTests(unittest.TestCase):
             history_summary=("round 1: thief moved right",),
         )
 
-        self.assertEqual(observation.to_public_json()["history_summary"], ["round 1: thief moved right"])
+        self.assertEqual(
+            observation.to_public_json()["history_summary"], ["round 1: thief moved right"]
+        )
 
 
 class ActionProtocolTests(unittest.TestCase):
@@ -149,7 +155,9 @@ class ActionProtocolTests(unittest.TestCase):
     def test_valid_cop_barrier_response_parses(self) -> None:
         state = _state(cop=Coordinate(1, 1), thief=Coordinate(0, 0), active=Role.COP)
         observation = build_observation(state, request_id="req-9", role=Role.COP)
-        barrier = next(action for action in observation.legal_actions if isinstance(action, PlaceBarrierAction))
+        barrier = next(
+            action for action in observation.legal_actions if isinstance(action, PlaceBarrierAction)
+        )
 
         parsed = parse_action_response(
             action_response_json(
@@ -230,7 +238,9 @@ class ActionProtocolTests(unittest.TestCase):
             parse_action_response(raw, observation)
 
     def test_thief_barrier_response_is_rejected(self) -> None:
-        observation = build_observation(_state(active=Role.THIEF), request_id="req-12", role=Role.THIEF)
+        observation = build_observation(
+            _state(active=Role.THIEF), request_id="req-12", role=Role.THIEF
+        )
         raw = json.dumps(
             {
                 "protocol_version": "1.0",

@@ -35,7 +35,7 @@ class McpClientConfig:
     max_retries: int = 2
 
     @classmethod
-    def from_config(cls, config: AppConfig) -> "McpClientConfig":
+    def from_config(cls, config: AppConfig) -> McpClientConfig:
         return cls(
             cop_url=config.my_servers.cop_mcp_url.rstrip("/"),
             thief_url=config.my_servers.thief_mcp_url.rstrip("/"),
@@ -95,7 +95,9 @@ class RoleMcpClient:
                 detail = json.loads(exc.read().decode("utf-8")).get("error", str(exc))
             except Exception:
                 detail = str(exc)
-            raise McpClientError(f"{self.role.value} server returned HTTP {exc.code}: {detail}") from exc
+            raise McpClientError(
+                f"{self.role.value} server returned HTTP {exc.code}: {detail}"
+            ) from exc
         except (TimeoutError, URLError, OSError) as exc:
             raise McpClientError(f"{self.role.value} server unavailable: {exc}") from exc
         if not isinstance(decoded, dict):

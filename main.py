@@ -5,8 +5,6 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 
-from ai_agents_hw6.config import ConfigError, load_config, validate_for_mode
-from ai_agents_hw6.cli import build_parser
 from ai_agents_hw6.application import (
     McpClientError,
     build_evidence_manifest,
@@ -14,8 +12,8 @@ from ai_agents_hw6.application import (
     write_engine_only_series_with_policy,
     write_evidence_manifest,
 )
-from ai_agents_hw6.reporting import build_internal_report, write_internal_report
-from ai_agents_hw6.ui import TerminalObserver, render_series_summary, replay_events
+from ai_agents_hw6.cli import build_parser
+from ai_agents_hw6.config import ConfigError, load_config, validate_for_mode
 from ai_agents_hw6.infrastructure import (
     GmailDeliveryError,
     GmailPaths,
@@ -26,6 +24,8 @@ from ai_agents_hw6.infrastructure import (
     validate_production_metadata,
     validate_secret_paths_are_gitignored,
 )
+from ai_agents_hw6.reporting import build_internal_report, write_internal_report
+from ai_agents_hw6.ui import TerminalObserver, render_series_summary, replay_events
 
 
 def main() -> int:
@@ -73,9 +73,7 @@ def main() -> int:
                 build_google_transport(paths, interactive=True)
                 print(f"Gmail authorization completed. Token: {paths.token_file}")
                 return 0
-            report, canonical_payload = load_canonical_report(
-                config.reports.internal_game_report
-            )
+            report, canonical_payload = load_canonical_report(config.reports.internal_game_report)
             validate_production_metadata(config, report)
             paths = GmailPaths.from_environment()
             validate_secret_paths_are_gitignored(paths)
@@ -126,9 +124,7 @@ def main() -> int:
             evidence_path,
             build_evidence_manifest(
                 config_path=args.config,
-                event_log_path=str(
-                    Path(config.logging.event_log_dir) / "engine_only_events.json"
-                ),
+                event_log_path=str(Path(config.logging.event_log_dir) / "engine_only_events.json"),
                 report_path=config.reports.internal_game_report,
             ),
         )
@@ -152,9 +148,7 @@ def main() -> int:
             evidence_path,
             build_evidence_manifest(
                 config_path=args.config,
-                event_log_path=str(
-                    Path(config.logging.event_log_dir) / "engine_only_events.json"
-                ),
+                event_log_path=str(Path(config.logging.event_log_dir) / "engine_only_events.json"),
                 report_path=config.reports.internal_game_report,
             ),
         )

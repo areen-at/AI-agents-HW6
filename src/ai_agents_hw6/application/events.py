@@ -4,27 +4,26 @@ import hashlib
 import json
 import re
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Any
 
 from ai_agents_hw6.domain import (
+    AttemptId,
+    Coordinate,
     GameAction,
     GameState,
+    GridSize,
     MoveAction,
     PlaceBarrierAction,
     Role,
     ScoreResult,
-    AttemptId,
-    Coordinate,
-    GridSize,
     SeriesId,
     SubGameId,
     TerminalOutcome,
     TerminalReason,
 )
-
 
 EVENT_SCHEMA_VERSION = "1.0"
 SENSITIVE_KEYS = {
@@ -89,7 +88,7 @@ class EventLog:
         record = EventRecord(
             schema_version=EVENT_SCHEMA_VERSION,
             event_type=event_type,
-            timestamp=datetime.now(UTC).isoformat(),
+            timestamp=datetime.now(timezone.utc).isoformat(),
             series_id=str(state.series_id),
             sub_game_id=str(state.sub_game_id),
             attempt_id=str(state.attempt_id),
@@ -148,7 +147,7 @@ def state_from_json(value: dict[str, Any]) -> GameState:
         active_role=Role(value["active_role"]),
         seed=value["seed"],
         move_round=value["move_round"],
-        barriers=(Coordinate.from_json(item) for item in value["barriers"]),
+        barriers=frozenset(Coordinate.from_json(item) for item in value["barriers"]),
         barriers_placed=value["barriers_placed"],
         terminal_outcome=(
             TerminalOutcome(value["terminal_outcome"]) if value["terminal_outcome"] else None

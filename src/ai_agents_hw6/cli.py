@@ -49,7 +49,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--replay-events",
         metavar="PATH",
-        help="Render committed state snapshots from a previously written event log, without MCP calls.",
+        help=(
+            "Render committed state snapshots from a previously written event log, "
+            "without MCP calls."
+        ),
     )
     parser.add_argument(
         "--gmail-preflight",

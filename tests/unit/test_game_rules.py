@@ -28,12 +28,16 @@ from ai_agents_hw6.domain import (
     score_state,
 )
 
+DEFAULT_GRID = GridSize(3, 3)
+DEFAULT_COP = Coordinate(1, 1)
+DEFAULT_THIEF = Coordinate(0, 0)
+
 
 def _state(
     *,
-    grid: GridSize = GridSize(3, 3),
-    cop: Coordinate = Coordinate(1, 1),
-    thief: Coordinate = Coordinate(0, 0),
+    grid: GridSize = DEFAULT_GRID,
+    cop: Coordinate = DEFAULT_COP,
+    thief: Coordinate = DEFAULT_THIEF,
     active: Role = Role.THIEF,
     move_round: int = 0,
     barriers: frozenset[Coordinate] = frozenset(),
@@ -120,7 +124,9 @@ class MovementRuleTests(unittest.TestCase):
     def test_thief_survives_at_configured_move_limit_after_cop_action(self) -> None:
         state = _state(cop=Coordinate(1, 1), thief=Coordinate(0, 0), active=Role.COP)
 
-        survived = apply_action(state, role=Role.COP, action=MoveAction(Direction.DOWN), max_moves=1)
+        survived = apply_action(
+            state, role=Role.COP, action=MoveAction(Direction.DOWN), max_moves=1
+        )
 
         self.assertTrue(survived.is_terminal)
         self.assertEqual(survived.move_round, 1)
@@ -130,7 +136,9 @@ class MovementRuleTests(unittest.TestCase):
     def test_capture_takes_precedence_on_final_round(self) -> None:
         state = _state(cop=Coordinate(1, 1), thief=Coordinate(1, 2), active=Role.COP)
 
-        captured = apply_action(state, role=Role.COP, action=MoveAction(Direction.RIGHT), max_moves=1)
+        captured = apply_action(
+            state, role=Role.COP, action=MoveAction(Direction.RIGHT), max_moves=1
+        )
 
         self.assertEqual(captured.terminal_outcome, TerminalOutcome.COP_WIN)
         self.assertEqual(captured.terminal_reason, TerminalReason.CAPTURE)
@@ -226,8 +234,12 @@ class BarrierRuleTests(unittest.TestCase):
             barriers_placed=2,
         )
 
-        self.assertNotIn(Direction.RIGHT, {a.direction for a in legal_move_actions(state, Role.COP)})
-        self.assertNotIn(Direction.RIGHT, {a.direction for a in legal_move_actions(state, Role.THIEF)})
+        self.assertNotIn(
+            Direction.RIGHT, {a.direction for a in legal_move_actions(state, Role.COP)}
+        )
+        self.assertNotIn(
+            Direction.RIGHT, {a.direction for a in legal_move_actions(state, Role.THIEF)}
+        )
 
 
 class ScoringAndReplayTests(unittest.TestCase):
@@ -299,7 +311,9 @@ class SmallBoardProgressiveTests(unittest.TestCase):
                         next_state = apply_action(state, role=active, action=action)
                         self.assertTrue(grid.contains(next_state.cop_position))
                         self.assertTrue(grid.contains(next_state.thief_position))
-                        self.assertTrue(all(grid.contains(barrier) for barrier in next_state.barriers))
+                        self.assertTrue(
+                            all(grid.contains(barrier) for barrier in next_state.barriers)
+                        )
 
     def test_progressive_grid_sanity_for_seeded_initialization_and_legal_moves(self) -> None:
         for rows, columns in ((3, 2), (3, 3), (4, 3), (4, 4), (5, 5)):

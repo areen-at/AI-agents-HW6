@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from collections.abc import Callable
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Protocol
+from typing import Any, Protocol
 
+from ai_agents_hw6.agents import heuristic_protocol_decision_provider
 from ai_agents_hw6.application.events import (
     EventLog,
     action_to_json,
@@ -13,7 +15,6 @@ from ai_agents_hw6.application.events import (
     state_hash,
     state_to_json,
 )
-from ai_agents_hw6.agents import heuristic_protocol_decision_provider
 from ai_agents_hw6.config import AppConfig
 from ai_agents_hw6.domain import (
     AttemptId,
@@ -32,7 +33,6 @@ from ai_agents_hw6.domain import (
     score_state,
 )
 
-
 DecisionProvider = Callable[[GameState], GameAction]
 
 
@@ -43,7 +43,7 @@ class SeriesObserver(Protocol):
 
     def on_endpoint_status(self, role: Role, status: str, url: str) -> None: ...
 
-    def on_series_finished(self, result: "SeriesResult") -> None: ...
+    def on_series_finished(self, result: SeriesResult) -> None: ...
 
 
 class TechnicalFailure(RuntimeError):
@@ -86,7 +86,7 @@ class SeriesResult:
     series_id: SeriesId
     valid_sub_games: tuple[SubGameRecord, ...]
     invalid_attempts: tuple[AttemptRecord, ...]
-    events: tuple[dict, ...]
+    events: tuple[dict[str, Any], ...]
     totals: dict[str, int]
 
 
@@ -101,7 +101,7 @@ class SeriesSettings:
     event_log_path: str | None = None
 
     @classmethod
-    def from_config(cls, config: AppConfig) -> "SeriesSettings":
+    def from_config(cls, config: AppConfig) -> SeriesSettings:
         return cls(
             grid=GridSize(*config.game.grid_size),
             num_games=config.game.num_games,
@@ -259,8 +259,12 @@ def run_series(
                 attempt_number=attempt_number,
                 payload={
                     "state_hash": state_hash(state),
-                    "terminal_outcome": state.terminal_outcome.value if state.terminal_outcome else None,
-                    "terminal_reason": state.terminal_reason.value if state.terminal_reason else None,
+                    "terminal_outcome": state.terminal_outcome.value
+                    if state.terminal_outcome
+                    else None,
+                    "terminal_reason": state.terminal_reason.value
+                    if state.terminal_reason
+                    else None,
                     "move_count": state.move_round,
                     "score": score_to_json(score),
                     "state": state_to_json(state),
@@ -342,6 +346,7 @@ def write_engine_only_series_with_policy(
 ) -> SeriesResult:
     settings = SeriesSettings.from_config(config)
     scoring = ScoreMatrix.from_config(config.game.scoring)
+    decision_provider: DecisionProvider
     if policy_name == "first-legal":
         decision_provider = first_legal_action_provider
     elif policy_name == "heuristic":

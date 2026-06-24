@@ -4,6 +4,7 @@ from dataclasses import replace
 
 from ai_agents_hw6.agents.policy import PolicyInput
 from ai_agents_hw6.domain import (
+    AttemptId,
     Coordinate,
     Direction,
     GameAction,
@@ -11,11 +12,12 @@ from ai_agents_hw6.domain import (
     MoveAction,
     PlaceBarrierAction,
     Role,
+    SeriesId,
+    SubGameId,
     legal_move_actions,
 )
 from ai_agents_hw6.domain.errors import DomainError
 from ai_agents_hw6.domain.state import GameState
-
 
 DIRECTION_TIE_BREAK = {
     Direction.UP: 0,
@@ -44,7 +46,8 @@ def _choose_cop_action(policy_input: PolicyInput) -> GameAction:
     if policy_input.visible_opponent is None:
         return _deterministic_first(policy_input.legal_actions)
 
-    capture = _capture_move(moves, policy_input.self_position, policy_input.visible_opponent)
+    opponent = policy_input.visible_opponent
+    capture = _capture_move(moves, policy_input.self_position, opponent)
     if capture is not None:
         return capture
 
@@ -55,7 +58,7 @@ def _choose_cop_action(policy_input: PolicyInput) -> GameAction:
     return min(
         moves or policy_input.legal_actions,
         key=lambda action: (
-            _distance_after_action(policy_input.self_position, action, policy_input.visible_opponent),
+            _distance_after_action(policy_input.self_position, action, opponent),
             _action_tie_break(action),
         ),
     )
@@ -68,10 +71,11 @@ def _choose_thief_action(policy_input: PolicyInput) -> GameAction:
     if policy_input.visible_opponent is None:
         return min(moves, key=_action_tie_break)
 
+    opponent = policy_input.visible_opponent
     return max(
         moves,
         key=lambda action: (
-            _distance_after_action(policy_input.self_position, action, policy_input.visible_opponent),
+            _distance_after_action(policy_input.self_position, action, opponent),
             _escape_degree(policy_input, action),
             *_reverse_tie_break(action),
         ),
@@ -114,7 +118,9 @@ def _useful_barrier(
             )
     if not useful:
         return None
-    return sorted(useful, key=lambda item: (item[0], item[1], item[2].target.row, item[2].target.column))[0][2]
+    return sorted(
+        useful, key=lambda item: (item[0], item[1], item[2].target.row, item[2].target.column)
+    )[0][2]
 
 
 def _visible_opponent_escape_degree(policy_input: PolicyInput) -> int:
@@ -193,8 +199,6 @@ def _reverse_tie_break(action: GameAction) -> tuple[int, int, int]:
 def manhattan_distance(first: Coordinate, second: Coordinate) -> int:
     return abs(first.row - second.row) + abs(first.column - second.column)
 
-
-from ai_agents_hw6.domain import AttemptId, SeriesId, SubGameId
 
 _DUMMY_STATE = GameState(
     series_id=SeriesId.new(),

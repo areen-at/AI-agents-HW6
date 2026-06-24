@@ -1,14 +1,15 @@
 from __future__ import annotations
 
-from ai_agents_hw6.domain import Role
+from typing import Any
 
+from ai_agents_hw6.domain import Role
 
 PROTOCOL_VERSION = "1.0"
 SERVER_TRANSPORT = "stdlib-json-http"
 FASTMCP_DEPENDENCY = "not-installed-phase-7-stdlib-transport"
 
 
-def capabilities(role: Role) -> dict:
+def capabilities(role: Role) -> dict[str, Any]:
     return {
         "protocol_version": PROTOCOL_VERSION,
         "transport": SERVER_TRANSPORT,

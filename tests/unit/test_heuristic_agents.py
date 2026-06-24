@@ -2,10 +2,15 @@ from __future__ import annotations
 
 import unittest
 
-from ai_agents_hw6.agents import HeuristicPolicy, heuristic_decision_provider, policy_input_from_state
+from ai_agents_hw6.agents import (
+    HeuristicPolicy,
+    heuristic_decision_provider,
+    policy_input_from_state,
+)
 from ai_agents_hw6.agents.policy import PolicyInput
 from ai_agents_hw6.application.series import SeriesSettings, run_series
 from ai_agents_hw6.domain import (
+    AttemptId,
     Coordinate,
     Direction,
     DomainError,
@@ -17,16 +22,19 @@ from ai_agents_hw6.domain import (
     ScoreMatrix,
     SeriesId,
     SubGameId,
-    AttemptId,
     legal_actions,
 )
+
+DEFAULT_GRID = GridSize(5, 5)
+DEFAULT_COP = Coordinate(2, 2)
+DEFAULT_THIEF = Coordinate(0, 2)
 
 
 def _state(
     *,
-    grid: GridSize = GridSize(5, 5),
-    cop: Coordinate = Coordinate(2, 2),
-    thief: Coordinate = Coordinate(0, 2),
+    grid: GridSize = DEFAULT_GRID,
+    cop: Coordinate = DEFAULT_COP,
+    thief: Coordinate = DEFAULT_THIEF,
     active: Role = Role.COP,
     barriers: frozenset[Coordinate] = frozenset(),
     barriers_placed: int = 0,
@@ -77,7 +85,9 @@ class HeuristicPolicyTests(unittest.TestCase):
         policy = HeuristicPolicy()
         state = _state(cop=Coordinate(1, 1), thief=Coordinate(1, 2), active=Role.COP)
 
-        self.assertEqual(policy.choose_action(policy_input_from_state(state)), MoveAction(Direction.RIGHT))
+        self.assertEqual(
+            policy.choose_action(policy_input_from_state(state)), MoveAction(Direction.RIGHT)
+        )
 
     def test_cop_falls_back_to_move_when_barrier_limit_reached(self) -> None:
         policy = HeuristicPolicy()

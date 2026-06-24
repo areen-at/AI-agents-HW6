@@ -10,8 +10,11 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 
 from ai_agents_hw6.domain import Role
-from ai_agents_hw6.mcp_servers.service import McpServerError, RoleDecisionService, response_public_json
-
+from ai_agents_hw6.mcp_servers.service import (
+    McpServerError,
+    RoleDecisionService,
+    response_public_json,
+)
 
 DEFAULT_MAX_REQUEST_BYTES = 64 * 1024
 DEFAULT_RATE_LIMIT_PER_MINUTE = 1000
@@ -164,9 +167,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> int:
     args = build_parser().parse_args()
     role = Role(args.role)
-    token_env = args.token_env or (
-        "COP_MCP_TOKEN" if role is Role.COP else "THIEF_MCP_TOKEN"
-    )
+    token_env = args.token_env or ("COP_MCP_TOKEN" if role is Role.COP else "THIEF_MCP_TOKEN")
     token = os.environ.get(token_env)
     if args.require_auth and not token:
         raise SystemExit(f"required authentication token is missing from {token_env}")

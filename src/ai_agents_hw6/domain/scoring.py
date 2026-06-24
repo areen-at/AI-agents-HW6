@@ -30,7 +30,7 @@ class ScoreMatrix:
                 raise DomainError(f"{field_name} score must be non-negative")
 
     @classmethod
-    def from_config(cls, config: Any) -> "ScoreMatrix":
+    def from_config(cls, config: Any) -> ScoreMatrix:
         """Create a score matrix from the Phase 1 config scoring object."""
 
         return cls(

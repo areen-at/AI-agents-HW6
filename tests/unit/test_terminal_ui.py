@@ -13,7 +13,6 @@ from ai_agents_hw6.domain import (
     Coordinate,
     GridSize,
     MoveAction,
-    Role,
     ScoreMatrix,
     create_initial_state,
 )
@@ -45,7 +44,9 @@ class TerminalRenderingTests(unittest.TestCase):
         self.assertIn("2 | . . . . T", rendered)
         self.assertIn("C=Cop T=Thief #=barrier .=empty", rendered)
 
-    def test_state_view_includes_ids_round_role_barriers_action_scores_and_orientation(self) -> None:
+    def test_state_view_includes_ids_round_role_barriers_action_scores_and_orientation(
+        self,
+    ) -> None:
         state = create_initial_state(grid=GridSize(5, 5), seed=8)
         rendered = render_state(
             state,
