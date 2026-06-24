@@ -70,6 +70,7 @@ reports/*.json
 artifacts/logs/
 artifacts/replays/
 artifacts/reports/
+artifacts/learning/
 
 # Assignment PDFs are local reference material unless explicitly approved
 ex*.pdf

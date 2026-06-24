@@ -92,6 +92,36 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual(config.game.num_games, 6)
         self.assertEqual(config.game.scoring.cop_win, 20)
         self.assertEqual(config.runtime.timezone, "Asia/Jerusalem")
+        self.assertFalse(config.learning.enabled)
+        self.assertNotEqual(config.learning.training_seed, config.learning.evaluation_seed)
+
+    def test_learning_configuration_is_optional_and_validated(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config = load_config(
+                _write_config(
+                    Path(temp_dir),
+                    {
+                        "learning": {
+                            "enabled": True,
+                            "alpha": 0.2,
+                            "gamma": 0.8,
+                            "epsilon": 0.05,
+                            "training_seed": 10,
+                            "evaluation_seed": 11,
+                        }
+                    },
+                )
+            )
+        self.assertTrue(config.learning.enabled)
+        self.assertEqual(config.learning.alpha, 0.2)
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = _write_config(
+                Path(temp_dir),
+                {"learning": {"epsilon": 2.0}},
+            )
+            with self.assertRaisesRegex(ConfigError, "epsilon"):
+                load_config(path)
 
     def test_bonus_mode_rejects_placeholder_opponent_data(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

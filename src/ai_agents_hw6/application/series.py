@@ -5,7 +5,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
 
-from ai_agents_hw6.agents import heuristic_protocol_decision_provider
+from ai_agents_hw6.agents import (
+    QLearningPolicy,
+    heuristic_protocol_decision_provider,
+    policy_decision_provider,
+)
 from ai_agents_hw6.application.events import (
     EventLog,
     action_to_json,
@@ -358,6 +362,15 @@ def write_engine_only_series_with_policy(
         decision_provider = first_legal_action_provider
     elif policy_name == "heuristic":
         decision_provider = heuristic_protocol_decision_provider(max_barriers=settings.max_barriers)
+    elif policy_name == "q-learning":
+        if not config.learning.enabled:
+            raise ValueError("q-learning policy requires learning.enabled=true")
+        policy = QLearningPolicy(config.learning)
+        policy.load()
+        decision_provider = policy_decision_provider(
+            policy,
+            max_barriers=settings.max_barriers,
+        )
     else:
         raise ValueError(f"unknown engine-only policy: {policy_name}")
     return run_series(

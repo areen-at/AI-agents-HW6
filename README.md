@@ -211,10 +211,11 @@ The baseline policies are deterministic heuristics:
 - Cop pursues a visible Thief and may place a useful legal barrier.
 - Thief chooses movement actions that improve escape safety.
 
-Q-learning is not currently implemented and is not required for baseline compliance. A later
-feature would use role-specific state encodings and Q-tables, configurable `alpha`, `gamma`, and
-`epsilon`, epsilon-greedy selection, terminal updates without future-state bootstrapping, and a
-feature flag that preserves this heuristic baseline.
+Q-learning is implemented as an optional, disabled-by-default policy and is not required for
+baseline compliance. It uses observation-only state encoding, separate versioned Cop and Thief
+tables, configurable epsilon-greedy selection, and terminal-safe updates. The heuristic remains the
+fallback. Run `python main.py --mode internal --config config.json --evaluate-learning` for a
+reproducible baseline comparison.
 
 ## Installation
 
@@ -654,5 +655,6 @@ log, fix the service problem, and allow the bounded replacement policy to comple
   package.
 - Render free services can cold-start.
 - Bonus orchestration/report agreement is not yet implemented.
-- Q-learning is deferred and the heuristic policy remains authoritative for the baseline.
+- Q-learning is optional and disabled by default; the heuristic remains authoritative for the
+  baseline and whenever evaluation reports a reliability regression.
 - Phase 13 will perform the required clean release rehearsal.

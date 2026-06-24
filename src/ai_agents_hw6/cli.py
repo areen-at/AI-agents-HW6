@@ -32,7 +32,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--policy",
-        choices=("heuristic", "first-legal"),
+        choices=("heuristic", "first-legal", "q-learning"),
         default="heuristic",
         help="Engine-only policy to use when --engine-only is set.",
     )
@@ -88,5 +88,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--verify-bonus-report",
         action="store_true",
         help="Validate and print the checksum of the finalized bonus report.",
+    )
+    parser.add_argument(
+        "--evaluate-learning",
+        action="store_true",
+        help="Compare optional Q-learning tables with the fixed heuristic baseline.",
     )
     return parser

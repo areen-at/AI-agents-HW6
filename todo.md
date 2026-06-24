@@ -712,53 +712,53 @@
 ### Tasks
 
 - [ ] T0461 Enter only after all required release gates pass.
-- [ ] T0462 Confirm learning cannot delay submission.
-- [ ] T0463 Keep heuristic strategies available as fallback.
-- [ ] T0464 Define observation-based state encoding.
-- [ ] T0465 Never encode hidden true state.
-- [ ] T0466 Define role-specific legal action indices.
-- [ ] T0467 Create separate Cop and Thief Q-tables.
-- [ ] T0468 Configure alpha, gamma, epsilon, and seed.
-- [ ] T0469 Implement epsilon-greedy legal-action selection.
-- [ ] T0470 Implement terminal-safe Q update.
-- [ ] T0471 Persist tables separately with versions.
-- [ ] T0472 Reject incompatible table versions.
-- [ ] T0473 Add runtime feature flag.
-- [ ] T0474 Use separate training and evaluation seeds.
-- [ ] T0475 Compare with fixed heuristic baseline.
-- [ ] T0476 Measure scores, illegal actions, and average moves.
-- [ ] T0477 Keep MCP contracts unchanged.
-- [ ] T0478 Keep report schemas unchanged.
-- [ ] T0479 Keep technical-failure policy unchanged.
-- [ ] T0480 Disable learning if reliability regresses.
-- [ ] T0481 Document learning as optional.
-- [ ] T0482 Run full baseline suite with learning off.
-- [ ] T0483 Run focused evaluation with learning on.
-- [ ] T0484 Verify no hidden-state leakage.
-- [ ] T0485 Do not make Q-learning a normal-mode dependency.
-- [ ] T0486 Report phase files, commands, outputs, and tests then stop.
+- [x] T0462 Confirm learning cannot delay submission.
+- [x] T0463 Keep heuristic strategies available as fallback.
+- [x] T0464 Define observation-based state encoding.
+- [x] T0465 Never encode hidden true state.
+- [x] T0466 Define role-specific legal action indices.
+- [x] T0467 Create separate Cop and Thief Q-tables.
+- [x] T0468 Configure alpha, gamma, epsilon, and seed.
+- [x] T0469 Implement epsilon-greedy legal-action selection.
+- [x] T0470 Implement terminal-safe Q update.
+- [x] T0471 Persist tables separately with versions.
+- [x] T0472 Reject incompatible table versions.
+- [x] T0473 Add runtime feature flag.
+- [x] T0474 Use separate training and evaluation seeds.
+- [x] T0475 Compare with fixed heuristic baseline.
+- [x] T0476 Measure scores, illegal actions, and average moves.
+- [x] T0477 Keep MCP contracts unchanged.
+- [x] T0478 Keep report schemas unchanged.
+- [x] T0479 Keep technical-failure policy unchanged.
+- [x] T0480 Disable learning if reliability regresses.
+- [x] T0481 Document learning as optional.
+- [x] T0482 Run full baseline suite with learning off.
+- [x] T0483 Run focused evaluation with learning on.
+- [x] T0484 Verify no hidden-state leakage.
+- [x] T0485 Do not make Q-learning a normal-mode dependency.
+- [x] T0486 Report phase files, commands, outputs, and tests then stop.
 
 ### Phase gate
 
 - [ ] All tasks required for this phase have evidence.
-- [ ] Automated and manual verification results are recorded.
-- [ ] Changed files and unrelated preserved files are listed.
-- [ ] Run commands and expected output are documented.
+- [x] Automated and manual verification results are recorded.
+- [x] Changed files and unrelated preserved files are listed.
+- [x] Run commands and expected output are documented.
 - [ ] Work stops here for review before the next phase.
 
 ## Cross-cutting quality and final handoff
 
 ### Tasks
 
-- [ ] T0487 Maintain unit tests for every game rule.
-- [ ] T0488 Maintain contract tests for every external schema.
-- [ ] T0489 Maintain integration tests for both local MCP servers.
-- [ ] T0490 Maintain end-to-end internal and bonus-mock tests.
-- [ ] T0491 Maintain observation leak tests.
-- [ ] T0492 Maintain timeout, retry, duplicate, and idempotency tests.
-- [ ] T0493 Maintain report total and schema tests.
-- [ ] T0494 Maintain fake Gmail tests.
-- [ ] T0495 Maintain remote auth tests when endpoints exist.
+- [x] T0487 Maintain unit tests for every game rule.
+- [x] T0488 Maintain contract tests for every external schema.
+- [x] T0489 Maintain integration tests for both local MCP servers.
+- [x] T0490 Maintain end-to-end internal and bonus-mock tests.
+- [x] T0491 Maintain observation leak tests.
+- [x] T0492 Maintain timeout, retry, duplicate, and idempotency tests.
+- [x] T0493 Maintain report total and schema tests.
+- [x] T0494 Maintain fake Gmail tests.
+- [x] T0495 Maintain remote auth tests when endpoints exist.
 - [ ] T0496 Map PRD game requirements to tests.
 - [ ] T0497 Map PRD observation requirements to tests.
 - [ ] T0498 Map PRD MCP requirements to traces.

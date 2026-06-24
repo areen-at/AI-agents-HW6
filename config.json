@@ -48,5 +48,16 @@
   "logging": {
     "level": "INFO",
     "event_log_dir": "artifacts/logs"
+  },
+  "learning": {
+    "enabled": false,
+    "alpha": 0.1,
+    "gamma": 0.95,
+    "epsilon": 0.1,
+    "seed": 2026,
+    "training_seed": 2026,
+    "evaluation_seed": 2027,
+    "cop_table_path": "artifacts/learning/cop_q_table.json",
+    "thief_table_path": "artifacts/learning/thief_q_table.json"
   }
 }

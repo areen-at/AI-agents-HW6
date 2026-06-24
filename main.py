@@ -12,6 +12,7 @@ from ai_agents_hw6.application import (
     build_bonus_match_evidence,
     build_bonus_schedule,
     build_evidence_manifest,
+    evaluate_learning,
     preflight_bonus_endpoints,
     require_confirmed_bonus_agreement,
     run_bonus_mock,
@@ -21,6 +22,7 @@ from ai_agents_hw6.application import (
     write_bonus_match_evidence,
     write_engine_only_series_with_policy,
     write_evidence_manifest,
+    write_learning_evaluation,
 )
 from ai_agents_hw6.cli import build_parser
 from ai_agents_hw6.config import ConfigError, load_config, validate_for_mode
@@ -135,6 +137,17 @@ def main() -> int:
     print(f"Group: {config.group.name}")
     print(f"Grid: {config.game.grid_size[0]}x{config.game.grid_size[1]}")
     print(f"Sub-games: {config.game.num_games}")
+
+    if args.evaluate_learning:
+        if args.mode != "internal":
+            parser.exit(status=2, message="--evaluate-learning requires --mode internal\n")
+        evaluation_path = "artifacts/learning/evaluation.json"
+        evaluation = evaluate_learning(config)
+        write_learning_evaluation(evaluation_path, evaluation)
+        print(f"Learning evaluation: {evaluation_path}")
+        print(f"Recommended runtime policy: {evaluation['recommended_runtime_policy']}")
+        print(f"Reliability regressed: {evaluation['reliability_regressed']}")
+        return 0
 
     if args.mode == "bonus-mock":
         if args.engine_only or args.local_mcp:

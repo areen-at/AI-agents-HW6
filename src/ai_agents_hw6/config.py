@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
+from ai_agents_hw6.agents.learning import LearningSettings
+
 
 class ConfigError(ValueError):
     """Raised when configuration is missing, malformed, or invalid."""
@@ -87,6 +89,7 @@ class AppConfig:
     runtime: RuntimeConfig
     reports: ReportPaths
     logging: LoggingConfig
+    learning: LearningSettings
 
 
 PLACEHOLDER_VALUES = {
@@ -204,6 +207,9 @@ def _parse_config(raw: dict[str, Any]) -> AppConfig:
     runtime_raw = _require_object(raw, "runtime")
     reports_raw = _require_object(raw, "reports")
     logging_raw = _require_object(raw, "logging")
+    learning_raw = raw.get("learning", {})
+    if not isinstance(learning_raw, dict):
+        raise ConfigError("learning must be an object")
 
     scoring_raw = _require_object(game_raw, "game.scoring", key="scoring")
 
@@ -327,12 +333,62 @@ def _parse_config(raw: dict[str, Any]) -> AppConfig:
                 logging_raw, "logging.event_log_dir", key="event_log_dir"
             ),
         ),
+        learning=_parse_learning(learning_raw),
     )
 
     if config.game.grid_size[0] < 2 or config.game.grid_size[1] < 2:
         raise ConfigError("game.grid_size must be at least [2, 2]")
 
     return config
+
+
+def _parse_learning(raw: dict[str, Any]) -> LearningSettings:
+    try:
+        return LearningSettings(
+            enabled=_optional_bool(raw, "enabled", False),
+            alpha=_optional_float(raw, "alpha", 0.1),
+            gamma=_optional_float(raw, "gamma", 0.95),
+            epsilon=_optional_float(raw, "epsilon", 0.1),
+            seed=_optional_int(raw, "seed", 2026),
+            training_seed=_optional_int(raw, "training_seed", 2026),
+            evaluation_seed=_optional_int(raw, "evaluation_seed", 2027),
+            cop_table_path=_optional_string(
+                raw, "cop_table_path", "artifacts/learning/cop_q_table.json"
+            ),
+            thief_table_path=_optional_string(
+                raw, "thief_table_path", "artifacts/learning/thief_q_table.json"
+            ),
+        )
+    except ValueError as exc:
+        raise ConfigError(f"invalid learning configuration: {exc}") from exc
+
+
+def _optional_bool(container: dict[str, Any], key: str, default: bool) -> bool:
+    value = container.get(key, default)
+    if not isinstance(value, bool):
+        raise ConfigError(f"learning.{key} must be a boolean")
+    return value
+
+
+def _optional_int(container: dict[str, Any], key: str, default: int) -> int:
+    value = container.get(key, default)
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ConfigError(f"learning.{key} must be an integer")
+    return value
+
+
+def _optional_float(container: dict[str, Any], key: str, default: float) -> float:
+    value = container.get(key, default)
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ConfigError(f"learning.{key} must be numeric")
+    return float(value)
+
+
+def _optional_string(container: dict[str, Any], key: str, default: str) -> str:
+    value = container.get(key, default)
+    if not isinstance(value, str) or not value.strip():
+        raise ConfigError(f"learning.{key} must be a non-empty string")
+    return value.strip()
 
 
 def _require_object(

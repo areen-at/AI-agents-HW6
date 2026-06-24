@@ -23,6 +23,10 @@ from ai_agents_hw6.application.bonus_mock import (
     run_bonus_mock,
 )
 from ai_agents_hw6.application.evidence import build_evidence_manifest, write_evidence_manifest
+from ai_agents_hw6.application.learning_eval import (
+    evaluate_learning,
+    write_learning_evaluation,
+)
 from ai_agents_hw6.application.mcp_client import (
     LocalMcpDecisionProvider,
     McpClientConfig,
@@ -77,4 +81,6 @@ __all__ = [
     "DeterministicBonusMock",
     "build_bonus_mock_report",
     "run_bonus_mock",
+    "evaluate_learning",
+    "write_learning_evaluation",
 ]
