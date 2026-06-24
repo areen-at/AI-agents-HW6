@@ -671,33 +671,33 @@
 
 ### Tasks
 
-- [ ] T0434 Set report_type to bonus_game.
+- [x] T0434 Set report_type to bonus_game.
 - [ ] T0435 Populate both real group names.
 - [ ] T0436 Populate both real GitHub repository URLs.
 - [ ] T0437 Populate all four real MCP URLs.
 - [ ] T0438 Populate both real student arrays.
-- [ ] T0439 Set timezone to Asia/Jerusalem.
-- [ ] T0440 Include exactly six valid sub-games.
-- [ ] T0441 Include 3+3 endpoint ownership data.
-- [ ] T0442 Calculate totals_by_group.
-- [ ] T0443 Assign bonus claim 10 to winner and 7 to loser.
-- [ ] T0444 Assign bonus claim 5 to each group on draw.
-- [ ] T0445 Keep bonus claims separate from game totals.
-- [ ] T0446 Initialize mutual_agreement to false.
-- [ ] T0447 Generate canonical JSON for opponent comparison.
+- [x] T0439 Set timezone to Asia/Jerusalem.
+- [x] T0440 Include exactly six valid sub-games.
+- [x] T0441 Include 3+3 endpoint ownership data.
+- [x] T0442 Calculate totals_by_group.
+- [x] T0443 Assign bonus claim 10 to winner and 7 to loser.
+- [x] T0444 Assign bonus claim 5 to each group on draw.
+- [x] T0445 Keep bonus claims separate from game totals.
+- [x] T0446 Initialize mutual_agreement to false.
+- [x] T0447 Generate canonical JSON for opponent comparison.
 - [ ] T0448 Compare games, outcomes, scores, totals, and claims with opponent.
 - [ ] T0449 Resolve differences using event evidence.
 - [ ] T0450 Obtain explicit approval from both groups.
-- [ ] T0451 Set mutual_agreement true only after exact approval.
-- [ ] T0452 Regenerate and validate final payload.
-- [ ] T0453 Write reports/bonus_game_report.json atomically.
-- [ ] T0454 Write mock report to a separate test path.
-- [ ] T0455 Reject placeholder or invented opponent metadata.
-- [ ] T0456 Reject sending while mutual_agreement is false.
-- [ ] T0457 Add no prose around report JSON.
-- [ ] T0458 Preserve agreement evidence.
+- [x] T0451 Set mutual_agreement true only after exact approval.
+- [x] T0452 Regenerate and validate final payload.
+- [x] T0453 Write reports/bonus_game_report.json atomically.
+- [x] T0454 Write mock report to a separate test path.
+- [x] T0455 Reject placeholder or invented opponent metadata.
+- [x] T0456 Reject sending while mutual_agreement is false.
+- [x] T0457 Add no prose around report JSON.
+- [x] T0458 Preserve agreement evidence.
 - [ ] T0459 Validate report checksum with opponent.
-- [ ] T0460 Report phase files, commands, outputs, and tests then stop.
+- [x] T0460 Report phase files, commands, outputs, and tests then stop.
 
 ### Phase gate
 

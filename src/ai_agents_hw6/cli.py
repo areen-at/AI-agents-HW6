@@ -74,4 +74,19 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Validate all four bonus endpoints and the shared agreement without starting games.",
     )
+    parser.add_argument(
+        "--build-bonus-report",
+        action="store_true",
+        help="Build the canonical unapproved bonus report candidate from verified match evidence.",
+    )
+    parser.add_argument(
+        "--finalize-bonus-report",
+        action="store_true",
+        help="Finalize the bonus report only after both groups approve the exact candidate hash.",
+    )
+    parser.add_argument(
+        "--verify-bonus-report",
+        action="store_true",
+        help="Validate and print the checksum of the finalized bonus report.",
+    )
     return parser

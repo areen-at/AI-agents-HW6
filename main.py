@@ -34,7 +34,21 @@ from ai_agents_hw6.infrastructure import (
     validate_production_metadata,
     validate_secret_paths_are_gitignored,
 )
-from ai_agents_hw6.reporting import build_internal_report, write_internal_report
+from ai_agents_hw6.reporting import (
+    BonusReportError,
+    build_bonus_report_candidate,
+    build_internal_report,
+    finalize_bonus_report,
+    load_bonus_match_evidence,
+    load_bonus_report_candidate,
+    load_final_bonus_report,
+    payload_sha256,
+    require_matching_evidence_confirmation,
+    write_bonus_approval_evidence,
+    write_bonus_candidate,
+    write_internal_report,
+    write_production_bonus_report,
+)
 from ai_agents_hw6.reporting.bonus_report import BONUS_MOCK_WARNING
 from ai_agents_hw6.ui import TerminalObserver, render_series_summary, replay_events
 
@@ -65,6 +79,14 @@ def main() -> int:
         parser.exit(
             status=2,
             message="TEST-ONLY bonus-mock mode cannot authorize, preflight, or send Gmail.\n",
+        )
+    if args.mode == "bonus" and gmail_commands:
+        parser.exit(
+            status=2,
+            message=(
+                "Bonus report delivery is blocked from Gmail; finalize mutual agreement and "
+                "exchange the exact JSON using the assignment-approved channel.\n"
+            ),
         )
     if gmail_commands > 1:
         parser.exit(
@@ -132,6 +154,51 @@ def main() -> int:
                 status=2,
                 message="Bonus game orchestration is reserved for Phase 15.\n",
             )
+        report_commands = sum(
+            bool(value)
+            for value in (
+                args.build_bonus_report,
+                args.finalize_bonus_report,
+                args.verify_bonus_report,
+            )
+        )
+        if report_commands > 1:
+            parser.exit(
+                status=2,
+                message=(
+                    "Choose only one of --build-bonus-report, --finalize-bonus-report, "
+                    "or --verify-bonus-report.\n"
+                ),
+            )
+        evidence_path = "artifacts/reports/bonus_match_evidence.json"
+        candidate_path = "artifacts/reports/bonus_report_candidate.json"
+        approval_path = "artifacts/reports/bonus_report_approval.json"
+        try:
+            if args.build_bonus_report:
+                evidence = load_bonus_match_evidence(evidence_path)
+                require_matching_evidence_confirmation(evidence)
+                candidate = build_bonus_report_candidate(config, evidence)
+                candidate_hash = write_bonus_candidate(candidate_path, candidate)
+                print("Canonical bonus report candidate created with mutual_agreement=false.")
+                print(f"Candidate SHA-256: {candidate_hash}")
+                print(f"Share for exact approval: {candidate_path}")
+                return 0
+            if args.finalize_bonus_report:
+                candidate = load_bonus_report_candidate(candidate_path)
+                final_report, approval = finalize_bonus_report(candidate)
+                write_production_bonus_report(config, final_report)
+                write_bonus_approval_evidence(approval_path, approval)
+                print("Final mutually agreed bonus report written.")
+                print(f"Report SHA-256: {approval['final_report_sha256']}")
+                print(f"Report: {config.reports.bonus_game_report}")
+                print(f"Approval evidence: {approval_path}")
+                return 0
+            if args.verify_bonus_report:
+                final_report = load_final_bonus_report(config.reports.bonus_game_report)
+                print(f"Final bonus report SHA-256: {payload_sha256(final_report)}")
+                return 0
+        except BonusReportError as exc:
+            parser.exit(status=2, message=f"Bonus report error: {exc}\n")
         try:
             agreement = build_bonus_agreement(config)
             agreement_path = "artifacts/reports/bonus_agreement.json"

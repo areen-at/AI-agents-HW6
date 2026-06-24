@@ -527,6 +527,28 @@ canonical result exchange file to `artifacts/reports/bonus_match_evidence.json`.
 compare that evidence hash and resolve any mismatch from the event history before Phase 16 creates
 the mutually agreed report.
 
+After both groups independently verify the match evidence, confirm its exact checksum privately:
+
+```powershell
+$env:OPPONENT_BONUS_EVIDENCE_SHA256="<verified evidence hash>"
+python main.py --mode bonus --config config.json --build-bonus-report
+```
+
+This creates `artifacts/reports/bonus_report_candidate.json` with
+`mutual_agreement: false`. Both groups inspect the exact candidate and approve its printed hash:
+
+```powershell
+$env:BONUS_GROUP_1_APPROVAL_SHA256="<candidate hash>"
+$env:BONUS_GROUP_2_APPROVAL_SHA256="<candidate hash>"
+python main.py --mode bonus --config config.json --finalize-bonus-report
+python main.py --mode bonus --config config.json --verify-bonus-report
+```
+
+Only matching approvals can write `reports/bonus_game_report.json` with
+`mutual_agreement: true`. The final file contains JSON only. Bonus-mode Gmail delivery is blocked;
+exchange the exact finalized file through the channel agreed with the opponent and required by the
+assignment.
+
 If either group disputes the payload, `mutual_agreement` remains `false`, and the assignment's
 disputed-series bonus policy applies.
 
