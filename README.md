@@ -4,10 +4,8 @@ This repository will implement a two-agent Cop-and-Thief game in which our Cop a
 
 ## Current status
 
-Phase 10 is complete, including the one-time Gmail JSON report delivery. Phase 11 deployment
-hardening and packaging are implemented, but the public two-endpoint gate remains open because
-anonymous Cloudflare Quick Tunnels did not provide a stable pair. A named tunnel/domain or
-equivalent hosting account is still required.
+Phase 10 is complete, including the one-time Gmail JSON report delivery. Phase 11 is complete with
+two authenticated Render HTTPS services, a six-game remote run, and offline replay evidence.
 
 ## Required baseline
 
@@ -249,6 +247,20 @@ Expected:
 - Gmail errors cannot change or rerun game results;
 - no OAuth credential or token file can be configured inside the repository; and
 - 108 tests pass.
+
+## Phase 11 public MCP deployment
+
+Production endpoints:
+
+- Cop: `https://salareen-cop.onrender.com/mcp`
+- Thief: `https://salareen-thief.onrender.com/mcp`
+
+Both endpoints require their role-specific Bearer token. Tokens are stored only in Render's private
+environment variables and ignored local `.env`. Missing or cross-role tokens return HTTP 401.
+
+The verified remote run completed six valid games and replayed 312 committed snapshots locally.
+Render free services can cold-start after inactivity, so wake and health-check both endpoints before
+a timed assessment.
 
 ## Git workflow
 

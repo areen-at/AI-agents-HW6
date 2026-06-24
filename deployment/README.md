@@ -1,5 +1,19 @@
 # Phase 11 deployment
 
+## Active deployment: Render
+
+The production endpoints are:
+
+- `https://salareen-cop.onrender.com/mcp`
+- `https://salareen-thief.onrender.com/mcp`
+
+Each is a separate Render Web Service built from this repository and configured with its matching
+private environment token. Render terminates HTTPS. The services use the Dockerfile and bind to the
+provider-supplied `PORT`.
+
+Cloudflare Tunnel below remains a documented alternative and records the initial provider choice,
+but Render is the working assignment deployment.
+
 The selected deployment boundary is Cloudflare Tunnel. The connector makes outbound-only
 connections to Cloudflare, so ports 8001 and 8002 remain bound to localhost and no inbound firewall
 rule is required. Cloudflare terminates public HTTPS and forwards each hostname to its role server.

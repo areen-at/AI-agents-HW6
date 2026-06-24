@@ -200,8 +200,20 @@ class ConfigTests(unittest.TestCase):
         with self.assertRaisesRegex(ConfigError, "distinct"):
             validate_for_public_deployment(duplicate)
 
+        with tempfile.TemporaryDirectory() as temp_dir:
+            local_http = load_config(
+                _write_config(
+                    Path(temp_dir),
+                    {
+                        "my_servers": {
+                            "cop_mcp_url": "http://127.0.0.1:8001/mcp",
+                            "thief_mcp_url": "http://127.0.0.1:8002/mcp",
+                        }
+                    },
+                )
+            )
         with self.assertRaisesRegex(ConfigError, "HTTPS"):
-            validate_for_public_deployment(load_config("config.json"))
+            validate_for_public_deployment(local_http)
 
 
 if __name__ == "__main__":

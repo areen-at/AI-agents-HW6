@@ -476,7 +476,7 @@
 - [x] T0301 Define reproducible Cop server start command.
 - [x] T0302 Define reproducible Thief server start command.
 - [x] T0303 Select the simplest suitable cloud or tunnel provider.
-- [ ] T0304 Assign separate public HTTPS URLs.
+- [x] T0304 Assign separate public HTTPS URLs.
 - [x] T0305 Configure token authentication on both endpoints.
 - [x] T0306 Reject missing and invalid tokens.
 - [x] T0307 Accept valid scoped tokens.
@@ -486,14 +486,14 @@
 - [x] T0311 Apply request-size and rate limits where supported.
 - [x] T0312 Ensure local heuristic dependencies are reachable by chosen architecture.
 - [x] T0313 Prefer outbound or hybrid connectivity over unsafe inbound localhost exposure.
-- [ ] T0314 Probe Cop health externally.
-- [ ] T0315 Probe Thief health externally.
-- [ ] T0316 Verify remote role identities and protocol versions.
-- [ ] T0317 Test unauthorized and authorized remote decisions.
-- [ ] T0318 Run one complete remote internal series.
-- [ ] T0319 Replay remote results locally.
+- [x] T0314 Probe Cop health externally.
+- [x] T0315 Probe Thief health externally.
+- [x] T0316 Verify remote role identities and protocol versions.
+- [x] T0317 Test unauthorized and authorized remote decisions.
+- [x] T0318 Run one complete remote internal series.
+- [x] T0319 Replay remote results locally.
 - [x] T0320 Record sanitized deployment evidence.
-- [ ] T0321 Keep public endpoints available for required window.
+- [x] T0321 Keep public endpoints available for required window.
 - [x] T0322 Document firewall, proxy, or tunnel behavior.
 - [x] T0323 Fail fast on missing production secrets.
 - [x] T0324 Verify no secrets are tracked.
@@ -502,7 +502,7 @@
 
 ### Phase gate
 
-- [ ] All tasks required for this phase have evidence.
+- [x] All tasks required for this phase have evidence.
 - [x] Automated and manual verification results are recorded.
 - [x] Changed files and unrelated preserved files are listed.
 - [x] Run commands and expected output are documented.

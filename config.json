@@ -8,8 +8,8 @@
     ]
   },
   "my_servers": {
-    "cop_mcp_url": "http://127.0.0.1:8001/mcp",
-    "thief_mcp_url": "http://127.0.0.1:8002/mcp"
+    "cop_mcp_url": "https://salareen-cop.onrender.com/mcp",
+    "thief_mcp_url": "https://salareen-thief.onrender.com/mcp"
   },
   "bonus_opponent": {
     "group_name": "OTHER_TEAM_NAME",

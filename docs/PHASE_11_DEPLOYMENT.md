@@ -2,10 +2,17 @@
 
 ## Result
 
-IMPLEMENTATION PASS / PUBLIC PAIR BLOCKED - Both role servers are packaged and hardened for remote
-deployment, but the exit gate requiring two simultaneously reachable public URLs is not complete.
-Anonymous Cloudflare Quick Tunnels repeatedly failed to publish DNS for the Cop hostname. A durable
-Cloudflare named tunnel (or equivalent provider account) is required to finish the live pair.
+PASS - Both role servers are packaged, hardened, and deployed as separate Render Web Services.
+Their distinct public HTTPS URLs pass authentication, health, identity, protocol, capability,
+six-game remote execution, and offline replay checks.
+
+## Public endpoints
+
+- Cop: `https://salareen-cop.onrender.com/mcp`
+- Thief: `https://salareen-thief.onrender.com/mcp`
+
+The endpoints are intentionally public metadata. Their different Bearer tokens remain only in
+Render's private environment configuration and the ignored local `.env`.
 
 ## Completed
 
@@ -27,7 +34,27 @@ Cloudflare named tunnel (or equivalent provider account) is required to finish t
 - Production configuration validation requires two different HTTPS URLs.
 - Token rotation/revocation, firewall behavior, named tunnel setup, and Docker commands are documented.
 
-## Live attempt
+## Live verification
+
+Observed on June 24, 2026:
+
+- both authenticated `/mcp/health` requests returned status `ok`;
+- Cop `/mcp/identity` returned role `cop`;
+- Thief `/mcp/identity` returned role `thief`;
+- both identities and capabilities reported protocol version `1.0`;
+- both capability documents included `decide`;
+- missing-token requests returned HTTP 401;
+- using the other role's token returned HTTP 401;
+- correct private tokens were accepted;
+- a complete remote internal series produced exactly six valid games;
+- all six games ended in Thief survival at move limit;
+- totals were Cop `30`, Thief `60`;
+- no technical attempt was invalidated;
+- the event log contained 312 committed snapshots;
+- every applied action contained request and correlation IDs; and
+- offline replay rendered all 312 snapshots without any MCP call.
+
+## Earlier provider attempt
 
 `cloudflared` version `2026.6.1` was downloaded from the official Cloudflare GitHub release.
 Two authenticated localhost role servers started successfully. Two anonymous Quick Tunnels were
@@ -43,22 +70,14 @@ Observed:
   through a stable pair;
 - all temporary server and tunnel processes were stopped after the failed smoke test.
 
-No secret token or Cloudflare diagnostic file was committed.
+No secret token or Cloudflare diagnostic file was committed. Render was selected as the working
+free provider after the anonymous tunnel failure.
 
-## Remaining live tasks
+## Availability
 
-- T0304: create two durable public HTTPS routes/hostnames.
-- T0314-T0317: probe both endpoints and verify identity, protocol, unauthorized, and authorized calls.
-- T0318: run a complete remote six-game internal series.
-- T0319: replay the remote results locally.
-- T0321: keep both endpoints available for the required assessment/bonus window.
-
-## Required user/provider input
-
-Provide access to a Cloudflare account with an active domain, or equivalent hosting credentials.
-Then create a named tunnel, configure two hostnames using
-`deployment/cloudflared.example.yml`, keep the tunnel credential file outside Git, and rerun the
-remaining probes.
+Render free services may sleep after inactivity and cold-start on the next request. Both services
+must remain configured in the Render account for the assessment/bonus window. A `401` request can
+wake a sleeping service, but authorized health probes should be used before a timed match.
 
 ## Verification commands
 
@@ -69,3 +88,5 @@ remaining probes.
 - probe missing/wrong/correct Bearer tokens
 - run `python main.py --mode internal --config <remote-config> --local-mcp --quiet`
 - replay the generated event log without MCP calls
+
+All commands passed for the Render endpoints.
