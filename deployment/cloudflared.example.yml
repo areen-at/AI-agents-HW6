@@ -1,0 +1,9 @@
+tunnel: REPLACE_WITH_NAMED_TUNNEL_ID
+credentials-file: C:\private\cloudflare\REPLACE_WITH_NAMED_TUNNEL_ID.json
+
+ingress:
+  - hostname: cop.example.com
+    service: http://127.0.0.1:8001
+  - hostname: thief.example.com
+    service: http://127.0.0.1:8002
+  - service: http_status:404

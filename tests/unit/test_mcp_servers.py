@@ -176,6 +176,16 @@ class HttpDecisionServerTests(unittest.TestCase):
         thread.start()
         try:
             base = f"http://127.0.0.1:{server.server_port}"
+            with self.assertRaises(HTTPError) as health_unauthorized:
+                _get_json(f"{base}/health")
+            self.assertEqual(health_unauthorized.exception.code, 401)
+            self.assertEqual(
+                _get_json(
+                    f"{base}/health",
+                    headers={"Authorization": "Bearer secret-token"},
+                )["status"],
+                "ok",
+            )
             payload = _decision_payload(
                 _state(active=Role.THIEF, cop=Coordinate(4, 4), thief=Coordinate(0, 0)),
                 role=Role.THIEF,
@@ -198,9 +208,32 @@ class HttpDecisionServerTests(unittest.TestCase):
             thread.join(timeout=5)
             server.server_close()
 
+    def test_request_size_and_rate_limits(self) -> None:
+        server = build_server(
+            role=Role.THIEF,
+            host="127.0.0.1",
+            port=0,
+            max_request_bytes=10,
+            rate_limit_per_minute=2,
+        )
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            base = f"http://127.0.0.1:{server.server_port}"
+            self.assertEqual(_get_json(f"{base}/health")["status"], "ok")
+            self.assertEqual(_get_json(f"{base}/identity")["role"], "thief")
+            with self.assertRaises(HTTPError) as limited:
+                _get_json(f"{base}/capabilities")
+            self.assertEqual(limited.exception.code, 429)
+        finally:
+            server.shutdown()
+            thread.join(timeout=5)
+            server.server_close()
 
-def _get_json(url: str) -> dict:
-    with urlopen(url, timeout=5) as response:
+
+def _get_json(url: str, *, headers: dict[str, str] | None = None) -> dict:
+    request = Request(url, headers=headers or {}, method="GET")
+    with urlopen(request, timeout=5) as response:
         return json.loads(response.read().decode("utf-8"))
 
 

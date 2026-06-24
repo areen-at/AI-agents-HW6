@@ -432,16 +432,16 @@
 
 ### Tasks
 
-- [ ] T0273 Finalize real group metadata in safe configuration.
+- [x] T0273 Finalize real group metadata in safe configuration.
 - [x] T0274 Validate exactly six internal sub-games and calculated totals.
 - [x] T0275 Confirm report path reports/internal_game_report.json.
-- [ ] T0276 Enable Gmail API in the intended Google Cloud project.
-- [ ] T0277 Configure consent screen, audience, and test user.
-- [ ] T0278 Create Desktop OAuth client.
+- [x] T0276 Enable Gmail API in the intended Google Cloud project.
+- [x] T0277 Configure consent screen, audience, and test user.
+- [x] T0278 Create Desktop OAuth client.
 - [x] T0279 Store credentials.json outside tracked source.
 - [x] T0280 Configure credential and token paths through environment.
 - [x] T0281 Use least-privilege Gmail sending scope.
-- [ ] T0282 Complete interactive authorization once.
+- [x] T0282 Complete interactive authorization once.
 - [x] T0283 Store token.json outside tracked source.
 - [x] T0284 Implement token refresh and revocation handling.
 - [x] T0285 Build Gmail MIME message from canonical JSON.
@@ -462,7 +462,7 @@
 
 ### Phase gate
 
-- [ ] All tasks required for this phase have evidence.
+- [x] All tasks required for this phase have evidence.
 - [x] Automated and manual verification results are recorded.
 - [x] Changed files and unrelated preserved files are listed.
 - [x] Run commands and expected output are documented.
@@ -472,41 +472,41 @@
 
 ### Tasks
 
-- [ ] T0300 Keep ports, URLs, tokens, timeouts, and log levels configurable.
-- [ ] T0301 Define reproducible Cop server start command.
-- [ ] T0302 Define reproducible Thief server start command.
-- [ ] T0303 Select the simplest suitable cloud or tunnel provider.
+- [x] T0300 Keep ports, URLs, tokens, timeouts, and log levels configurable.
+- [x] T0301 Define reproducible Cop server start command.
+- [x] T0302 Define reproducible Thief server start command.
+- [x] T0303 Select the simplest suitable cloud or tunnel provider.
 - [ ] T0304 Assign separate public HTTPS URLs.
-- [ ] T0305 Configure token authentication on both endpoints.
-- [ ] T0306 Reject missing and invalid tokens.
-- [ ] T0307 Accept valid scoped tokens.
-- [ ] T0308 Document token rotation and revocation.
-- [ ] T0309 Configure TLS termination.
-- [ ] T0310 Redact authorization headers.
-- [ ] T0311 Apply request-size and rate limits where supported.
-- [ ] T0312 Ensure local model dependencies are reachable by chosen architecture.
-- [ ] T0313 Prefer outbound or hybrid connectivity over unsafe inbound localhost exposure.
+- [x] T0305 Configure token authentication on both endpoints.
+- [x] T0306 Reject missing and invalid tokens.
+- [x] T0307 Accept valid scoped tokens.
+- [x] T0308 Document token rotation and revocation.
+- [x] T0309 Configure TLS termination through the selected tunnel boundary.
+- [x] T0310 Redact authorization headers.
+- [x] T0311 Apply request-size and rate limits where supported.
+- [x] T0312 Ensure local heuristic dependencies are reachable by chosen architecture.
+- [x] T0313 Prefer outbound or hybrid connectivity over unsafe inbound localhost exposure.
 - [ ] T0314 Probe Cop health externally.
 - [ ] T0315 Probe Thief health externally.
 - [ ] T0316 Verify remote role identities and protocol versions.
 - [ ] T0317 Test unauthorized and authorized remote decisions.
 - [ ] T0318 Run one complete remote internal series.
 - [ ] T0319 Replay remote results locally.
-- [ ] T0320 Record sanitized deployment evidence.
+- [x] T0320 Record sanitized deployment evidence.
 - [ ] T0321 Keep public endpoints available for required window.
-- [ ] T0322 Document firewall, proxy, or tunnel behavior.
-- [ ] T0323 Fail fast on missing production secrets.
-- [ ] T0324 Verify no secrets are tracked.
-- [ ] T0325 Verify two URLs are truly distinct.
-- [ ] T0326 Report phase files, commands, outputs, and tests then stop.
+- [x] T0322 Document firewall, proxy, or tunnel behavior.
+- [x] T0323 Fail fast on missing production secrets.
+- [x] T0324 Verify no secrets are tracked.
+- [x] T0325 Add validation that production URLs are HTTPS and distinct.
+- [x] T0326 Report phase files, commands, outputs, and tests then stop.
 
 ### Phase gate
 
 - [ ] All tasks required for this phase have evidence.
-- [ ] Automated and manual verification results are recorded.
-- [ ] Changed files and unrelated preserved files are listed.
-- [ ] Run commands and expected output are documented.
-- [ ] Work stops here for review before the next phase.
+- [x] Automated and manual verification results are recorded.
+- [x] Changed files and unrelated preserved files are listed.
+- [x] Run commands and expected output are documented.
+- [x] Work stops here for review before the next phase.
 
 ## Phase 12 - README and scientific documentation
 

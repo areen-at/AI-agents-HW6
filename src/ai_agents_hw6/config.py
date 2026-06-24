@@ -162,6 +162,25 @@ def validate_for_mode(config: AppConfig, mode: str) -> None:
         )
 
 
+def validate_for_public_deployment(config: AppConfig) -> None:
+    cop_url = config.my_servers.cop_mcp_url
+    thief_url = config.my_servers.thief_mcp_url
+    _require_valid_url(
+        "my_servers.cop_mcp_url",
+        cop_url,
+        require_https=True,
+        allow_local_http=False,
+    )
+    _require_valid_url(
+        "my_servers.thief_mcp_url",
+        thief_url,
+        require_https=True,
+        allow_local_http=False,
+    )
+    if cop_url.rstrip("/") == thief_url.rstrip("/"):
+        raise ConfigError("Cop and Thief public MCP URLs must be distinct")
+
+
 def _parse_config(raw: dict[str, Any]) -> AppConfig:
     group_raw = _require_object(raw, "group")
     servers_raw = _require_object(raw, "my_servers")

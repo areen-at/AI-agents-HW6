@@ -45,16 +45,6 @@ class GmailPaths:
             raise GmailDeliveryError("GOOGLE_TOKEN_FILE is not configured")
         credentials_file = Path(credentials).expanduser()
         token_file = Path(token).expanduser()
-        workspace = Path.cwd().resolve()
-        for label, path in (
-            ("GOOGLE_CREDENTIALS_FILE", credentials_file),
-            ("GOOGLE_TOKEN_FILE", token_file),
-        ):
-            try:
-                path.resolve().relative_to(workspace)
-            except ValueError:
-                continue
-            raise GmailDeliveryError(f"{label} must point outside the repository workspace")
         if credentials_file.resolve() == token_file.resolve():
             raise GmailDeliveryError("Google credentials and token paths must be different files")
         return cls(
@@ -308,6 +298,7 @@ def gmail_preflight(config: AppConfig, *, report_path: str | Path) -> dict[str, 
     report, canonical_payload = load_canonical_report(report_path)
     validate_production_metadata(config, report)
     paths = GmailPaths.from_environment()
+    validate_secret_paths_are_gitignored(paths)
     if not paths.credentials_file.exists():
         raise GmailDeliveryError(
             f"Google Desktop OAuth credentials file not found: {paths.credentials_file}"
@@ -323,6 +314,27 @@ def gmail_preflight(config: AppConfig, *, report_path: str | Path) -> dict[str, 
         "scope": GMAIL_SEND_SCOPE,
         "receipt_file": str(paths.receipt_file),
     }
+
+
+def validate_secret_paths_are_gitignored(paths: GmailPaths) -> None:
+    workspace = Path.cwd().resolve()
+    ignore_file = workspace / ".gitignore"
+    ignore_text = ignore_file.read_text(encoding="utf-8") if ignore_file.exists() else ""
+    required_patterns = {
+        "credentials.json": "credentials.json",
+        "token.json": "token.json",
+    }
+    for path in (paths.credentials_file, paths.token_file):
+        try:
+            relative = path.resolve().relative_to(workspace)
+        except ValueError:
+            continue
+        relative_text = relative.as_posix()
+        required = required_patterns.get(relative_text)
+        if required is None or required not in ignore_text.splitlines():
+            raise GmailDeliveryError(
+                f"workspace OAuth file is not explicitly protected by .gitignore: {relative_text}"
+            )
 
 
 def _load_receipt(path: str | Path) -> DeliveryReceipt | None:

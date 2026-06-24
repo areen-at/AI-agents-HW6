@@ -46,6 +46,9 @@ class RoleDecisionService:
     def capabilities(self) -> dict[str, Any]:
         return capabilities(self.role)
 
+    def authorize(self, authorization: str | None) -> None:
+        self._check_auth(authorization)
+
     def decide(self, payload: dict[str, Any], *, authorization: str | None = None) -> dict[str, Any]:
         started = time.monotonic()
         self._check_auth(authorization)

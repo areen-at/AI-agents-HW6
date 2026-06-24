@@ -1,8 +1,11 @@
 {
   "group": {
-    "name": "MY_GROUP_NAME",
+    "name": "salareen",
     "github_repo": "https://github.com/areen-at/AI-agents-HW6",
-    "students": []
+    "students": [
+      "saleh hammam - 318827417",
+      "areen tarabeh - 214028904"
+    ]
   },
   "my_servers": {
     "cop_mcp_url": "http://127.0.0.1:8001/mcp",

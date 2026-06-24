@@ -1,0 +1,13 @@
+.git
+.env
+*.env
+credentials*.json
+token*.json
+reports
+artifacts
+__pycache__
+*.pyc
+.venv
+venv
+tests
+*.pdf

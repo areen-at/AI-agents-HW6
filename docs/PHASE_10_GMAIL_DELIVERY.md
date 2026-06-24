@@ -2,24 +2,17 @@
 
 ## Result
 
-IMPLEMENTATION PASS / LIVE ACTIVATION PENDING - The Gmail delivery path is implemented and covered
-by fake-transport tests. It validates a six-game report and calculated totals, canonicalizes the
-JSON, constructs and re-inspects the MIME body, uses the send-only Gmail scope, records a delivery
-receipt, and prevents a known payload from being sent twice.
+PASS - The Gmail delivery path is implemented, tested, authorized, and used for the required
+JSON-only internal report. The real group metadata is configured, while `credentials.json`,
+`token.json`, the report, and the delivery receipt remain ignored and untracked.
 
-No real email was sent. The repository still contains `MY_GROUP_NAME` and an empty student list,
-and no private Google OAuth files were supplied. Those values must not be invented or committed.
+## Live delivery evidence
 
-## External prerequisites still open
-
-- T0273: provide the real group name and student list in safe non-secret configuration.
-- T0276: enable Gmail API in the intended Google Cloud project.
-- T0277: configure the OAuth consent screen, audience, and sending-account test user.
-- T0278: create and download a Desktop OAuth client.
-- T0282: complete one interactive authorization.
-
-These are account/user actions, not safe repository defaults. The CLI fails before sending while
-the metadata is a placeholder.
+- Recipient: `rmisegal+uoh26b@gmail.com`
+- Gmail scope: `https://www.googleapis.com/auth/gmail.send`
+- Gmail message ID: `19ef9469a7472c75`
+- Sent at: `2026-06-24T10:56:54.338091+00:00`
+- Canonical payload SHA-256: `17389716c3b5914130560382d0aefa5eb971a8ae76d10c7f977ad86628b94bae`
 
 ## Implemented behavior
 
@@ -58,11 +51,11 @@ Install:
 python -m pip install -e ".[gmail]"
 ```
 
-Use paths outside the checkout:
+The current setup uses root-local files that are explicitly ignored:
 
 ```powershell
-$env:GOOGLE_CREDENTIALS_FILE='C:\private\google\credentials.json'
-$env:GOOGLE_TOKEN_FILE='C:\private\google\token.json'
+$env:GOOGLE_CREDENTIALS_FILE='credentials.json'
+$env:GOOGLE_TOKEN_FILE='token.json'
 $env:GMAIL_DELIVERY_RECEIPT_FILE='artifacts\reports\gmail_delivery_receipt.json'
 ```
 
@@ -115,9 +108,5 @@ Observed:
 - Preflight currently exits safely on placeholder group metadata, before OAuth or network access.
 - No live Gmail API call was made.
 
-## Remaining live evidence
-
-After the user supplies the real group/student metadata and private OAuth files, run authorization,
-preflight, and one reviewed send. Record the returned Gmail message ID/timestamp and confirm the
-received decoded body equals the preserved canonical payload. Keep the receipt and OAuth files
-outside Git.
+The API accepted the exact pre-inspected canonical MIME payload. Gmail read permission was
+intentionally not requested, so inbox retrieval is outside the least-privilege send-only scope.

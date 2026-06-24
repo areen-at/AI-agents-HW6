@@ -5,7 +5,12 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from ai_agents_hw6.config import ConfigError, load_config, validate_for_mode
+from ai_agents_hw6.config import (
+    ConfigError,
+    load_config,
+    validate_for_mode,
+    validate_for_public_deployment,
+)
 
 
 def _write_config(tmp_path: Path, overrides: dict | None = None) -> Path:
@@ -164,6 +169,39 @@ class ConfigTests(unittest.TestCase):
 
             with self.assertRaisesRegex(ConfigError, "logging.level"):
                 load_config(path)
+
+    def test_public_deployment_requires_distinct_https_urls(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            valid = load_config(
+                _write_config(
+                    Path(temp_dir),
+                    {
+                        "my_servers": {
+                            "cop_mcp_url": "https://cop.example.net/mcp",
+                            "thief_mcp_url": "https://thief.example.net/mcp",
+                        }
+                    },
+                )
+            )
+        validate_for_public_deployment(valid)
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            duplicate = load_config(
+                _write_config(
+                    Path(temp_dir),
+                    {
+                        "my_servers": {
+                            "cop_mcp_url": "https://same.example.net/mcp",
+                            "thief_mcp_url": "https://same.example.net/mcp",
+                        }
+                    },
+                )
+            )
+        with self.assertRaisesRegex(ConfigError, "distinct"):
+            validate_for_public_deployment(duplicate)
+
+        with self.assertRaisesRegex(ConfigError, "HTTPS"):
+            validate_for_public_deployment(load_config("config.json"))
 
 
 if __name__ == "__main__":

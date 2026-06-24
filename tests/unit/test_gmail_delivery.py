@@ -143,20 +143,10 @@ class GmailDeliveryTests(unittest.TestCase):
             paths = GmailPaths.from_environment()
         self.assertEqual(paths.credentials_file.name, "credentials.json")
         self.assertEqual(paths.token_file.name, "token.json")
-        with patch.dict(
-            os.environ,
-            {
-                "GOOGLE_CREDENTIALS_FILE": "credentials.json",
-                "GOOGLE_TOKEN_FILE": "token.json",
-            },
-            clear=True,
-        ):
-            with self.assertRaisesRegex(GmailDeliveryError, "outside"):
-                GmailPaths.from_environment()
 
-    def test_placeholder_group_metadata_blocks_production_send(self) -> None:
+    def test_report_metadata_must_match_production_configuration(self) -> None:
         config = load_config("config.json")
-        with self.assertRaisesRegex(GmailDeliveryError, "real group name"):
+        with self.assertRaisesRegex(GmailDeliveryError, "group_name"):
             validate_production_metadata(config, _report())
 
     def test_least_privilege_scope_is_send_only(self) -> None:

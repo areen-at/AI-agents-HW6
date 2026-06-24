@@ -16,6 +16,7 @@ from ai_agents_hw6.infrastructure.gmail_delivery import (
     load_canonical_report,
     validate_internal_report,
     validate_production_metadata,
+    validate_secret_paths_are_gitignored,
 )
 
 __all__ = [
@@ -34,4 +35,5 @@ __all__ = [
     "load_canonical_report",
     "validate_internal_report",
     "validate_production_metadata",
+    "validate_secret_paths_are_gitignored",
 ]

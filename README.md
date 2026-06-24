@@ -4,12 +4,10 @@ This repository will implement a two-agent Cop-and-Thief game in which our Cop a
 
 ## Current status
 
-Phase 10 implementation is complete. The repository now includes the prior game, MCP, replay, and
-terminal phases plus a tested Gmail API delivery workflow for the canonical internal JSON report.
-Live activation remains intentionally blocked until real group/student metadata and private Google
-Desktop OAuth files are provided outside the repository.
-
-Do not start Phase 11 until the Phase 10 live OAuth/send checklist is completed.
+Phase 10 is complete, including the one-time Gmail JSON report delivery. Phase 11 deployment
+hardening and packaging are implemented, but the public two-endpoint gate remains open because
+anonymous Cloudflare Quick Tunnels did not provide a stable pair. A named tunnel/domain or
+equivalent hosting account is still required.
 
 ## Required baseline
 
@@ -65,6 +63,7 @@ An opponent mock may be used only in explicit test mode. Real opponent data will
 - [Phase 8 local MCP orchestrator evidence](docs/PHASE_8_LOCAL_MCP_ORCHESTRATOR.md)
 - [Phase 9 terminal and logging evidence](docs/PHASE_9_TERMINAL_LOGGING.md)
 - [Phase 10 Gmail delivery evidence](docs/PHASE_10_GMAIL_DELIVERY.md)
+- [Phase 11 deployment evidence](docs/PHASE_11_DEPLOYMENT.md)
 
 ## Phase 1 validation commands
 

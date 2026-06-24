@@ -24,6 +24,7 @@ from ai_agents_hw6.infrastructure import (
     gmail_preflight,
     load_canonical_report,
     validate_production_metadata,
+    validate_secret_paths_are_gitignored,
 )
 
 
@@ -68,6 +69,7 @@ def main() -> int:
                 return 0
             if args.gmail_authorize:
                 paths = GmailPaths.from_environment()
+                validate_secret_paths_are_gitignored(paths)
                 build_google_transport(paths, interactive=True)
                 print(f"Gmail authorization completed. Token: {paths.token_file}")
                 return 0
@@ -76,6 +78,7 @@ def main() -> int:
             )
             validate_production_metadata(config, report)
             paths = GmailPaths.from_environment()
+            validate_secret_paths_are_gitignored(paths)
             transport = build_google_transport(paths, interactive=False)
             receipt = deliver_report(
                 canonical_payload=canonical_payload,

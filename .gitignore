@@ -23,6 +23,9 @@ secret.json
 *.secrets.json
 .secrets/
 secrets/
+.cloudflared/
+cloudflared*.json
+cert.pem
 
 # Python generated files and virtual environments
 __pycache__/
