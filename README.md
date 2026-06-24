@@ -76,9 +76,9 @@ Production bonus mode requires the opponent's real:
 
 `bonus-mock` is test-only. Mock results are written only to
 `reports/bonus_game_report.mock.json`, are visibly marked `test_only`, never contain bonus claims,
-and cannot set `mutual_agreement` to `true`. Production bonus orchestration is scheduled for
-Phase 15; Phase 14 `bonus` mode performs only a fail-fast authentication, identity, and protocol
-preflight.
+and cannot set `mutual_agreement` to `true`. Phase 15 production orchestration is implemented, but
+it remains fail-closed until a real opponent supplies its metadata/endpoints and both groups
+confirm the same agreement hash.
 
 ## Architecture
 
@@ -493,7 +493,7 @@ not call Gmail, start an opponent server, or touch the production bonus report p
 Real bonus validation:
 
 ```powershell
-python main.py --mode bonus --config config.json
+python main.py --mode bonus --config config.json --bonus-preflight-only
 ```
 
 Real bonus mode currently fails safely and lists every missing field because `bonus_opponent`
@@ -511,6 +511,21 @@ Before a production bonus series, both groups must:
 5. construct one canonical bonus JSON payload;
 6. compare its exact hash/content; and
 7. set `mutual_agreement: true` only after both groups approve that exact payload.
+
+The preflight writes `artifacts/reports/bonus_agreement.json`. Share that file with the opponent,
+compare its SHA-256, then set the approved hash privately:
+
+```powershell
+$env:BONUS_AGREEMENT_SHA256="<approved hash>"
+python main.py --mode bonus --config config.json --bonus-preflight-only
+python main.py --mode bonus --config config.json
+```
+
+The full command verifies all four endpoints and runs the fixed schedule through the local
+authoritative engine. It writes replayable events to `artifacts/logs/bonus_events.json` and a
+canonical result exchange file to `artifacts/reports/bonus_match_evidence.json`. Both groups should
+compare that evidence hash and resolve any mismatch from the event history before Phase 16 creates
+the mutually agreed report.
 
 If either group disputes the payload, `mutual_agreement` remains `false`, and the assignment's
 disputed-series bonus policy applies.
@@ -572,7 +587,8 @@ Load `.env` and restart with `--require-auth`. Cop reads `COP_MCP_TOKEN`; Thief 
 This is expected until every opponent placeholder is replaced with real external-team data and
 distinct HTTPS URLs, both opponent token environment variables are present, both `/identity`
 responses match their configured roles, and both `/capabilities` responses advertise protocol
-version `1.0` with the `decide` operation. A failed check exits before any game starts.
+version `1.0` with the `decide` operation. The shared agreement hash must also match
+`BONUS_AGREEMENT_SHA256`. A failed check exits before any game starts.
 
 ### A technical attempt is replaced
 

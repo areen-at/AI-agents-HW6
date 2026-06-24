@@ -119,7 +119,7 @@ class BonusBoundaryTests(unittest.TestCase):
 
         preflight_bonus_opponent(
             self.config,
-            credentials=BonusCredentials("cop-secret", "thief-secret"),
+            credentials=BonusCredentials(None, None, "cop-secret", "thief-secret"),
             client_factory=factory,
         )
 
@@ -129,7 +129,7 @@ class BonusBoundaryTests(unittest.TestCase):
         with self.assertRaisesRegex(BonusPreflightError, "protocol mismatch"):
             preflight_bonus_opponent(
                 self.config,
-                credentials=BonusCredentials("cop-secret", "thief-secret"),
+                credentials=BonusCredentials(None, None, "cop-secret", "thief-secret"),
                 client_factory=WrongProtocolClient,
             )
 

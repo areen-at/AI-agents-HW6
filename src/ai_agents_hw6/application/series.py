@@ -34,6 +34,7 @@ from ai_agents_hw6.domain import (
 )
 
 DecisionProvider = Callable[[GameState], GameAction]
+DecisionProviderFactory = Callable[[int], DecisionProvider]
 
 
 class SeriesObserver(Protocol):
@@ -118,6 +119,7 @@ def run_series(
     settings: SeriesSettings,
     scoring: ScoreMatrix,
     decision_provider: DecisionProvider,
+    decision_provider_factory: DecisionProviderFactory | None = None,
     observer: SeriesObserver | None = None,
 ) -> SeriesResult:
     if settings.num_games != 6:
@@ -131,6 +133,11 @@ def run_series(
     invalid_attempts: list[AttemptRecord] = []
 
     for valid_game_index in range(1, settings.num_games + 1):
+        active_decision_provider = (
+            decision_provider_factory(valid_game_index)
+            if decision_provider_factory is not None
+            else decision_provider
+        )
         sub_game_id = SubGameId.new()
         completed = False
 
@@ -159,8 +166,8 @@ def run_series(
                 while not state.is_terminal:
                     role = state.active_role
                     before = state
-                    action = decision_provider(state)
-                    request_id, correlation_id = _decision_metadata(decision_provider)
+                    action = active_decision_provider(state)
+                    request_id, correlation_id = _decision_metadata(active_decision_provider)
                     after = apply_action(
                         state,
                         role=role,

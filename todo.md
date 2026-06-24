@@ -632,32 +632,32 @@
 
 ### Tasks
 
-- [ ] T0408 Add python main.py --mode bonus --config config.json or equivalent.
+- [x] T0408 Add python main.py --mode bonus --config config.json or equivalent.
 - [ ] T0409 Load both groups' real metadata.
-- [ ] T0410 Load all four MCP URLs.
-- [ ] T0411 Verify owned and opponent endpoints.
-- [ ] T0412 Verify authentication and role identity on all endpoints.
+- [x] T0410 Load all four MCP URLs.
+- [x] T0411 Verify owned and opponent endpoints.
+- [x] T0412 Verify authentication and role identity on all endpoints.
 - [ ] T0413 Agree with opponent on configuration, seeds, timeouts, and retry policy.
-- [ ] T0414 Print the six-game matchup schedule.
+- [x] T0414 Print the six-game matchup schedule.
 - [ ] T0415 Run games 1-3 with our Cop versus opponent Thief.
 - [ ] T0416 Run games 4-6 with opponent Cop versus our Thief.
-- [ ] T0417 Keep local engine authoritative for every game.
-- [ ] T0418 Use normal grid, barrier, move, and scoring rules.
-- [ ] T0419 Replace technical failure attempts.
-- [ ] T0420 Record endpoint ownership per sub-game.
-- [ ] T0421 Validate exactly six valid bonus games.
-- [ ] T0422 Validate first three matchup assignments.
-- [ ] T0423 Validate last three matchup assignments.
-- [ ] T0424 Reject reversed or duplicated matchup order.
-- [ ] T0425 Attribute role scores to owning groups.
-- [ ] T0426 Calculate totals_by_group from sub-games.
-- [ ] T0427 Return non-zero when opponent preflight fails.
-- [ ] T0428 Never print authentication tokens.
-- [ ] T0429 Preserve event and replay evidence.
+- [x] T0417 Keep local engine authoritative for every game.
+- [x] T0418 Use normal grid, barrier, move, and scoring rules.
+- [x] T0419 Replace technical failure attempts.
+- [x] T0420 Record endpoint ownership per sub-game.
+- [x] T0421 Validate exactly six valid bonus games.
+- [x] T0422 Validate first three matchup assignments.
+- [x] T0423 Validate last three matchup assignments.
+- [x] T0424 Reject reversed or duplicated matchup order.
+- [x] T0425 Attribute role scores to owning groups.
+- [x] T0426 Calculate totals_by_group from sub-games.
+- [x] T0427 Return non-zero when opponent preflight fails.
+- [x] T0428 Never print authentication tokens.
+- [x] T0429 Preserve event and replay evidence.
 - [ ] T0430 Share identical result evidence with opponent.
 - [ ] T0431 Resolve discrepancies before report creation.
-- [ ] T0432 Run mock ordering tests before real match.
-- [ ] T0433 Report phase files, commands, outputs, and tests then stop.
+- [x] T0432 Run mock ordering tests before real match.
+- [x] T0433 Report phase files, commands, outputs, and tests then stop.
 
 ### Phase gate
 

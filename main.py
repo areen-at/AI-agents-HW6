@@ -8,10 +8,17 @@ sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 from ai_agents_hw6.application import (
     BonusPreflightError,
     McpClientError,
+    build_bonus_agreement,
+    build_bonus_match_evidence,
+    build_bonus_schedule,
     build_evidence_manifest,
-    preflight_bonus_opponent,
+    preflight_bonus_endpoints,
+    require_confirmed_bonus_agreement,
     run_bonus_mock,
+    run_external_bonus_series,
     run_local_mcp_series,
+    write_bonus_agreement,
+    write_bonus_match_evidence,
     write_engine_only_series_with_policy,
     write_evidence_manifest,
 )
@@ -126,11 +133,42 @@ def main() -> int:
                 message="Bonus game orchestration is reserved for Phase 15.\n",
             )
         try:
-            preflight_bonus_opponent(config)
+            agreement = build_bonus_agreement(config)
+            agreement_path = "artifacts/reports/bonus_agreement.json"
+            agreement_hash = write_bonus_agreement(agreement_path, config)
+            schedule = build_bonus_schedule(config)
+            print("Bonus matchup schedule:")
+            for matchup in schedule:
+                print(
+                    f"  Game {matchup.index}: {matchup.cop_group} Cop vs "
+                    f"{matchup.thief_group} Thief"
+                )
+            print(f"Agreement SHA-256: {agreement_hash}")
+            print(f"Share for opponent confirmation: {agreement_path}")
+            print(
+                "Agreement fields: "
+                f"{len(agreement['schedule'])} games, protocol {agreement['protocol_version']}"
+            )
+            require_confirmed_bonus_agreement(config)
+            preflight_bonus_endpoints(config)
+            if args.bonus_preflight_only:
+                print(
+                    "Production bonus preflight passed: all four endpoints, authentication, "
+                    "roles, protocol, and shared agreement verified."
+                )
+                return 0
+            result = run_external_bonus_series(config, observer=None)
         except BonusPreflightError as exc:
             parser.exit(status=2, message=f"Bonus preflight failed: {exc}\n")
-        print("Production bonus preflight passed: authentication, roles, and protocol verified.")
-        print("No games were started; external orchestration begins in Phase 15.")
+        evidence_path = "artifacts/reports/bonus_match_evidence.json"
+        evidence = build_bonus_match_evidence(config, result)
+        write_bonus_match_evidence(evidence_path, evidence)
+        print("External bonus series completed.")
+        print(f"Valid sub-games: {len(result.series.valid_sub_games)}")
+        print(f"Invalid replacement attempts: {len(result.series.invalid_attempts)}")
+        print(f"Totals by group: {result.totals_by_group}")
+        print(f"Evidence SHA-256: {evidence['evidence_sha256']}")
+        print(f"Share this identical evidence file with the opponent: {evidence_path}")
         return 0
 
     if args.engine_only and args.local_mcp:

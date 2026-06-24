@@ -69,4 +69,9 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Send the existing internal JSON report through Gmail after strict validation.",
     )
+    parser.add_argument(
+        "--bonus-preflight-only",
+        action="store_true",
+        help="Validate all four bonus endpoints and the shared agreement without starting games.",
+    )
     return parser
