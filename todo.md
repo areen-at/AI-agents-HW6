@@ -512,42 +512,42 @@
 
 ### Tasks
 
-- [ ] T0327 Explain project goal and required normal mode.
-- [ ] T0328 Explain optional bonus mode separately.
-- [ ] T0329 State repository owns only our Cop and Thief servers.
-- [ ] T0330 State opponent bonus servers are real external services.
-- [ ] T0331 State opponent mocks are test-only.
-- [ ] T0332 Diagram engine, orchestrator, both MCP servers, reports, and external bonus links.
-- [ ] T0333 Explain MCP client/server boundaries.
-- [ ] T0334 Explain natural-language plus structured action flow.
-- [ ] T0335 Explain why engine alone mutates state.
-- [ ] T0336 Define Dec-POMDP tuple n,S,{Ai},P,R,{Omega_i},O,gamma.
-- [ ] T0337 Map every Dec-POMDP element to implementation.
-- [ ] T0338 Explain partial observability and hidden fields.
-- [ ] T0339 Document Python and dependency installation.
-- [ ] T0340 Document config.json and .env setup.
-- [ ] T0341 Document both server start commands.
-- [ ] T0342 Document internal mode command and expected output.
-- [ ] T0343 Document test and replay commands.
-- [ ] T0344 Document every configuration group.
-- [ ] T0345 Document internal report schema and path.
-- [ ] T0346 Document Gmail JSON-only workflow.
-- [ ] T0347 Document deployment and authentication.
-- [ ] T0348 List all opponent information needed for bonus.
-- [ ] T0349 Document bonus and bonus-mock commands.
-- [ ] T0350 Document 3+3 matchup order.
-- [ ] T0351 Document mutual-agreement procedure.
-- [ ] T0352 Verify all README commands actually work.
-- [ ] T0353 Verify README contains no secrets.
-- [ ] T0354 Report phase files, commands, outputs, and tests then stop.
+- [x] T0327 Explain project goal and required normal mode.
+- [x] T0328 Explain optional bonus mode separately.
+- [x] T0329 State repository owns only our Cop and Thief servers.
+- [x] T0330 State opponent bonus servers are real external services.
+- [x] T0331 State opponent mocks are test-only.
+- [x] T0332 Diagram engine, orchestrator, both MCP servers, reports, and external bonus links.
+- [x] T0333 Explain MCP client/server boundaries.
+- [x] T0334 Explain natural-language plus structured action flow.
+- [x] T0335 Explain why engine alone mutates state.
+- [x] T0336 Define Dec-POMDP tuple n,S,{Ai},P,R,{Omega_i},O,gamma.
+- [x] T0337 Map every Dec-POMDP element to implementation.
+- [x] T0338 Explain partial observability and hidden fields.
+- [x] T0339 Document Python and dependency installation.
+- [x] T0340 Document config.json and .env setup.
+- [x] T0341 Document both server start commands.
+- [x] T0342 Document internal mode command and expected output.
+- [x] T0343 Document test and replay commands.
+- [x] T0344 Document every configuration group.
+- [x] T0345 Document internal report schema and path.
+- [x] T0346 Document Gmail JSON-only workflow.
+- [x] T0347 Document deployment and authentication.
+- [x] T0348 List all opponent information needed for bonus.
+- [x] T0349 Document bonus and bonus-mock commands.
+- [x] T0350 Document 3+3 matchup order.
+- [x] T0351 Document mutual-agreement procedure.
+- [x] T0352 Verify all required README commands actually work.
+- [x] T0353 Verify README contains no secrets.
+- [x] T0354 Report phase files, commands, outputs, and tests then stop.
 
 ### Phase gate
 
-- [ ] All tasks required for this phase have evidence.
-- [ ] Automated and manual verification results are recorded.
-- [ ] Changed files and unrelated preserved files are listed.
-- [ ] Run commands and expected output are documented.
-- [ ] Work stops here for review before the next phase.
+- [x] All tasks required for this phase have evidence.
+- [x] Automated and manual verification results are recorded.
+- [x] Changed files and unrelated preserved files are listed.
+- [x] Run commands and expected output are documented.
+- [x] Work stops here for review before the next phase.
 
 ## Phase 13 - Required release rehearsal
 

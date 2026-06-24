@@ -13,7 +13,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--mode",
         choices=VALID_MODES,
         default="internal",
-        help="Run mode. Phase 1 only validates configuration.",
+        help="Run mode: required internal series, real external bonus, or test-only bonus mock.",
     )
     parser.add_argument(
         "--config",
