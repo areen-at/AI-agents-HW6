@@ -141,25 +141,39 @@ def validate_for_mode(config: AppConfig, mode: str) -> None:
     )
 
     if mode == "bonus":
-        _require_real_text("bonus_opponent.group_name", config.bonus_opponent.group_name)
-        _require_valid_url(
-            "bonus_opponent.github_repo",
-            config.bonus_opponent.github_repo,
-            require_https=True,
-            allow_local_http=False,
-        )
-        _require_valid_url(
-            "bonus_opponent.cop_mcp_url",
-            config.bonus_opponent.cop_mcp_url,
-            require_https=True,
-            allow_local_http=False,
-        )
-        _require_valid_url(
-            "bonus_opponent.thief_mcp_url",
-            config.bonus_opponent.thief_mcp_url,
-            require_https=True,
-            allow_local_http=False,
-        )
+        errors = bonus_configuration_errors(config)
+        if errors:
+            raise ConfigError(
+                "production bonus configuration is invalid:\n- " + "\n- ".join(errors)
+            )
+
+
+def bonus_configuration_errors(config: AppConfig) -> tuple[str, ...]:
+    """Return every production bonus metadata problem in one diagnostic."""
+
+    opponent = config.bonus_opponent
+    errors: list[str] = []
+
+    if _is_placeholder(opponent.group_name):
+        errors.append("bonus_opponent.group_name must contain the real opponent group name")
+    if not opponent.students:
+        errors.append("bonus_opponent.students must contain the real opponent student list")
+
+    for path, value in (
+        ("bonus_opponent.github_repo", opponent.github_repo),
+        ("bonus_opponent.cop_mcp_url", opponent.cop_mcp_url),
+        ("bonus_opponent.thief_mcp_url", opponent.thief_mcp_url),
+    ):
+        if _is_placeholder(value):
+            errors.append(f"{path} must contain real production data, not a placeholder")
+            continue
+        parsed = urlparse(value)
+        if parsed.scheme != "https" or not parsed.netloc:
+            errors.append(f"{path} must be a valid HTTPS URL")
+
+    if opponent.cop_mcp_url.rstrip("/") == opponent.thief_mcp_url.rstrip("/"):
+        errors.append("bonus opponent Cop and Thief MCP URLs must be distinct")
+    return tuple(errors)
 
 
 def validate_for_public_deployment(config: AppConfig) -> None:
@@ -388,8 +402,13 @@ def _require_log_level(container: dict[str, Any]) -> str:
 
 
 def _require_real_text(path: str, value: str) -> None:
-    if value.strip() in PLACEHOLDER_VALUES or "example.com" in value:
+    if _is_placeholder(value):
         raise ConfigError(f"{path} must be real production data, not a placeholder")
+
+
+def _is_placeholder(value: str) -> bool:
+    normalized = value.strip()
+    return normalized in PLACEHOLDER_VALUES or "example.com" in normalized.lower()
 
 
 def _require_valid_url(

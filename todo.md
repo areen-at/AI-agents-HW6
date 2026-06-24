@@ -593,40 +593,40 @@
 
 ### Tasks
 
-- [ ] T0382 Do not start until required Phase 13 passes.
-- [ ] T0383 Model opponent group name, students, repository, Cop URL, and Thief URL.
-- [ ] T0384 Read opponent authentication secrets only from environment.
-- [ ] T0385 Keep opponent fields optional in internal mode.
-- [ ] T0386 Require all opponent fields in production bonus mode.
-- [ ] T0387 Reject placeholder opponent names and URLs.
-- [ ] T0388 Require HTTPS external URLs in production bonus mode.
-- [ ] T0389 Print all missing opponent fields clearly.
-- [ ] T0390 Refuse games after failed bonus preflight.
-- [ ] T0391 Add explicit bonus-mock mode.
-- [ ] T0392 Keep mock code test-only or clearly isolated.
-- [ ] T0393 Print prominent test-only warning in mock mode.
-- [ ] T0394 Prevent mock mode from sending Gmail.
-- [ ] T0395 Prevent mock mode from setting mutual_agreement true.
-- [ ] T0396 Prevent mock output from overwriting production bonus report.
-- [ ] T0397 Use deterministic mock responses.
-- [ ] T0398 Test both matchup directions in mock mode.
-- [ ] T0399 Add python main.py --mode bonus-mock --config config.json or equivalent.
-- [ ] T0400 Confirm internal mode still works without opponent data.
-- [ ] T0401 Confirm production bonus fails without real data.
-- [ ] T0402 Confirm no opponent production server implementation exists.
-- [ ] T0403 Document how to receive data from real opponent.
-- [ ] T0404 Document never to invent missing data.
-- [ ] T0405 Validate opponent role identities before match.
-- [ ] T0406 Validate protocol compatibility before match.
-- [ ] T0407 Report phase files, commands, outputs, and tests then stop.
+- [x] T0382 Do not start until required Phase 13 passes.
+- [x] T0383 Model opponent group name, students, repository, Cop URL, and Thief URL.
+- [x] T0384 Read opponent authentication secrets only from environment.
+- [x] T0385 Keep opponent fields optional in internal mode.
+- [x] T0386 Require all opponent fields in production bonus mode.
+- [x] T0387 Reject placeholder opponent names and URLs.
+- [x] T0388 Require HTTPS external URLs in production bonus mode.
+- [x] T0389 Print all missing opponent fields clearly.
+- [x] T0390 Refuse games after failed bonus preflight.
+- [x] T0391 Add explicit bonus-mock mode.
+- [x] T0392 Keep mock code test-only or clearly isolated.
+- [x] T0393 Print prominent test-only warning in mock mode.
+- [x] T0394 Prevent mock mode from sending Gmail.
+- [x] T0395 Prevent mock mode from setting mutual_agreement true.
+- [x] T0396 Prevent mock output from overwriting production bonus report.
+- [x] T0397 Use deterministic mock responses.
+- [x] T0398 Test both matchup directions in mock mode.
+- [x] T0399 Add python main.py --mode bonus-mock --config config.json or equivalent.
+- [x] T0400 Confirm internal mode still works without opponent data.
+- [x] T0401 Confirm production bonus fails without real data.
+- [x] T0402 Confirm no opponent production server implementation exists.
+- [x] T0403 Document how to receive data from real opponent.
+- [x] T0404 Document never to invent missing data.
+- [x] T0405 Validate opponent role identities before match.
+- [x] T0406 Validate protocol compatibility before match.
+- [x] T0407 Report phase files, commands, outputs, and tests then stop.
 
 ### Phase gate
 
-- [ ] All tasks required for this phase have evidence.
-- [ ] Automated and manual verification results are recorded.
-- [ ] Changed files and unrelated preserved files are listed.
-- [ ] Run commands and expected output are documented.
-- [ ] Work stops here for review before the next phase.
+- [x] All tasks required for this phase have evidence.
+- [x] Automated and manual verification results are recorded.
+- [x] Changed files and unrelated preserved files are listed.
+- [x] Run commands and expected output are documented.
+- [x] Work stops here for review before the next phase.
 
 ## Phase 15 - External bonus match orchestration
 

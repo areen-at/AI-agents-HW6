@@ -6,8 +6,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 
 from ai_agents_hw6.application import (
+    BonusPreflightError,
     McpClientError,
     build_evidence_manifest,
+    preflight_bonus_opponent,
+    run_bonus_mock,
     run_local_mcp_series,
     write_engine_only_series_with_policy,
     write_evidence_manifest,
@@ -25,6 +28,7 @@ from ai_agents_hw6.infrastructure import (
     validate_secret_paths_are_gitignored,
 )
 from ai_agents_hw6.reporting import build_internal_report, write_internal_report
+from ai_agents_hw6.reporting.bonus_report import BONUS_MOCK_WARNING
 from ai_agents_hw6.ui import TerminalObserver, render_series_summary, replay_events
 
 
@@ -50,6 +54,11 @@ def main() -> int:
     gmail_commands = sum(
         bool(value) for value in (args.gmail_preflight, args.gmail_authorize, args.send_report)
     )
+    if args.mode == "bonus-mock" and gmail_commands:
+        parser.exit(
+            status=2,
+            message="TEST-ONLY bonus-mock mode cannot authorize, preflight, or send Gmail.\n",
+        )
     if gmail_commands > 1:
         parser.exit(
             status=2,
@@ -97,6 +106,32 @@ def main() -> int:
     print(f"Group: {config.group.name}")
     print(f"Grid: {config.game.grid_size[0]}x{config.game.grid_size[1]}")
     print(f"Sub-games: {config.game.num_games}")
+
+    if args.mode == "bonus-mock":
+        if args.engine_only or args.local_mcp:
+            parser.exit(
+                status=2,
+                message="bonus-mock uses only its isolated deterministic test double.\n",
+            )
+        run_bonus_mock(config)
+        print(f"*** {BONUS_MOCK_WARNING} ***")
+        print(f"Mock report: {config.reports.bonus_mock_report}")
+        print("Production bonus report was not written.")
+        return 0
+
+    if args.mode == "bonus":
+        if args.engine_only or args.local_mcp:
+            parser.exit(
+                status=2,
+                message="Bonus game orchestration is reserved for Phase 15.\n",
+            )
+        try:
+            preflight_bonus_opponent(config)
+        except BonusPreflightError as exc:
+            parser.exit(status=2, message=f"Bonus preflight failed: {exc}\n")
+        print("Production bonus preflight passed: authentication, roles, and protocol verified.")
+        print("No games were started; external orchestration begins in Phase 15.")
+        return 0
 
     if args.engine_only and args.local_mcp:
         parser.exit(status=2, message="Choose either --engine-only or --local-mcp, not both\n")

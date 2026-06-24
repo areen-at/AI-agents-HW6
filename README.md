@@ -74,9 +74,11 @@ Production bonus mode requires the opponent's real:
 - authentication exchange procedure; and
 - confirmation of compatible protocol version.
 
-`bonus-mock` is test-only. Mock results are never production bonus evidence and cannot set
-`mutual_agreement` to `true`. Bonus orchestration and its joint report are scheduled for later
-phases; current `bonus` mode deliberately rejects placeholder opponent data.
+`bonus-mock` is test-only. Mock results are written only to
+`reports/bonus_game_report.mock.json`, are visibly marked `test_only`, never contain bonus claims,
+and cannot set `mutual_agreement` to `true`. Production bonus orchestration is scheduled for
+Phase 15; Phase 14 `bonus` mode performs only a fail-fast authentication, identity, and protocol
+preflight.
 
 ## Architecture
 
@@ -485,13 +487,21 @@ Mock configuration validation:
 python main.py --mode bonus-mock --config config.json
 ```
 
+This writes a deterministic six-entry mock report covering both 3+3 matchup directions. It does
+not call Gmail, start an opponent server, or touch the production bonus report path.
+
 Real bonus validation:
 
 ```powershell
 python main.py --mode bonus --config config.json
 ```
 
-Real bonus mode currently fails safely because `bonus_opponent` still contains placeholders.
+Real bonus mode currently fails safely and lists every missing field because `bonus_opponent`
+still contains placeholders. Never invent those values. Obtain the group name, student list,
+GitHub URL, Cop URL, Thief URL, and protocol/authentication instructions directly from the real
+opponent group. Put metadata and HTTPS URLs in `config.json`; exchange tokens privately and expose
+them only as `OPPONENT_COP_MCP_TOKEN` and `OPPONENT_THIEF_MCP_TOKEN` environment variables.
+
 Before a production bonus series, both groups must:
 
 1. exchange real metadata, repository URLs, service URLs, protocol versions, and tokens privately;
@@ -560,7 +570,9 @@ Load `.env` and restart with `--require-auth`. Cop reads `COP_MCP_TOKEN`; Thief 
 ### Bonus mode rejects configuration
 
 This is expected until every opponent placeholder is replaced with real external-team data and
-HTTPS URLs.
+distinct HTTPS URLs, both opponent token environment variables are present, both `/identity`
+responses match their configured roles, and both `/capabilities` responses advertise protocol
+version `1.0` with the `decide` operation. A failed check exits before any game starts.
 
 ### A technical attempt is replaced
 

@@ -1,5 +1,15 @@
 """Application services for orchestration, replay, and series control."""
 
+from ai_agents_hw6.application.bonus import (
+    BonusCredentials,
+    BonusPreflightError,
+    preflight_bonus_opponent,
+)
+from ai_agents_hw6.application.bonus_mock import (
+    DeterministicBonusMock,
+    build_bonus_mock_report,
+    run_bonus_mock,
+)
 from ai_agents_hw6.application.evidence import build_evidence_manifest, write_evidence_manifest
 from ai_agents_hw6.application.mcp_client import (
     LocalMcpDecisionProvider,
@@ -37,4 +47,10 @@ __all__ = [
     "run_local_mcp_series",
     "build_evidence_manifest",
     "write_evidence_manifest",
+    "BonusCredentials",
+    "BonusPreflightError",
+    "preflight_bonus_opponent",
+    "DeterministicBonusMock",
+    "build_bonus_mock_report",
+    "run_bonus_mock",
 ]

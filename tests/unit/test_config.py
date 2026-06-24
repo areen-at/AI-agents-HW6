@@ -115,6 +115,7 @@ class ConfigTests(unittest.TestCase):
                         "bonus_opponent": {
                             "group_name": "Real Opponent",
                             "github_repo": "https://github.com/example/opponent",
+                            "students": ["Real Student - 123"],
                             "cop_mcp_url": "http://opponent.example/cop",
                             "thief_mcp_url": "https://opponent.example/thief",
                         }
