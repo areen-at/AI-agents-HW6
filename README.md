@@ -553,10 +553,10 @@ assignment.
 If either group disputes the payload, `mutual_agreement` remains `false`, and the assignment's
 disputed-series bonus policy applies.
 
-### Agreed sharNamr interop result
+### Agreed sharNamr bonus result
 
-For the final interop match with `sharNamr`, both teams agreed to use the single authoritative
-run produced on sharNamr's side. The local result file is:
+For the final bonus/interoperability match with `sharNamr`, both teams agreed to use the single
+authoritative run produced on sharNamr's side. The committed result file is:
 
 ```text
 reports/agreed_interop_match_report.json
@@ -566,17 +566,24 @@ Summary:
 
 ```json
 {
-  "group_name": "salareen",
-  "opponent_group": "sharNamr",
-  "totals": {
-    "us": 40,
-    "partner": 60
+  "report_type": "bonus_game",
+  "groups": {
+    "group_1": "sharNamr",
+    "group_2": "salareen"
+  },
+  "totals_by_group": {
+    "sharNamr": 60,
+    "salareen": 40
+  },
+  "bonus_claim": {
+    "sharNamr": 10,
+    "salareen": 7
   }
 }
 ```
 
-The report is intentionally committed as the agreed interop result. It is not sent automatically;
-no Gmail command is part of this interop-report workflow.
+The report is intentionally committed as the agreed result. It is not sent automatically; no Gmail
+command is part of this workflow.
 
 ## Tests and verification
 
