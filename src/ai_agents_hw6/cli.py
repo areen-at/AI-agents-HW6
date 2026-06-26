@@ -108,6 +108,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="Delay between host-status polls for --bonus-fastmcp-host-client.",
     )
     parser.add_argument(
+        "--bonus-rest-decide-series",
+        action="store_true",
+        help=(
+            "Host the six-game bonus series locally while the opponent answers moves from "
+            "OPPONENT_DECIDE_URL."
+        ),
+    )
+    parser.add_argument(
         "--build-bonus-report",
         action="store_true",
         help="Build the canonical unapproved bonus report candidate from verified match evidence.",

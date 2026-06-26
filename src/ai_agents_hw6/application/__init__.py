@@ -43,6 +43,12 @@ from ai_agents_hw6.application.mcp_client import (
     preflight_clients,
     run_local_mcp_series,
 )
+from ai_agents_hw6.application.rest_decide_bonus import (
+    RestDecideBonusError,
+    RestDecideClient,
+    RestDecideSettings,
+    run_rest_decide_bonus_series,
+)
 from ai_agents_hw6.application.series import (
     SeriesObserver,
     SeriesResult,
@@ -69,6 +75,10 @@ __all__ = [
     "RoleMcpClient",
     "preflight_clients",
     "run_local_mcp_series",
+    "RestDecideBonusError",
+    "RestDecideClient",
+    "RestDecideSettings",
+    "run_rest_decide_bonus_series",
     "build_evidence_manifest",
     "write_evidence_manifest",
     "FastMcpHostClientError",

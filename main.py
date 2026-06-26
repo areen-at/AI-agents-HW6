@@ -12,6 +12,7 @@ from ai_agents_hw6.application import (
     FastMcpHostClientError,
     FastMcpHostSettings,
     McpClientError,
+    RestDecideBonusError,
     build_bonus_agreement,
     build_bonus_match_evidence,
     build_bonus_schedule,
@@ -23,6 +24,7 @@ from ai_agents_hw6.application import (
     run_external_bonus_series,
     run_fastmcp_host_client,
     run_local_mcp_series,
+    run_rest_decide_bonus_series,
     write_bonus_agreement,
     write_bonus_match_evidence,
     write_engine_only_series_with_policy,
@@ -84,7 +86,10 @@ def main() -> int:
     try:
         config = load_config(args.config)
         validation_mode = (
-            "internal" if args.bonus_fastmcp_host_client and args.mode == "bonus" else args.mode
+            "internal"
+            if (args.bonus_fastmcp_host_client or args.bonus_rest_decide_series)
+            and args.mode == "bonus"
+            else args.mode
         )
         validate_for_mode(config, validation_mode)
     except ConfigError as exc:
@@ -161,6 +166,8 @@ def main() -> int:
     validated_label = (
         "internal bootstrap for bonus FastMCP host client"
         if args.bonus_fastmcp_host_client and args.mode == "bonus"
+        else "internal bootstrap for bonus REST decide series"
+        if args.bonus_rest_decide_series and args.mode == "bonus"
         else args.mode
     )
     print(f"Config validation passed for mode {validated_label}.")
@@ -192,6 +199,14 @@ def main() -> int:
         return 0
 
     if args.mode == "bonus":
+        if args.bonus_fastmcp_host_client and args.bonus_rest_decide_series:
+            parser.exit(
+                status=2,
+                message=(
+                    "Choose only one of --bonus-fastmcp-host-client or "
+                    "--bonus-rest-decide-series\n"
+                ),
+            )
         if args.bonus_fastmcp_host_client:
             if not args.bonus_role:
                 parser.exit(
@@ -215,6 +230,21 @@ def main() -> int:
             print(f"Dry run: {result.dry_run}")
             print("Final host status:")
             print(json.dumps(result.final_status, ensure_ascii=False, indent=2, sort_keys=True))
+            return 0
+        if args.bonus_rest_decide_series:
+            try:
+                result = run_rest_decide_bonus_series(config, observer=None)
+            except RestDecideBonusError as exc:
+                parser.exit(status=2, message=f"Bonus REST /decide failed: {exc}\n")
+            evidence_path = "artifacts/reports/bonus_match_evidence.json"
+            evidence = build_bonus_match_evidence(config, result)
+            write_bonus_match_evidence(evidence_path, evidence)
+            print("Bonus REST /decide series completed.")
+            print(f"Valid sub-games: {len(result.series.valid_sub_games)}")
+            print(f"Invalid replacement attempts: {len(result.series.invalid_attempts)}")
+            print(f"Totals by group: {result.totals_by_group}")
+            print(f"Evidence SHA-256: {evidence['evidence_sha256']}")
+            print(f"Evidence: {evidence_path}")
             return 0
         if args.engine_only or args.local_mcp:
             parser.exit(
