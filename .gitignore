@@ -65,6 +65,7 @@ temp/
 reports/*.json
 !reports/*.example.json
 !reports/schema*.json
+!reports/agreed_interop_match_report.json
 
 # Local artifacts and replay output
 artifacts/logs/

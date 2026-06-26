@@ -1,0 +1,68 @@
+{
+  "report_type": "interop_match",
+  "protocol_version": "1.0",
+  "timezone": "Asia/Jerusalem",
+  "group_name": "salareen",
+  "students": [
+    "saleh hammam - 318827417",
+    "areen tarabeh - 214028904"
+  ],
+  "opponent_group": "sharNamr",
+  "github_repo": "https://github.com/areen-at/AI-agents-HW6",
+  "opponent_github_repo": "https://github.com/SharbelMaroun/AI-Agent-Orchestration-HW6",
+  "our_first_role": "thief",
+  "sub_games": [
+    {
+      "index": 0,
+      "my_role": "thief",
+      "winner": "thief",
+      "moves_used": 25,
+      "our_score": 10,
+      "partner_score": 5
+    },
+    {
+      "index": 1,
+      "my_role": "thief",
+      "winner": "thief",
+      "moves_used": 25,
+      "our_score": 10,
+      "partner_score": 5
+    },
+    {
+      "index": 2,
+      "my_role": "thief",
+      "winner": "cop",
+      "moves_used": 8,
+      "our_score": 5,
+      "partner_score": 20
+    },
+    {
+      "index": 3,
+      "my_role": "cop",
+      "winner": "thief",
+      "moves_used": 25,
+      "our_score": 5,
+      "partner_score": 10
+    },
+    {
+      "index": 4,
+      "my_role": "cop",
+      "winner": "thief",
+      "moves_used": 25,
+      "our_score": 5,
+      "partner_score": 10
+    },
+    {
+      "index": 5,
+      "my_role": "cop",
+      "winner": "thief",
+      "moves_used": 25,
+      "our_score": 5,
+      "partner_score": 10
+    }
+  ],
+  "totals": {
+    "us": 40,
+    "partner": 60
+  }
+}

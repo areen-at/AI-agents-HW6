@@ -99,7 +99,16 @@ class BonusReportWorkflowTests(unittest.TestCase):
         self.assertEqual(candidate["totals_by_group"]["salareen"], 60)
 
     def test_candidate_rejects_placeholder_config(self) -> None:
-        placeholder = load_config(ROOT / "config.json")
+        placeholder = replace(
+            self.config,
+            bonus_opponent=BonusOpponentConfig(
+                group_name="OTHER_TEAM_NAME",
+                github_repo="https://example.com/other-team-repo",
+                students=(),
+                cop_mcp_url="OTHER_TEAM_COP_MCP_URL",
+                thief_mcp_url="OTHER_TEAM_THIEF_MCP_URL",
+            ),
+        )
         with self.assertRaisesRegex(BonusReportError, "real opponent metadata"):
             build_bonus_report_candidate(placeholder, self.evidence)
 

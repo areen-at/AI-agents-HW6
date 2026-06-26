@@ -13,8 +13,11 @@
   },
   "bonus_opponent": {
     "group_name": "sharNamr",
-    "github_repo": "https://example.com/other-team-repo",
-    "students": [],
+    "github_repo": "https://github.com/SharbelMaroun/AI-Agent-Orchestration-HW6",
+    "students": [
+      "Sharbel",
+      "Amr"
+    ],
     "cop_mcp_url": "https://cop-mcp.onrender.com/mcp/",
     "thief_mcp_url": "https://thief-mcp.onrender.com/mcp/"
   },
