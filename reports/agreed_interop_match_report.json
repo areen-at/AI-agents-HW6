@@ -1,35 +1,51 @@
 {
   "report_type": "bonus_game",
   "groups": {
-    "group_1": "sharNamr",
-    "group_2": "salareen"
+    "group_1": "salareen",
+    "group_2": "sharNamr"
   },
-  "github_repo_group_1": "[https://github.com/SharbelMaroun/AI-Agent-Orchestration-HW6](https://github.com/SharbelMaroun/AI-Agent-Orchestration-HW6)",
-  "github_repo_group_2": "[https://github.com/areen-at/AI-agents-HW6.git](https://github.com/areen-at/AI-agents-HW6.git)",
-  "mcp_url_group_1_cop": "[https://cop-mcp.onrender.com](https://cop-mcp.onrender.com/)",
-  "mcp_url_group_1_thief": "[https://thief-mcp.onrender.com](https://thief-mcp.onrender.com/)",
-  "mcp_url_group_2_cop": "[https://salareen-cop.onrender.com/mcp](https://salareen-cop.onrender.com/mcp)",
-  "mcp_url_group_2_thief": "[https://salareen-thief.onrender.com/mcp](https://salareen-thief.onrender.com/mcp)",
+  "github_repo_group_1": "https://github.com/areen-at/AI-agents-HW6.git",
+  "github_repo_group_2": "https://github.com/SharbelMaroun/AI-Agent-Orchestration-HW6",
+  "mcp_url_group_1_cop": "https://salareen-cop.onrender.com/mcp",
+  "mcp_url_group_1_thief": "https://salareen-thief.onrender.com/mcp",
+  "mcp_url_group_2_cop": "https://cop-mcp.onrender.com",
+  "mcp_url_group_2_thief": "https://thief-mcp.onrender.com",
   "timezone": "Asia/Jerusalem",
   "students_group_1": [
-    "Sharbel Maroun",
-    "Amr Safadi"
-  ],
-  "students_group_2": [
     "Areen Tarabeh",
     "Saleh Hammam"
+  ],
+  "students_group_2": [
+    "Sharbel Maroun",
+    "Amr Safadi"
   ],
   "sub_games": [
     {
       "index": 0,
-      "my_role": "cop",
+      "my_role": "thief",
       "winner": "thief",
       "moves_used": 25,
-      "our_score": 5,
-      "partner_score": 10
+      "our_score": 10,
+      "partner_score": 5
     },
     {
       "index": 1,
+      "my_role": "thief",
+      "winner": "thief",
+      "moves_used": 25,
+      "our_score": 10,
+      "partner_score": 5
+    },
+    {
+      "index": 2,
+      "my_role": "thief",
+      "winner": "cop",
+      "moves_used": 8,
+      "our_score": 5,
+      "partner_score": 20
+    },
+    {
+      "index": 3,
       "my_role": "cop",
       "winner": "thief",
       "moves_used": 25,
@@ -37,45 +53,30 @@
       "partner_score": 10
     },
     {
-      "index": 2,
-      "my_role": "cop",
-      "winner": "cop",
-      "moves_used": 8,
-      "our_score": 20,
-      "partner_score": 5
-    },
-    {
-      "index": 3,
-      "my_role": "thief",
-      "winner": "thief",
-      "moves_used": 25,
-      "our_score": 10,
-      "partner_score": 5
-    },
-    {
       "index": 4,
-      "my_role": "thief",
+      "my_role": "cop",
       "winner": "thief",
       "moves_used": 25,
-      "our_score": 10,
-      "partner_score": 5
+      "our_score": 5,
+      "partner_score": 10
     },
     {
       "index": 5,
-      "my_role": "thief",
+      "my_role": "cop",
       "winner": "thief",
       "moves_used": 25,
-      "our_score": 10,
-      "partner_score": 5
+      "our_score": 5,
+      "partner_score": 10
     }
   ],
   "totals_by_group": {
-    "sharNamr": 60,
-    "salareen": 40
+    "salareen": 40,
+    "sharNamr": 60
   },
   "bonus_claim": {
-    "sharNamr": 10,
-    "salareen": 7
+    "salareen": 7,
+    "sharNamr": 10
   },
   "mutual_agreement": true
 }
+

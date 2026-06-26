@@ -568,16 +568,16 @@ Summary:
 {
   "report_type": "bonus_game",
   "groups": {
-    "group_1": "sharNamr",
-    "group_2": "salareen"
+    "group_1": "salareen",
+    "group_2": "sharNamr"
   },
   "totals_by_group": {
-    "sharNamr": 60,
-    "salareen": 40
+    "salareen": 40,
+    "sharNamr": 60
   },
   "bonus_claim": {
-    "sharNamr": 10,
-    "salareen": 7
+    "salareen": 7,
+    "sharNamr": 10
   }
 }
 ```
