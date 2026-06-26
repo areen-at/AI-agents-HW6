@@ -4,6 +4,7 @@ import unittest
 
 from ai_agents_hw6.application.fastmcp_host_client import (
     FastMcpHostSettings,
+    _status_active_role,
     action_to_fastmcp_submit_args,
     observation_from_fastmcp_json,
 )
@@ -57,6 +58,24 @@ class FastMcpHostClientTests(unittest.TestCase):
         )
 
         self.assertEqual(settings.host_url, "https://example.test/game/mcp")
+
+    def test_status_to_move_identifies_active_role(self) -> None:
+        self.assertIs(_status_active_role({"to_move": "thief"}), Role.THIEF)
+
+    def test_observation_accepts_host_self_and_opponent_aliases(self) -> None:
+        observation = observation_from_fastmcp_json(
+            {
+                "role": "thief",
+                "self": [3, 0],
+                "opponent": None,
+                "visible_cells": [[2, 0], [2, 1], [3, 0]],
+                "visible_barriers": [],
+            },
+            Role.THIEF,
+        )
+
+        self.assertEqual(observation.self_position.to_json(), [0, 3])
+        self.assertIsNone(observation.visible_opponent)
 
 
 if __name__ == "__main__":

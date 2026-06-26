@@ -140,8 +140,10 @@ def observation_from_fastmcp_json(payload: dict[str, Any], role: Role) -> Observ
     normalized.setdefault("request_id", str(payload.get("request_id", "fastmcp-host")))
     normalized["role"] = role.value
     normalized["grid_size"] = _grid_size_from_payload(payload)
-    normalized["self_position"] = _xy_to_row_col(payload.get("self_position"))
-    visible_opponent = payload.get("visible_opponent")
+    normalized["self_position"] = _xy_to_row_col(
+        payload.get("self_position", payload.get("self"))
+    )
+    visible_opponent = payload.get("visible_opponent", payload.get("opponent"))
     normalized["visible_opponent"] = (
         _xy_to_row_col(visible_opponent) if visible_opponent is not None else None
     )
@@ -236,7 +238,7 @@ def _status_is_done(status: dict[str, Any]) -> bool:
 
 
 def _status_active_role(status: dict[str, Any]) -> Role | None:
-    for key in ("active_role", "whose_turn", "turn", "current_turn", "role"):
+    for key in ("to_move", "active_role", "whose_turn", "turn", "current_turn", "role"):
         value = status.get(key)
         if isinstance(value, str):
             lowered = value.lower()
@@ -306,14 +308,26 @@ def _convert_fastmcp_action(action: Any) -> dict[str, Any] | None:
 def _fallback_cardinal_moves(payload: dict[str, Any]) -> list[dict[str, str]]:
     grid_json = _grid_size_from_payload(payload)
     grid = GridSize.from_json(grid_json)
-    self_position = Coordinate.from_json(_xy_to_row_col(payload.get("self_position")))
+    self_position = Coordinate.from_json(
+        _xy_to_row_col(payload.get("self_position", payload.get("self")))
+    )
     barriers = {
         Coordinate.from_json(_xy_to_row_col(item))
         for item in payload.get("visible_barriers", [])
     }
     moves: list[dict[str, str]] = []
     for direction in (Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT):
-        next_position = self_position.moved(direction)
+        row_delta, column_delta = {
+            Direction.UP: (-1, 0),
+            Direction.DOWN: (1, 0),
+            Direction.LEFT: (0, -1),
+            Direction.RIGHT: (0, 1),
+        }[direction]
+        next_row = self_position.row + row_delta
+        next_column = self_position.column + column_delta
+        if next_row < 0 or next_column < 0:
+            continue
+        next_position = Coordinate(next_row, next_column)
         if grid.contains(next_position) and next_position not in barriers:
             moves.append({"type": "move", "direction": direction.value})
     if not moves:

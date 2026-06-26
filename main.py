@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -60,7 +61,23 @@ from ai_agents_hw6.reporting.bonus_report import BONUS_MOCK_WARNING
 from ai_agents_hw6.ui import TerminalObserver, render_series_summary, replay_events
 
 
+def _load_local_env(path: str | Path = ".env") -> None:
+    env_path = Path(path)
+    if not env_path.exists():
+        return
+    for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key and key not in os.environ:
+            os.environ[key] = value
+
+
 def main() -> int:
+    _load_local_env()
     parser = build_parser()
     args = parser.parse_args()
 
