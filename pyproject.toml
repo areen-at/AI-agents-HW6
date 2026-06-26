@@ -11,6 +11,9 @@ requires-python = ">=3.10"
 dependencies = []
 
 [project.optional-dependencies]
+fastmcp = [
+    "fastmcp>=2.0",
+]
 gmail = [
     "google-api-python-client>=2.0",
     "google-auth-httplib2>=0.2",

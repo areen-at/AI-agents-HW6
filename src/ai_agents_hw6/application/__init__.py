@@ -23,6 +23,14 @@ from ai_agents_hw6.application.bonus_mock import (
     run_bonus_mock,
 )
 from ai_agents_hw6.application.evidence import build_evidence_manifest, write_evidence_manifest
+from ai_agents_hw6.application.fastmcp_host_client import (
+    FastMcpHostClientError,
+    FastMcpHostRunResult,
+    FastMcpHostSettings,
+    action_to_fastmcp_submit_args,
+    observation_from_fastmcp_json,
+    run_fastmcp_host_client,
+)
 from ai_agents_hw6.application.learning_eval import (
     evaluate_learning,
     write_learning_evaluation,
@@ -63,6 +71,12 @@ __all__ = [
     "run_local_mcp_series",
     "build_evidence_manifest",
     "write_evidence_manifest",
+    "FastMcpHostClientError",
+    "FastMcpHostRunResult",
+    "FastMcpHostSettings",
+    "action_to_fastmcp_submit_args",
+    "observation_from_fastmcp_json",
+    "run_fastmcp_host_client",
     "BonusCredentials",
     "BonusMatchResult",
     "BonusMatchup",

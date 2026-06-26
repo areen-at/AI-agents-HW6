@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -7,6 +8,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 
 from ai_agents_hw6.application import (
     BonusPreflightError,
+    FastMcpHostClientError,
+    FastMcpHostSettings,
     McpClientError,
     build_bonus_agreement,
     build_bonus_match_evidence,
@@ -17,6 +20,7 @@ from ai_agents_hw6.application import (
     require_confirmed_bonus_agreement,
     run_bonus_mock,
     run_external_bonus_series,
+    run_fastmcp_host_client,
     run_local_mcp_series,
     write_bonus_agreement,
     write_bonus_match_evidence,
@@ -26,6 +30,7 @@ from ai_agents_hw6.application import (
 )
 from ai_agents_hw6.cli import build_parser
 from ai_agents_hw6.config import ConfigError, load_config, validate_for_mode
+from ai_agents_hw6.domain import Role
 from ai_agents_hw6.infrastructure import (
     GmailDeliveryError,
     GmailPaths,
@@ -61,7 +66,10 @@ def main() -> int:
 
     try:
         config = load_config(args.config)
-        validate_for_mode(config, args.mode)
+        validation_mode = (
+            "internal" if args.bonus_fastmcp_host_client and args.mode == "bonus" else args.mode
+        )
+        validate_for_mode(config, validation_mode)
     except ConfigError as exc:
         parser.exit(status=2, message=f"Configuration error: {exc}\n")
 
@@ -133,7 +141,12 @@ def main() -> int:
         except GmailDeliveryError as exc:
             parser.exit(status=2, message=f"Gmail delivery error: {exc}\n")
 
-    print(f"Config validation passed for mode {args.mode}.")
+    validated_label = (
+        "internal bootstrap for bonus FastMCP host client"
+        if args.bonus_fastmcp_host_client and args.mode == "bonus"
+        else args.mode
+    )
+    print(f"Config validation passed for mode {validated_label}.")
     print(f"Group: {config.group.name}")
     print(f"Grid: {config.game.grid_size[0]}x{config.game.grid_size[1]}")
     print(f"Sub-games: {config.game.num_games}")
@@ -162,6 +175,30 @@ def main() -> int:
         return 0
 
     if args.mode == "bonus":
+        if args.bonus_fastmcp_host_client:
+            if not args.bonus_role:
+                parser.exit(
+                    status=2,
+                    message="--bonus-fastmcp-host-client requires --bonus-role cop|thief\n",
+                )
+            try:
+                settings = FastMcpHostSettings.from_environment(
+                    role=Role(args.bonus_role),
+                    max_polls=args.bonus_fastmcp_max_polls,
+                    poll_seconds=args.bonus_fastmcp_poll_seconds,
+                    dry_run=args.bonus_fastmcp_dry_run,
+                )
+                result = run_fastmcp_host_client(settings)
+            except FastMcpHostClientError as exc:
+                parser.exit(status=2, message=f"FastMCP host client failed: {exc}\n")
+            print("Shared FastMCP host client completed.")
+            print(f"Role: {result.role.value}")
+            print(f"Polls: {result.polls}")
+            print(f"Submitted actions: {result.submitted_actions}")
+            print(f"Dry run: {result.dry_run}")
+            print("Final host status:")
+            print(json.dumps(result.final_status, ensure_ascii=False, indent=2, sort_keys=True))
+            return 0
         if args.engine_only or args.local_mcp:
             parser.exit(
                 status=2,

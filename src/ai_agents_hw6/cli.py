@@ -75,6 +75,39 @@ def build_parser() -> argparse.ArgumentParser:
         help="Validate all four bonus endpoints and the shared agreement without starting games.",
     )
     parser.add_argument(
+        "--bonus-fastmcp-host-client",
+        action="store_true",
+        help=(
+            "Drive our selected role against a shared authoritative FastMCP host using "
+            "BONUS_FASTMCP_HOST_URL and BONUS_FASTMCP_HOST_TOKEN."
+        ),
+    )
+    parser.add_argument(
+        "--bonus-role",
+        choices=("cop", "thief"),
+        help="Our role when --bonus-fastmcp-host-client is used.",
+    )
+    parser.add_argument(
+        "--bonus-fastmcp-dry-run",
+        action="store_true",
+        help=(
+            "Connect to the shared FastMCP host and compute the next action without "
+            "submitting it."
+        ),
+    )
+    parser.add_argument(
+        "--bonus-fastmcp-max-polls",
+        type=int,
+        default=300,
+        help="Maximum host-status polls for --bonus-fastmcp-host-client.",
+    )
+    parser.add_argument(
+        "--bonus-fastmcp-poll-seconds",
+        type=float,
+        default=1.0,
+        help="Delay between host-status polls for --bonus-fastmcp-host-client.",
+    )
+    parser.add_argument(
         "--build-bonus-report",
         action="store_true",
         help="Build the canonical unapproved bonus report candidate from verified match evidence.",

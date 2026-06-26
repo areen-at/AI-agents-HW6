@@ -12,11 +12,11 @@
     "thief_mcp_url": "https://salareen-thief.onrender.com/mcp"
   },
   "bonus_opponent": {
-    "group_name": "OTHER_TEAM_NAME",
+    "group_name": "sharNamr",
     "github_repo": "https://example.com/other-team-repo",
     "students": [],
-    "cop_mcp_url": "https://example.com/other-team-cop-mcp",
-    "thief_mcp_url": "https://example.com/other-team-thief-mcp"
+    "cop_mcp_url": "https://cop-mcp.onrender.com/mcp/",
+    "thief_mcp_url": "https://thief-mcp.onrender.com/mcp/"
   },
   "game": {
     "grid_size": [5, 5],

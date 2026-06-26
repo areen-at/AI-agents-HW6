@@ -60,8 +60,17 @@ class BonusBoundaryTests(unittest.TestCase):
         validate_for_mode(self.config, "bonus-mock")
 
     def test_production_bonus_lists_all_missing_or_placeholder_fields(self) -> None:
+        placeholder_opponent = BonusOpponentConfig(
+            group_name="OTHER_TEAM_NAME",
+            github_repo="https://example.com/other-team-repo",
+            students=(),
+            cop_mcp_url="OTHER_TEAM_COP_MCP_URL",
+            thief_mcp_url="OTHER_TEAM_THIEF_MCP_URL",
+        )
+        config = replace(self.config, bonus_opponent=placeholder_opponent)
+
         with self.assertRaises(ConfigError) as raised:
-            validate_for_mode(self.config, "bonus")
+            validate_for_mode(config, "bonus")
 
         message = str(raised.exception)
         for field in (
