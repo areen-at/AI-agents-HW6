@@ -4,20 +4,20 @@
     "group_1": "sharNamr",
     "group_2": "salareen"
   },
-  "github_repo_group_1": "https://github.com/SharbelMaroun/AI-Agent-Orchestration-HW6",
-  "github_repo_group_2": "https://github.com/areen-at/AI-agents-HW6",
-  "mcp_url_group_1_cop": "https://cop-mcp.onrender.com",
-  "mcp_url_group_1_thief": "https://thief-mcp.onrender.com",
-  "mcp_url_group_2_cop": "https://salareen-cop.onrender.com/mcp",
-  "mcp_url_group_2_thief": "https://salareen-thief.onrender.com/mcp",
+  "github_repo_group_1": "[https://github.com/SharbelMaroun/AI-Agent-Orchestration-HW6](https://github.com/SharbelMaroun/AI-Agent-Orchestration-HW6)",
+  "github_repo_group_2": "[https://github.com/areen-at/AI-agents-HW6.git](https://github.com/areen-at/AI-agents-HW6.git)",
+  "mcp_url_group_1_cop": "[https://cop-mcp.onrender.com](https://cop-mcp.onrender.com/)",
+  "mcp_url_group_1_thief": "[https://thief-mcp.onrender.com](https://thief-mcp.onrender.com/)",
+  "mcp_url_group_2_cop": "[https://salareen-cop.onrender.com/mcp](https://salareen-cop.onrender.com/mcp)",
+  "mcp_url_group_2_thief": "[https://salareen-thief.onrender.com/mcp](https://salareen-thief.onrender.com/mcp)",
   "timezone": "Asia/Jerusalem",
   "students_group_1": [
-    "Sharbel",
-    "Amr"
+    "Sharbel Maroun",
+    "Amr Safadi"
   ],
   "students_group_2": [
-    "saleh hammam - 318827417",
-    "areen tarabeh - 214028904"
+    "Areen Tarabeh",
+    "Saleh Hammam"
   ],
   "sub_games": [
     {
