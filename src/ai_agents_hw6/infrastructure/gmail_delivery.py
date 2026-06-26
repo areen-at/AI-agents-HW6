@@ -16,7 +16,7 @@ from ai_agents_hw6.application.events import atomic_write_json, redact
 from ai_agents_hw6.config import PLACEHOLDER_VALUES, AppConfig
 
 GMAIL_SEND_SCOPE = "https://www.googleapis.com/auth/gmail.send"
-FINAL_RECIPIENT = "areentarabeh1@gmail.com"
+FINAL_RECIPIENT = "rmisegal+uoh26b@gmail.com"
 DEFAULT_SUBJECT = "AI Agents HW6 Internal Report"
 
 
